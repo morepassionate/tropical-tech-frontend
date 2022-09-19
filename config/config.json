@@ -1,0 +1,41 @@
+{
+  "development": {
+    "username": "growleads05",
+    "password": "Uhrapp1324",
+    "database": "growleads05",
+    "host": "mysql62-farm2.uni5.net",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "growleads05",
+    "password": "Uhrapp1324",
+    "database": "growleads05",
+    "host": "mysql62-farm2.uni5.net",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "growleads05",
+    "password": "Uhrapp1324",
+    "database": "growleads05",
+    "host": "mysql62-farm2.uni5.net",
+    "dialect": "mysql"
+  },
+  
+  "googleApi":"AIzaSyADuOUU5eh0dfKhVXYR20vOgOVt3YT3gqI",
+  "publicKey":"TEST-8c4707d7-c1ca-4f50-920e-847648453f1a",
+  "token":"TEST-2656856595491187-013015-a37434365983173b558d39419bf62734-99582288",
+  "urlRoot":"https://pacific-dusk-99070.herokuapp.com/",
+  "hotel":{
+    "urlPhotoSm":"http://photos.hotelbeds.com/giata/small/",
+    "urlPhotoMd":"http://photos.hotelbeds.com/giata/medium/",
+    "urlPhotoBg":"http://photos.hotelbeds.com/giata/bigger/"
+  },
+  "smtp":{
+    "host":"srv154.prodns.com.br",
+    "port": 587,
+    "secure": false,
+    "user": "support@mazag.com.br",
+    "pass": "mzg@1324"
+  }
+}
+

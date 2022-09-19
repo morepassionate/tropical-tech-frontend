@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "Uhr",
+    "slug": "urh",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/img/icon.png",
+    "splash": {
+      "image": "./assets/img/splash.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/img/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.aalmeida727.urh"
+    },
+    "web": {
+      "favicon": "./assets/img/favicon.png"
+    }
+  }
+}

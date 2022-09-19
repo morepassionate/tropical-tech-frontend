@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "868845968399",
+    "project_id": "uhr-app-a49e9",
+    "storage_bucket": "uhr-app-a49e9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:868845968399:android:a06b1c0d9da92c25f9d77a",
+        "android_client_info": {
+          "package_name": "com.app.uhr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "868845968399-mli25ng8l61tg4b16mg4fqvl8nnt8mpc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCc21LjCK5zngV2dL-5Z0lEasc00yUDj4c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "868845968399-mli25ng8l61tg4b16mg4fqvl8nnt8mpc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
