@@ -22,6 +22,7 @@ import styles from './styles'
 import { useRecoilState } from 'recoil'
 import AuthStatus from '../../assets/atoms/AuthStatus'
 import LightButton from '../../Components/LightButton'
+import ModalReviews from '../../Components/ModalReviews'
 
 const HotelDetails = ({ navigation, route }: any) => {
   const code: number = route.params?.code
@@ -40,8 +41,12 @@ const HotelDetails = ({ navigation, route }: any) => {
   const [modalConfirm, setModalConfirm] = useState(false)
   const [modalPolicy, setModalPolicy] = useState(false)
   const [authStatus, setAuthStatus] = useRecoilState(AuthStatus)
+  const [moreDetailDescription, setMoreDetailDescription] = useState(false)
+  const [reviewModalVisible, setReviewModalVisible] = useState(false)
 
   useEffect(() => {
+    setMoreDetailDescription(false)
+    // setReviewModalVisible(false)
     LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
   }, [])
   // const [gallery, setGallery] = useState(null)
@@ -80,8 +85,6 @@ const HotelDetails = ({ navigation, route }: any) => {
       longitudeDelta: 0.0421
     })
     // setGallery(config.hotel.urlPhotoBg + json.hotel.images.map((item) => item))
-
-    console.log(config.hotel.urlPhotoBg + json.hotel)
   }
   const iconsAndInfos = [
     { icon: 'wifi', info: 'Wifi' },
@@ -90,20 +93,20 @@ const HotelDetails = ({ navigation, route }: any) => {
     { icon: PoolIcon, info: 'Pool' },
     { icon: 'youtube-tv', info: 'Digital TV' }
   ]
-  const renderItem = ({
-    item
-  }: {
-    item: { comment: string; datePublish: string; user: string; userImage: string }
-  }) => (
-    <View style={{ marginRight: 20 }}>
-      <Reviews
-        comment={item.comment}
-        dateOfPost={item.datePublish}
-        user={item.user}
-        userImage={item.userImage}
-      />
-    </View>
-  )
+  // const renderItem = ({
+  //   item
+  // }: {
+  //   item: { comment: string; datePublish: string; user: string; userImage: string }
+  // }) => (
+  //   <View style={{ marginRight: 20 }}>
+  //     <Reviews
+  //       comment={item.comment}
+  //       dateOfPost={item.datePublish}
+  //       user={item.user}
+  //       userImage={item.userImage}
+  //     />
+  //   </View>
+  // )
 
   return (
     <ScrollView style={{ backgroundColor: 'white' }}>
@@ -128,12 +131,14 @@ const HotelDetails = ({ navigation, route }: any) => {
           <View style={styles.pinCashback}>
             <Text style={styles.pinText}>{`${(dataHotel[code].value * 10) / 100}$ CASHBACK`}</Text>
           </View>
-          <Text style={{ marginBottom: 15 }}>08 Oct - 10 Oct, 1 guest</Text>
+          <Text style={{ marginBottom: 15, fontSize: 16, fontFamily: 'Corbel', color: '#979FA9' }}>
+            08 Oct - 10 Oct, 1 guest
+          </Text>
         </View>
         <View style={{ justifyContent: 'center', marginTop: 20 }}>
           <Text style={styles.ratings}>{`${dataHotel[code].ratings}`}</Text>
           <Text style={{ color: COLORS.blue, fontFamily: 'Corbel', fontSize: 14 }}>
-            {`${dataHotel[code].reviews} reviews`}
+            {`${dataHotel[code].reviews} Reviews`}
           </Text>
         </View>
       </View>
@@ -158,7 +163,15 @@ const HotelDetails = ({ navigation, route }: any) => {
         <View style={styles.line} />
       </View>
       <View>
-        <Text style={styles.description}>{`${dataHotel[code].description}`}</Text>
+        <Text
+          numberOfLines={moreDetailDescription ? 1000 : 5}
+          style={styles.description}
+        >{`${dataHotel[code].description}`}</Text>
+        <TouchableOpacity onPress={() => setMoreDetailDescription(!moreDetailDescription)}>
+          <Text style={styles.moreReadButton}>
+            {!moreDetailDescription ? 'Read More' : 'Read Less'}
+          </Text>
+        </TouchableOpacity>
       </View>
       {/* MAPA COM DESIGN ESCURO */}
       <MapView
@@ -182,7 +195,10 @@ const HotelDetails = ({ navigation, route }: any) => {
       <View style={styles.line} />
       {/* REVIEWS */}
       <View style={styles.marginHorizontal}>
-        <View style={[styles.rowContent, { marginTop: 24, alignItems: 'center' }]}>
+        <TouchableOpacity
+          onPress={() => setReviewModalVisible(true)}
+          style={[styles.rowContent, { marginTop: 24, alignItems: 'center' }]}
+        >
           <IconButton
             icon={'star'}
             size={12}
@@ -190,7 +206,7 @@ const HotelDetails = ({ navigation, route }: any) => {
             style={[styles.notMargin, { top: 2 }]}
           />
           <Text style={styles.font18}>{`4.91 (155 Reviews)`}</Text>
-        </View>
+        </TouchableOpacity>
         <View style={styles.reviewsContent}>
           {/* <FlatList
             data={commentsReviews}
@@ -213,6 +229,10 @@ const HotelDetails = ({ navigation, route }: any) => {
           </ScrollView>
         </View>
       </View>
+      <ModalReviews
+        modalVisible={reviewModalVisible}
+        setModalVisible={() => setReviewModalVisible(false)}
+      />
       <View style={styles.line} />
       <View style={styles.marginHorizontal}>
         <TouchableOpacity
@@ -248,7 +268,9 @@ const HotelDetails = ({ navigation, route }: any) => {
           }
         }}
       >
-        Book
+        <Text style={{ fontSize: 18, lineHeight: 22, fontWeight: 'bold', fontFamily: 'Corbel' }}>
+          Book
+        </Text>
       </Button>
       <Modal
         animationType={'slide'}
@@ -265,9 +287,14 @@ const HotelDetails = ({ navigation, route }: any) => {
               position: 'relative',
               width: '90%',
               alignSelf: 'center',
-              height: 300,
+              height: 385,
               marginVertical: 150,
-              borderRadius: 30
+              borderRadius: 30,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.25,
+              shadowRadius: 10,
+              elevation: 5
             }}
           >
             <IconButton
@@ -282,9 +309,8 @@ const HotelDetails = ({ navigation, route }: any) => {
               <LightButton
                 text="Register or Login for Cashback Account"
                 style={{
-                  marginTop: 20,
+                  marginTop: 75,
                   borderRadius: 25,
-
                   width: '50%'
                 }}
                 textStyle={{ color: '#4A5CAE', textTransform: 'capitalize', textAlign: 'center' }}
@@ -296,9 +322,8 @@ const HotelDetails = ({ navigation, route }: any) => {
               <LightButton
                 text="Continue Payment"
                 style={{
-                  marginTop: 20,
+                  marginTop: 75,
                   borderRadius: 25,
-
                   width: '50%'
                 }}
                 textStyle={{ color: '#4A5CAE', textTransform: 'capitalize', textAlign: 'center' }}

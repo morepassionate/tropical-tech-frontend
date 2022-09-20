@@ -14,7 +14,7 @@ export const dataHotel = [
     value: 1000,
     taxesAndChargesInclude: true,
     freeCancellation: true,
-    noPrepaymentNeeded: false,
+    noPrepaymentNeeded: true,
     city: 'Cusco',
     country: 'Peru',
     from: '9/18/2022',
@@ -37,7 +37,7 @@ export const dataHotel = [
     value: 1000,
     taxesAndChargesInclude: false,
     freeCancellation: true,
-    noPrepaymentNeeded: false,
+    noPrepaymentNeeded: true,
     city: 'Cartagena',
     country: 'Colômbia',
     from: '8/18/2022',
@@ -231,35 +231,38 @@ export const dataHotel = [
 
 export const commentsReviews = [
   {
-    userImage: 'https://cdn.pixabay.com/photo/2016/03/12/23/18/man-1253004__340.jpg',
+    userImage:
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUPpSjzdwuLErHgbBc5vAnXPBT4qge9TSNJflVOKwINRoxYAdQS7atVd_OevSh3WYgHKc&usqp=CAU',
     user: 'Usuário',
     datePublish: 'August 2021',
     comment:
-      'Comment, my comment. Comment, my comment. Comment, my comment Comment, my comment. Comment, my comment. Comment, my comment'
+      'The design and style are stunning.The blinds didn’t close properly, so we could always see sunlight or city light. The smoke detector also flashed a lot. Too much light stimulation. The decor of the hotel is on point. The lobby and the ground floor are beautifully designed and the space feels warm and welcoming whilst also trendy and edgy. The room was perfectly clean and there was everything that I would have needed inside. And more.The staff on duty when I arrived were lovely. The rest were rude. The menu was limited and the food was over priced.'
   },
   {
-    userImage: 'https://cdn.pixabay.com/photo/2016/03/12/23/18/man-1253004__340.jpg',
+    userImage:
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUPpSjzdwuLErHgbBc5vAnXPBT4qge9TSNJflVOKwINRoxYAdQS7atVd_OevSh3WYgHKc&usqp=CAU',
     user: 'Usuário',
     datePublish: 'August 2021',
     comment:
-      'Comment, my comment. Comment, my comment. Comment, my comment Comment, my comment. Comment, my comment. Comment, my comment'
+      'Yes, Hotel Executive Suites is popular with guests booking family stays. The prices at Hotel Executive Suites may vary depending on your stay (e.g. dates you select, hotel policy etc.). See the prices by entering your dates. Check-in at Hotel Executive Suites is from 15:00, and check-out is until 11:00. From the nearest airport, you can get to Hotel Executive Suites by airport.'
   },
   {
-    userImage: 'https://cdn.pixabay.com/photo/2016/03/12/23/18/man-1253004__340.jpg',
+    userImage:
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUPpSjzdwuLErHgbBc5vAnXPBT4qge9TSNJflVOKwINRoxYAdQS7atVd_OevSh3WYgHKc&usqp=CAU',
     user: 'Usuário',
     datePublish: 'August 2021',
     comment:
-      'Comment, my comment. Comment, my comment. Comment, my comment Comment, my comment. Comment, my comment. Comment, my comment'
+      'Guests staying at Radisson Blu Atlantic Hotel, Stavanger can enjoy a highly-rated breakfast during their stay. The prices at Radisson Blu Atlantic Hotel, Stavanger may vary depending on your stay (e.g. dates you select, hotel policy etc.). See the prices by entering your dates. This is our guests favourite part of Stavanger, according to independent reviews.'
   }
 ]
 
 export const gallery = [
-  'https://cdn.pixabay.com/photo/2014/07/10/17/17/hotel-389256__340.jpg',
-  'https://cdn.pixabay.com/photo/2017/03/09/06/30/pool-2128578__340.jpg',
-  'https://cdn.pixabay.com/photo/2015/07/14/07/18/greece-844269__340.jpg',
-  'https://cdn.pixabay.com/photo/2013/04/18/14/39/ship-105596__480.jpg',
-  'https://cdn.pixabay.com/photo/2013/04/18/14/39/ship-105596__480.jpg',
-  'https://cdn.pixabay.com/photo/2013/04/18/14/39/ship-105596__480.jpg'
+  'https://cf.bstatic.com/xdata/images/hotel/square200/381306642.webp?k=449bd6750c9e9c663fcd6ce7d1c2f5c36e1ae248d6424bb06dcd9fbe6a79394d&o=&s=1',
+  'https://cf.bstatic.com/xdata/images/hotel/square200/320889160.webp?k=f5ea2773ce0b80e1b8624017c10aa972d9919af31a2543f0bf7d41ff9c0a2693&o=&s=1',
+  'https://cf.bstatic.com/xdata/images/hotel/square200/297032294.webp?k=7ae435c3a31e2341deb9d85efbd29235f20a2b293e1cadb5b8df36fd54deacc3&o=&s=1',
+  'https://cf.bstatic.com/xdata/images/hotel/square200/344063400.webp?k=251daf0866cb6f7c0ad2acde6a17eaadde239309770339c814bb277312d038d0&o=&s=1',
+  'https://cf.bstatic.com/xdata/images/hotel/square200/299126070.webp?k=565d9421f9a50fbc454c05e5be7368137c278ccd220adc9599629edcca1c51a1&o=&s=1',
+  'https://cf.bstatic.com/xdata/images/hotel/square200/284753992.webp?k=9b091d7813c2428bb2bbf389fc777f5e8febca241100183d4c3e786dd31c80a5&o=&s=1'
 ]
 
 export const popularHotels = [

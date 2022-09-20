@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.orange,
     width: 115,
     marginTop: 5,
-    borderRadius: 10,
+    borderRadius: 20,
     height: 20
   },
   pinText: {
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Corbel',
     fontSize: 16,
     paddingBottom: 4,
-    paddingHorizontal: 12,
+    paddingHorizontal: 15,
     borderRadius: 8,
     alignSelf: 'flex-end',
     paddingTop: 4
@@ -98,7 +98,9 @@ const styles = StyleSheet.create({
   buttonStyle: {
     backgroundColor: COLORS.primary,
     marginHorizontal: 25,
-    borderRadius: 20,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 50,
     marginTop: 40,
     marginBottom: 70
   },
@@ -112,16 +114,20 @@ const styles = StyleSheet.create({
   font18: {
     fontSize: 18,
     fontFamily: 'Corbel',
-    alignSelf: 'center'
+    alignSelf: 'center',
+    fontWeight: 'bold',
+    color: '#05233A'
   },
   font24: {
     fontFamily: 'Corbel',
-    fontSize: 24
+    fontSize: 24,
+    fontWeight: 'bold'
   },
   fullRefunds: {
     fontSize: 16,
     fontFamily: 'Corbel',
-    marginBottom: 35
+    marginBottom: 35,
+    lineHeight: 19
   },
   seeMoreButton: {
     backgroundColor: COLORS.primary,
@@ -142,7 +148,8 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     marginHorizontal: 24,
     marginTop: 24,
-    marginBottom: 12
+    marginBottom: 1,
+    flex: 1
   },
   galleryText: {
     fontSize: 16,
@@ -162,6 +169,13 @@ const styles = StyleSheet.create({
     height: 72,
     borderRadius: 12,
     margin: 8
+  },
+  moreReadButton: {
+    fontSize: 16,
+    fontFamily: 'Corbel',
+    color: 'rgba(27,102,253,0.5)',
+    marginLeft: 25,
+    marginBottom: 12
   }
 })
 

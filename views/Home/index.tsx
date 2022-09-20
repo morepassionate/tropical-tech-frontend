@@ -14,13 +14,14 @@ import {
   SectionList,
   LogBox
 } from 'react-native'
+import { Hoverable } from 'react-native-web-hover'
 import { Calendar, CalendarList, Agenda } from 'react-native-calendars'
 import { Checkbox, IconButton, RadioButton, Switch } from 'react-native-paper'
 import Carousel from 'react-native-snap-carousel'
 import styles from './styles'
 import { AntDesign } from '@expo/vector-icons'
 import { ToggleButton } from 'react-native-paper'
-import { TextInput as TextInputPaper } from 'react-native-paper'
+import { TextInput as TextInputPaper, Button } from 'react-native-paper'
 // import Header from '../../components/Header'
 import CardUpcomingTrips from '../../Components/CardUpcomingTrips'
 import CardDestinationIdeas from '../../Components/CardDestinationIdeas'
@@ -33,6 +34,8 @@ import LightButton from '../../Components/LightButton'
 import CartoonPersonIcon from '../../assets/icons/CartoonPerson'
 import DoubleCartoonsIcon from '../../assets/icons/DoubleCartoons'
 import FamilyCartoonsIcon from '../../assets/icons/FamilyCartoons'
+import { Icon } from 'react-native-paper/lib/typescript/components/Avatar/Avatar'
+import { dataHotel } from '../../data'
 
 const Home = (props: any) => {
   const [modalWhereVisible, setModalWhereVisible] = useState(false)
@@ -43,6 +46,7 @@ const Home = (props: any) => {
   const onDismissSnackBar = () => setModalWhereVisible(false)
   const [isSwitchOn, setIsSwitchOn] = useState(false)
   const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn)
+  const [whereFocus, setWhereFocus] = useState(false)
 
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
@@ -56,18 +60,23 @@ const Home = (props: any) => {
   const [dateValue, setDateValue] = useState('')
   const [secondDateValue, setSecondDateValue] = useState('')
 
+  const [numberOfDays, setNumberOfDays] = useState(1)
   const [teste, setTeste] = useState({})
 
   useEffect(() => {
     if (dateValue && !secondDateValue) {
       setTeste({
-        [dateValue]: { selected: true, color: '#1B4298', textColor: '#fff' }
+        [dateValue]: {
+          selected: true,
+          color: '#1B4298',
+          textColor: '#fff'
+        }
       })
     }
 
     if (dateValue && secondDateValue) {
       setTeste({
-        [dateValue]: { startingDay: true, color: '#1B4298', textColor: '#fff' },
+        [dateValue]: { selected: true, startingDay: true, color: '#1B4298', textColor: '#fff' },
         [secondDateValue]: {
           selected: true,
           endingDay: true,
@@ -116,11 +125,16 @@ const Home = (props: any) => {
     // setWhere(text);
   }
   function sendWen(text: string) {
+    setTabsActive('calendar')
+    setNumberOfDays(1)
+    setDateValue('')
+    setSecondDateValue('')
     setModalWhenVisible(false)
   }
   // function calendar() {
   //   setFlexibleBtn()
   // }
+
   function sendForm() {
     console.log('sendForm')
   }
@@ -156,7 +170,9 @@ const Home = (props: any) => {
                 style={styles.input}
                 // value={`${dateValue} - ${secondDateValue}`}
                 placeholder="When do you want to go?"
-                onFocus={() => setModalWhenVisible(true)}
+                onFocus={() => {
+                  setModalWhenVisible(true), setTabsActive('flexible')
+                }}
                 onChangeText={() => setModalWhenVisible(true)}
               />
             </View>
@@ -195,45 +211,98 @@ const Home = (props: any) => {
           }}
         >
           <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalTitle}>Where are you going? </Text>
+            <View style={!whereFocus ? styles.modalView : styles.modalViewTyping}>
+              <IconButton
+                icon={'close'}
+                size={24}
+                color={'#8296CA'}
+                style={{ alignSelf: 'flex-end' }}
+                onPress={() => {
+                  setModalWhereVisible(false), setDateValue(''), setSecondDateValue('')
+                }}
+                rippleColor={'white'}
+              />
+              <View style={styles.modalHeader}>
+                <View style={styles.modalHeaderContent}>
+                  <Text style={styles.modalTitle}>Where are you going?</Text>
+                </View>
+              </View>
               <View style={styles.inputBottom}>
                 <TextInput
                   style={styles.inputModal}
                   placeholder="Search for destination"
+                  onFocus={() => setWhereFocus(true)}
+                  onBlur={() => setWhereFocus(false)}
                   onChangeText={(text) => setWhere(text)}
                 />
               </View>
-              <Text style={styles.modalText}>Not sure where to go? </Text>
-              <TouchableOpacity
-                style={styles.icons}
-                onPress={() => props.navigation.navigate('Home')}
-              >
-                <IconButton icon={LocationIcon} size={24} />
-                <Text style={styles.textIcons}>Everywhere</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.icons}
-                onPress={() => props.navigation.navigate('Home')}
-              >
-                <IconButton icon={LocationIcon} size={24} />
-                <Text style={styles.textIcons}>Most Popular</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.icons}
-                onPress={() => props.navigation.navigate('Home')}
-              >
-                <IconButton icon={LocationIcon} size={24} />
-                <Text style={styles.textIcons}>Best deals</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.loginButton, styles.btnSearch]}
-                onPress={() => sendWhere()}
-              >
-                <Text style={styles.loginButtonText}>
-                  <AntDesign name="search1" size={20} color="#1B4298" /> Search
-                </Text>
-              </TouchableOpacity>
+              <View style={{ marginLeft: 50, width: '100%' }}>
+                {!whereFocus && <Text style={styles.modalText}>Not sure where to go? </Text>}
+                {!whereFocus && (
+                  <TouchableOpacity
+                    style={styles.icons}
+                    onPress={() => props.navigation.navigate('Home')}
+                  >
+                    <View
+                      style={{
+                        width: 50,
+                        height: 50,
+                        backgroundColor: '#1B4298',
+                        borderRadius: 10
+                      }}
+                    >
+                      <IconButton color={'white'} icon={LocationIcon} size={24} />
+                    </View>
+                    <Text style={styles.textIcons}>Everywhere</Text>
+                  </TouchableOpacity>
+                )}
+                {!whereFocus && (
+                  <TouchableOpacity
+                    style={styles.icons}
+                    onPress={() => props.navigation.navigate('Home')}
+                  >
+                    <View
+                      style={{
+                        width: 50,
+                        height: 50,
+                        backgroundColor: '#1B4298',
+                        borderRadius: 10
+                      }}
+                    >
+                      <IconButton color={'white'} icon={LocationIcon} size={24} />
+                    </View>
+                    <Text style={styles.textIcons}>Most Popular</Text>
+                  </TouchableOpacity>
+                )}
+                {!whereFocus && (
+                  <TouchableOpacity
+                    style={styles.icons}
+                    onPress={() => props.navigation.navigate('Home')}
+                  >
+                    <View
+                      style={{
+                        width: 50,
+                        height: 50,
+                        backgroundColor: '#1B4298',
+                        borderRadius: 10
+                      }}
+                    >
+                      <IconButton color={'white'} icon={LocationIcon} size={24} />
+                    </View>
+                    <Text style={styles.textIcons}>Best deals</Text>
+                  </TouchableOpacity>
+                )}
+                {!whereFocus && (
+                  <TouchableOpacity
+                    style={[styles.loginWhereModalButton, styles.btnSearch]}
+                    onPress={() => sendWhere()}
+                  >
+                    <Text style={styles.loginButtonText}>
+                      <AntDesign name="search1" size={20} color="#1B4298" /> Search
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              </View>
             </View>
           </View>
         </Modal>
@@ -246,10 +315,24 @@ const Home = (props: any) => {
           }}
         >
           <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalTitle}>When do you want to go? </Text>
-              <View style={styles.buttons}>
-                <Pressable
+            <View style={styles.modalViewTyping}>
+              <IconButton
+                icon={'close'}
+                size={24}
+                color={'#8296CA'}
+                style={{ alignSelf: 'flex-end' }}
+                onPress={() => {
+                  setModalWhenVisible(false), setTabsActive('flexible'), setNumberOfDays(1)
+                }}
+                rippleColor={'white'}
+              />
+              <View style={styles.modalHeader}>
+                <View style={styles.modalHeaderContent}>
+                  <Text style={styles.modalTitle}>When do you want to go?</Text>
+                </View>
+              </View>
+              {/* <View style={styles.buttons}> */}
+              {/* <Pressable
                   onPress={() => {
                     setTabsActive('calendar')
                   }}
@@ -272,12 +355,31 @@ const Home = (props: any) => {
                   }}
                 >
                   <Text style={styles.textIcons}>I'm flexible</Text>
-                </Pressable>
-              </View>
+                </Pressable> */}
+              {tabsActive !== 'calendar' && (
+                <LightButton
+                  text="Calendar"
+                  textStyle={{ paddingHorizontal: 50 }}
+                  style={{ borderRadius: 20 }}
+                  onPress={() => {
+                    setTabsActive('calendar')
+                  }}
+                />
+              )}
+              {/* </View> */}
               <View style={{ display: tabsActive === 'calendar' ? 'flex' : 'none' }}>
                 <Calendar
                   markingType={'period'}
                   markedDates={teste}
+                  style={{
+                    marginTop: 60,
+                    width: 400,
+                    height: 420,
+                    borderWidth: 2,
+                    borderColor: '#506F9D',
+                    borderRadius: 12,
+                    marginBottom: 13
+                  }}
                   onDayPress={(day) => {
                     if (dateValue) {
                       setSecondDateValue(day.dateString.toString())
@@ -294,140 +396,256 @@ const Home = (props: any) => {
 
               <View
                 style={{
-                  display: tabsActive == 'flexible' ? 'flex' : 'none',
-                  paddingTop: 15
+                  display: tabsActive === 'flexible' ? 'flex' : 'none',
+                  paddingTop: 30,
+                  width: '100%',
+                  marginBottom: 150
                 }}
               >
                 <Text style={{ fontWeight: 'bold' }}>Number of Days</Text>
                 <View style={{ flexDirection: 'row', marginTop: 20, marginLeft: 0 }}>
                   <View style={{ flexDirection: 'row' }}>
                     <Pressable
-                      onPress={() => {
-                        return
-                      }}
+                      onPress={() => setNumberOfDays(numberOfDays - 1)}
                       style={{
-                        borderWidth: 1,
+                        borderWidth: 2,
                         width: 20,
                         height: 20,
                         alignItems: 'center',
                         borderRadius: 50,
-                        marginTop: 5,
+                        marginTop: 'auto',
+                        marginBottom: 'auto',
                         borderColor: '#506F9D'
                       }}
                     >
-                      <Text style={{ fontWeight: 'bold', color: '#8296CA' }}>-</Text>
+                      <Text
+                        style={{
+                          fontWeight: 'bold',
+                          fontSize: 18,
+                          lineHeight: 18,
+                          color: '#8296CA'
+                        }}
+                      >
+                        -
+                      </Text>
                     </Pressable>
                     <TextInput
                       style={{
-                        borderWidth: 1,
-                        borderRadius: 15,
+                        borderWidth: 2,
+                        borderRadius: 30,
                         padding: 5,
                         borderColor: '#506F9D',
                         marginLeft: 10,
                         marginRight: 10,
-                        width: 90
+                        width: 90,
+                        textAlign: 'center',
+                        fontWeight: 'bold'
                       }}
-                    />
+                    >
+                      {numberOfDays}
+                    </TextInput>
                     <Pressable
-                      onPress={() => {
-                        return
-                      }}
+                      onPress={() => setNumberOfDays(numberOfDays + 1)}
                       style={{
-                        borderWidth: 1,
+                        borderWidth: 2,
                         width: 20,
                         height: 20,
                         alignItems: 'center',
                         borderRadius: 50,
-                        marginTop: 5,
+                        marginTop: 'auto',
+                        marginBottom: 'auto',
                         borderColor: '#506F9D'
                       }}
                     >
-                      <Text style={{ fontWeight: 'bold', color: '#8296CA' }}>+</Text>
+                      <Text
+                        style={{
+                          fontWeight: 'bold',
+                          fontSize: 16,
+                          lineHeight: 17,
+                          color: '#8296CA'
+                        }}
+                      >
+                        +
+                      </Text>
                     </Pressable>
                   </View>
                   <View>
                     <Pressable
-                      onPress={() => {
-                        return
-                      }}
+                      onPress={() => setTabsActive('calendar')}
                       style={{
-                        borderWidth: 1,
-                        alignItems: 'center',
-                        borderRadius: 50,
-                        borderColor: '#506F9D',
-                        marginLeft: 90,
-                        padding: 5,
-                        width: 50
+                        marginLeft: 90
                       }}
                     >
-                      <Text style={{ fontWeight: 'bold', color: '#8296CA' }}>any</Text>
+                      <Text
+                        style={{
+                          borderWidth: 2,
+                          borderRadius: 30,
+                          padding: 5,
+                          borderColor: '#506F9D',
+                          marginLeft: 10,
+                          marginRight: 10,
+                          width: 90,
+                          paddingVertical: 10,
+                          color: '#000',
+                          fontWeight: 'bold',
+                          textAlign: 'center'
+                        }}
+                      >
+                        Any
+                      </Text>
                     </Pressable>
                   </View>
                 </View>
-                <View style={{ marginTop: 25 }}>
+                <View style={{ marginTop: 60 }}>
                   <Text>
-                    Go in<Text style={{ fontWeight: 'bold' }}>Month</Text>
+                    Go in<Text style={{ fontWeight: 'bold' }}>{'  '}Month</Text>
                   </Text>
 
-                  <View style={{ flexDirection: 'row', marginTop: 15 }}>
+                  <View style={{ flexDirection: 'row', marginTop: 30 }}>
                     <View
                       style={{
-                        borderWidth: 1,
-                        padding: 20,
+                        borderWidth: 2,
                         borderRadius: 12,
                         borderColor: '#1B4298',
-                        margin: 5
+                        width: 80,
+                        height: 80,
+                        marginRight: 10
                       }}
                     >
-                      <Text>Nov</Text>
+                      <IconButton
+                        style={{ marginLeft: 'auto', marginRight: 'auto' }}
+                        icon={'calendar'}
+                        size={24}
+                        color={'#1B4298'}
+                      ></IconButton>
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          lineHeight: 19,
+                          fontFamily: 'Corbel',
+                          alignItems: 'center',
+                          textAlign: 'center',
+                          color: '#1B4298'
+                        }}
+                      >
+                        Sep
+                      </Text>
                     </View>
                     <View
                       style={{
-                        borderWidth: 1,
-                        padding: 20,
+                        borderWidth: 2,
                         borderRadius: 12,
                         borderColor: '#1B4298',
-                        margin: 5
+                        width: 80,
+                        height: 80,
+                        marginRight: 10
                       }}
                     >
-                      <Text>Nov</Text>
+                      <IconButton
+                        style={{ marginLeft: 'auto', marginRight: 'auto' }}
+                        icon={'calendar'}
+                        size={24}
+                        color={'#1B4298'}
+                      ></IconButton>
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          lineHeight: 19,
+                          fontFamily: 'Corbel',
+                          alignItems: 'center',
+                          textAlign: 'center',
+                          color: '#1B4298'
+                        }}
+                      >
+                        Oct
+                      </Text>
                     </View>
                     <View
                       style={{
-                        borderWidth: 1,
-                        padding: 20,
+                        borderWidth: 2,
                         borderRadius: 12,
                         borderColor: '#1B4298',
-                        margin: 5
+                        width: 80,
+                        height: 80,
+                        marginRight: 10
                       }}
                     >
-                      <Text>Nov</Text>
+                      <IconButton
+                        style={{ marginLeft: 'auto', marginRight: 'auto' }}
+                        icon={'calendar'}
+                        size={24}
+                        color={'#1B4298'}
+                      ></IconButton>
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          lineHeight: 19,
+                          fontFamily: 'Corbel',
+                          alignItems: 'center',
+                          textAlign: 'center',
+                          color: '#1B4298'
+                        }}
+                      >
+                        Dec
+                      </Text>
                     </View>
                     <View
                       style={{
-                        borderWidth: 1,
-                        padding: 20,
+                        borderWidth: 2,
                         borderRadius: 12,
                         borderColor: '#1B4298',
-                        margin: 5
+                        width: 80,
+                        height: 80,
+                        marginRight: 10
                       }}
                     >
-                      <Text>Nov</Text>
+                      <IconButton
+                        style={{ marginLeft: 'auto', marginRight: 'auto' }}
+                        icon={'calendar'}
+                        size={24}
+                        color={'#1B4298'}
+                      ></IconButton>
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          lineHeight: 19,
+                          fontFamily: 'Corbel',
+                          alignItems: 'center',
+                          textAlign: 'center',
+                          color: '#1B4298'
+                        }}
+                      >
+                        Dec
+                      </Text>
                     </View>
                   </View>
                 </View>
               </View>
 
-              <TouchableOpacity
-                style={[styles.loginButton, styles.btnSearch]}
-                onPress={() => {
-                  sendWen(`${dateValue}${secondDateValue}`)
-                }}
-              >
-                <Text style={styles.loginButtonText}>
-                  <AntDesign name="search1" size={20} color="#1B4298" /> Search
-                </Text>
-              </TouchableOpacity>
+              {tabsActive === 'flexible' && (
+                <TouchableOpacity
+                  style={[styles.calendarBtnSearch]}
+                  onPress={() => {
+                    setTabsActive('calendar')
+                  }}
+                >
+                  <Text style={styles.loginButtonText}>
+                    <AntDesign name="search1" size={20} color="#1B4298" /> Search
+                  </Text>
+                </TouchableOpacity>
+              )}
+              {tabsActive === 'calendar' && (
+                <TouchableOpacity
+                  style={[styles.calendarBtnSearch]}
+                  onPress={() => {
+                    sendWen(`${dateValue}${secondDateValue}`)
+                  }}
+                >
+                  <Text style={styles.loginButtonText}>
+                    <AntDesign name="search1" size={20} color="#1B4298" /> Search
+                  </Text>
+                </TouchableOpacity>
+              )}
             </View>
           </View>
         </Modal>
@@ -441,7 +659,7 @@ const Home = (props: any) => {
             <View
               style={{
                 backgroundColor: 'white',
-                width: '70%',
+                width: '90%',
                 height: '50%',
                 maxHeight: 400,
                 borderRadius: 20
@@ -531,7 +749,7 @@ const Home = (props: any) => {
             <View
               style={{
                 backgroundColor: 'white',
-                width: '85%',
+                width: '90%',
                 height: '50%',
                 maxHeight: 350,
                 borderRadius: 20

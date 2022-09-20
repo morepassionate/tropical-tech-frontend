@@ -5,7 +5,7 @@ import LocationIcon from '../../assets/icons/Location'
 import COLORS from '../../Constants/styles'
 import styles from './styles'
 
-const LocationSearch = ({ navigation }: any) => {
+const LocationSearch = () => {
   return (
     <View style={styles.allPage}>
       <View style={styles.container}>

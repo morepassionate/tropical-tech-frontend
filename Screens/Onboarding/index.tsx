@@ -156,9 +156,10 @@ const styles = StyleSheet.create({
     borderRadius: 30
   },
   chevronText: {
-    paddingHorizontal: 12,
-    fontSize: 30,
-    bottom: 2,
+    paddingHorizontal: 15,
+    fontSize: 25,
+    lineHeight: 25,
+    // bottom: 2,
     color: COLORS.primary,
     fontFamily: 'Corbel-Bold'
   },

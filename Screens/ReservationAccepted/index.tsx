@@ -31,7 +31,7 @@ const ReservationAccepted = ({ navigation }: { navigation: any }) => {
         <View style={styles.navContainer}>
           <IconButton
             icon={'chevron-left'}
-            size={30}
+            size={40}
             style={styles.notMargin}
             onPress={() => navigation.goBack()}
           />
@@ -48,16 +48,16 @@ const ReservationAccepted = ({ navigation }: { navigation: any }) => {
         <Text style={styles.h1}>Your reservation is accepted</Text>
         <Image
           source={{
-            uri: 'https://cdn.pixabay.com/photo/2017/08/10/16/11/burj-al-arab-2624317__340.jpg'
+            uri: 'https://cf.bstatic.com/xdata/images/hotel/square200/381306642.webp?k=449bd6750c9e9c663fcd6ce7d1c2f5c36e1ae248d6424bb06dcd9fbe6a79394d&o=&s=1'
           }}
           resizeMode={'cover'}
           style={{ width: '100%', height: 215, borderRadius: 12, marginTop: 8 }}
         />
         <Text style={[styles.corbel, styles.reservation]}>Reservation details</Text>
         <Text style={[styles.corbel]}>Confirmation code</Text>
-        <Text style={[styles.corbel]}>{`KFDKADBF5`}</Text>
+        <Text style={[styles.corbel]}>{`KFDKADBFS`}</Text>
 
-        <Text style={[styles.corbel, styles.title, { marginTop: 17 }]}>Hotel Name</Text>
+        <Text style={[styles.corbel, styles.title, { marginTop: 25 }]}>Hotel Name</Text>
         <View style={styles.rowContentLined}>
           <View style={{ width: '50%' }}>
             <Text style={[styles.startEnd]}>Starts</Text>
@@ -75,7 +75,7 @@ const ReservationAccepted = ({ navigation }: { navigation: any }) => {
         {mock.map((item, index) => (
           <TouchableOpacity
             key={`${item}@${index}`}
-            style={[styles.rowContentLined, { alignItems: 'center' }]}
+            style={[styles.rowContentLined, { alignItems: 'center', paddingVertical: 5 }]}
             onPress={() => {
               if (index === 0) {
                 const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' })
@@ -111,7 +111,7 @@ const ReservationAccepted = ({ navigation }: { navigation: any }) => {
               }}
             >
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <IconButton style={styles.notMargin} icon={item.icon} size={25} />
+                <IconButton style={styles.notMargin} icon={item.icon} size={26} />
                 <Text style={[styles.corbel, { marginLeft: 33, fontSize: 16 }]}>{item.title}</Text>
               </View>
               <IconButton style={styles.notMargin} icon={'chevron-right'} size={32} />

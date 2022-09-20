@@ -1,5 +1,6 @@
 import React from 'react'
 import { View, StyleSheet, Image, Text } from 'react-native'
+import { useRecoilBridgeAcrossReactRoots_UNSTABLE } from 'recoil'
 import COLORS from '../../Constants/styles'
 
 type ReviewsProps = {
@@ -16,10 +17,12 @@ const Reviews: React.FC<ReviewsProps> = (props) => {
         <Image source={{ uri: userImage }} resizeMode={'cover'} style={styles.imgStyle} />
         <View>
           <Text style={styles.userText}>{`User`}</Text>
-          <Text style={styles.dateText}>{`August 2021`}</Text>
+          <Text style={styles.dateText}>{dateOfPost}</Text>
         </View>
       </View>
-      <Text style={styles.comment}>{`Comment, Comment, Comment`}</Text>
+      <Text style={styles.comment} numberOfLines={4} ellipsizeMode="tail">
+        {comment}
+      </Text>
     </View>
   )
 }
@@ -45,12 +48,14 @@ const styles = StyleSheet.create({
   },
   userText: {
     fontSize: 18,
-    fontFamily: 'Corbel'
+    fontFamily: 'Corbel',
+    fontWeight: 'bold'
   },
   dateText: {
     fontSize: 14,
     fontFamily: 'Corbel',
-    color: COLORS.primary70
+    color: 'rgba(27, 102, 253, 0.5)',
+    lineHeight: 17
   },
   comment: {
     paddingHorizontal: 17,

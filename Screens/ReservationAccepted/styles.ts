@@ -17,13 +17,16 @@ const styles = StyleSheet.create({
     margin: 0
   },
   container: {
-    marginHorizontal: 18
+    marginHorizontal: 20
   },
   corbel: {
-    fontFamily: 'Corbel'
+    fontFamily: 'Corbel',
+    fontSize: 16,
+    lineHeight: 19
   },
   title: {
     fontSize: 24,
+    lineHeight: 29,
     fontWeight: 'bold',
     marginBottom: 10
   },
@@ -34,9 +37,10 @@ const styles = StyleSheet.create({
   },
   navContainer: {
     flexDirection: 'row',
+    marginLeft: -30,
     justifyContent: 'space-around',
     alignItems: 'center',
-    marginTop: 20
+    marginTop: 10
   },
   point: {
     fontSize: 20,
@@ -53,11 +57,13 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontFamily: 'Corbel',
     fontWeight: 'bold',
-    marginTop: 30
+    marginTop: 30,
+    lineHeight: 39
   },
   reservation: {
     fontSize: 24,
-    marginTop: 26,
+    marginTop: 30,
+    fontWeight: 'bold',
     marginBottom: 20
   },
   bold: {
@@ -66,6 +72,7 @@ const styles = StyleSheet.create({
   startEnd: {
     fontFamily: 'Corbel',
     fontWeight: 'bold',
+    fontSize: 16,
     marginBottom: 7
   }
 })

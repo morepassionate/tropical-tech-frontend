@@ -33,42 +33,57 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.orange,
     width: 115,
     marginTop: 5,
-    borderRadius: 10,
+    borderRadius: 20,
     height: 20
   },
   pinText: {
     fontSize: 14,
     color: COLORS.red,
-    textAlign: 'center'
+    textAlign: 'center',
+    fontFamily: 'Corbel'
   },
   buttonStyle: {
     backgroundColor: COLORS.primary,
-    marginHorizontal: 25,
-    borderRadius: 20,
+    borderRadius: 50,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
     marginTop: 40,
-    marginBottom: 70
+    marginBottom: 70,
+    width: '100%'
   },
   title: {
     fontSize: 24,
-    fontFamily: 'Corbel-Bold',
-    marginTop: 15
+    fontFamily: 'Corbel',
+    marginTop: 15,
+    lineHeight: 29,
+    fontWeight: 'bold'
   },
   boldText: {
-    fontFamily: 'Corbel-Bold'
+    fontFamily: 'Corbel',
+    fontSize: 16,
+    lineHeight: 19,
+    fontWeight: 'bold'
+  },
+  info: {
+    fontFamily: 'Corbel',
+    fontSize: 16,
+    lineHeight: 19
   },
   policy: {
     fontSize: 16,
-    fontFamily: 'Corbel-Bold',
+    fontFamily: 'Corbel',
     marginTop: 24,
-    marginBottom: 15
+    marginBottom: 15,
+    fontWeight: 'bold'
   },
   vertical12: {
     marginVertical: 6
   },
   requiredCard: {
     marginLeft: 20,
-    fontFamily: 'Corbel-Bold',
+    fontFamily: 'Corbel',
     fontSize: 16,
+    fontWeight: 'bold',
     color: COLORS.error,
     textAlign: 'center'
   }

@@ -85,7 +85,10 @@ function CardBestDeals(props: any) {
               >
                 <View style={styles.containerCard}>
                   <Image style={styles.imgCard} source={{ uri: item.image }} />
-                  <Text style={styles.text}>{item.name}</Text>
+                  <Text>
+                    <Text style={styles.textTown}>{item.name} </Text>
+                    <Text style={styles.textCountry}>{item.country}</Text>
+                  </Text>
                 </View>
               </TouchableOpacity>
             )

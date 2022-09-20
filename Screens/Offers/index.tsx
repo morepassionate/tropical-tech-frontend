@@ -1,6 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { View, Text, ScrollView, Image, SafeAreaView, TouchableOpacity, Modal } from 'react-native'
+import {
+  View,
+  Text,
+  ScrollView,
+  Image,
+  FlatList,
+  SafeAreaView,
+  TouchableOpacity,
+  Modal
+} from 'react-native'
 import { Button, Checkbox, IconButton, TextInput } from 'react-native-paper'
+import { white } from 'react-native-paper/lib/typescript/styles/colors'
 import Carousel from 'react-native-snap-carousel'
 import FilterIcon from '../../assets/icons/Filter'
 import LocationIcon from '../../assets/icons/Location'
@@ -9,6 +19,7 @@ import CardBestDeals from '../../Components/CardBestDeals'
 import CardDestinationIdea from '../../Components/CardDestinationIdeas'
 import CardMostPopular from '../../Components/CardMostPopular'
 import LightButton from '../../Components/LightButton'
+import ModalReviews from '../../Components/ModalReviews'
 import COLORS from '../../Constants/styles'
 import { dataHotel, destinationIdeas, popularHotels } from '../../data'
 import RenderHotelComponent from './components/RenderHotel'
@@ -45,6 +56,8 @@ const Offers = ({ navigation }: any) => {
   const [dateSearch, setDateSearch] = useState('')
   const [personsAndRooms, setPersonsAndRooms] = useState('')
   const [filterActive, setFilterActive] = useState('Normal') //Normal ,Search, SortAsc, SortDesc, Price
+  const [minPrice, setMinPrice] = useState('')
+  const [maxPrice, setMaxPrice] = useState('')
 
   const searchFilter = dataHotel.filter((item) => {
     return (
@@ -54,7 +67,7 @@ const Offers = ({ navigation }: any) => {
   })
 
   const sortFilterAsc = dataHotel.sort((item) => {
-    return item.value > 0 ? -1 : 1
+    return item.value > item.value ? -1 : 1
   })
 
   const sortFilterDesc = dataHotel.sort((item) => {
@@ -78,18 +91,18 @@ const Offers = ({ navigation }: any) => {
       case 'Price':
         return priceFilter
       default:
-        return []
+        return dataHotel
     }
   }
   useEffect(() => {
-    setFilterActive('Normal')
+    // setFilterActive('Normal')
     console.log(getRenderActive(filterActive))
   }, [])
 
   const previousPrices = [10, 20, 25, 30, 15, 19]
   const mostPrices = [40, 35, 55, 15, 20, 25, 27, 30, 15, 10]
 
-  const renderItem = ({ item }: any) => {
+  const renderItem = ({ item, index }: any) => {
     return (
       <View style={styles.carouselItem}>
         <Image style={styles.imgHotel} source={{ uri: item.img }} />
@@ -156,7 +169,7 @@ const Offers = ({ navigation }: any) => {
         {/* <Text style={styles.mostPopularText}>Most popular</Text> */}
         <CardMostPopular />
       </View>
-      {getRenderActive(filterActive).map((item, index) => {
+      {getRenderActive(filterActive).map((item: ItemProps, index: number) => {
         if (index < 3) {
           return (
             <View
@@ -245,7 +258,7 @@ const Offers = ({ navigation }: any) => {
         Load more
       </Button>
       <Modal
-        animationType={'slide'}
+        animationType={'fade'}
         transparent={true}
         visible={modalSearch}
         onRequestClose={() => setModalSearch(false)}
@@ -346,11 +359,7 @@ const Offers = ({ navigation }: any) => {
             />
             <Button
               icon={{ direction: 'ltr', source: 'magnify' }}
-              labelStyle={{
-                textTransform: 'capitalize',
-                paddingTop: 5,
-                color: COLORS.primary
-              }}
+              labelStyle={{ textTransform: 'capitalize', paddingTop: 5, color: COLORS.primary }}
               style={styles.modalSearch}
               onPress={() => {
                 setModalSearch(false)
@@ -359,13 +368,7 @@ const Offers = ({ navigation }: any) => {
             >
               Search
             </Button>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-            >
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
               <Text style={{ fontFamily: 'Corbel', fontSize: 16, color: '#5163B0' }}>
                 I'm travelling for work
               </Text>
@@ -395,9 +398,14 @@ const Offers = ({ navigation }: any) => {
             style={{
               backgroundColor: 'white',
               width: '65%',
-              height: '30%',
+              height: '25%',
               borderRadius: 20,
-              paddingHorizontal: 22
+              paddingHorizontal: 22,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.25,
+              shadowRadius: 5,
+              elevation: 5
             }}
           >
             <IconButton
@@ -462,7 +470,12 @@ const Offers = ({ navigation }: any) => {
               height: '45%',
               borderRadius: 20,
               padding: 10,
-              marginTop: 20
+              marginTop: 20,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.25,
+              shadowRadius: 5,
+              elevation: 5
             }}
           >
             <IconButton
@@ -520,33 +533,28 @@ const Offers = ({ navigation }: any) => {
               }}
             />
 
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                marginBottom: 40
-              }}
-            >
+            <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: 40 }}>
               <View
-                style={{
-                  borderWidth: 1,
-                  borderColor: '#DEE9FF',
-                  borderRadius: 12,
-                  width: '35%'
-                }}
+                style={{ borderWidth: 1, borderColor: '#DEE9FF', borderRadius: 12, width: '35%' }}
               >
                 <Text style={{ fontFamily: 'Corbel', fontSize: 16, paddingHorizontal: 5 }}>
                   min. price
                 </Text>
-                <Text
+                <TextInput
+                  mode={'flat'}
                   style={{
+                    backgroundColor: 'white',
                     fontFamily: 'Corbel-Bold',
                     fontSize: 16,
-                    paddingHorizontal: 5
+                    paddingHorizontal: 5,
+                    height: 30,
+                    borderRadius: 12
                   }}
+                  value={minPrice}
+                  onChangeText={(e) => setMinPrice(e)}
                 >
-                  €0
-                </Text>
+                  <Text>$</Text>
+                </TextInput>
               </View>
               <View
                 style={{
@@ -558,34 +566,29 @@ const Offers = ({ navigation }: any) => {
                 }}
               />
               <View
-                style={{
-                  borderWidth: 1,
-                  borderColor: '#DEE9FF',
-                  borderRadius: 12,
-                  width: '35%'
-                }}
+                style={{ borderWidth: 1, borderColor: '#DEE9FF', borderRadius: 12, width: '35%' }}
               >
                 <Text style={{ fontFamily: 'Corbel', fontSize: 16, paddingHorizontal: 5 }}>
                   max. price
                 </Text>
-                <Text
+                <TextInput
                   style={{
+                    backgroundColor: 'white',
                     fontFamily: 'Corbel-Bold',
                     fontSize: 16,
-                    paddingHorizontal: 5
+                    paddingHorizontal: 5,
+                    height: 30,
+                    borderRadius: 12
                   }}
+                  value={maxPrice}
+                  onChangeText={(e) => setMaxPrice(e)}
                 >
-                  €0
-                </Text>
+                  <Text>$</Text>
+                </TextInput>
               </View>
             </View>
             <View
-              style={{
-                height: 1,
-                backgroundColor: '#05233A',
-                width: '90%',
-                alignSelf: 'center'
-              }}
+              style={{ height: 1, backgroundColor: '#05233A', width: '90%', alignSelf: 'center' }}
             />
             <View
               style={{

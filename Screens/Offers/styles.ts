@@ -14,7 +14,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 37,
     marginTop: 40,
     fontFamily: 'Corbel',
-    fontSize: 16
+    fontSize: 16,
+    lineHeight: 20
   },
   text: {
     fontSize: 16,
@@ -207,7 +208,12 @@ const styles = StyleSheet.create({
   modalSearchContainer: {
     backgroundColor: 'white',
     width: '90%',
-    height: '70%',
+    height: '60%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 5,
+    elevation: 5,
     borderBottomRightRadius: 20,
     borderBottomLeftRadius: 20,
     paddingHorizontal: 22

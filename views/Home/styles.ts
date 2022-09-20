@@ -1,4 +1,6 @@
 import { StyleSheet } from 'react-native'
+import { useRecoilBridgeAcrossReactRoots_UNSTABLE } from 'recoil'
+import COLORS from '../../Constants/styles'
 
 const styles = StyleSheet.create({
   container: {
@@ -9,7 +11,13 @@ const styles = StyleSheet.create({
     height: 'auto',
     padding: 20
   },
-
+  buttonStyle: {
+    backgroundColor: 'white',
+    marginHorizontal: '25%',
+    borderRadius: 20,
+    color: '#000',
+    marginVertical: 6.5
+  },
   search: {
     width: '100%'
   },
@@ -34,6 +42,11 @@ const styles = StyleSheet.create({
     width: 163,
     marginLeft: 'auto',
     marginRight: 'auto'
+    // backgroundColor: '#fff',
+    // marginHorizontal: '25%',
+    // borderRadius: 20,
+    // marginVertical: 6.5,
+    // paddingVertical: 3.5
   },
   loginButtonText: {
     fontSize: 16,
@@ -41,7 +54,17 @@ const styles = StyleSheet.create({
     fontFamily: 'Corbel',
     fontWeight: 'bold'
   },
-
+  loginWhereModalButton: {
+    padding: 12,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    borderRadius: 25,
+    marginTop: 5,
+    marginBottom: 10,
+    width: 163,
+    marginLeft: 'auto',
+    marginRight: 25
+  },
   input: {
     marginBottom: 15,
     backgroundColor: '#DEE9FF',
@@ -51,7 +74,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
     shadowRadius: 5,
-    //shadowBlur: 4,
     elevation: 5,
     padding: 15,
     textAlign: 'center'
@@ -104,7 +126,28 @@ const styles = StyleSheet.create({
     marginTop: 15
   },
   modalView: {
-    width: 320,
+    width: '100%',
+    height: '80%',
+    textAlign: 'left',
+    backgroundColor: 'white',
+    borderRadius: 20,
+    paddingTop: 50,
+    paddingBottom: 50,
+    paddingLeft: 25,
+    paddingRight: 25,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  modalViewTyping: {
+    width: '100%',
+    height: '100%',
     textAlign: 'left',
     backgroundColor: 'white',
     borderRadius: 20,
@@ -126,6 +169,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     color: '#000',
     fontSize: 21,
+    fontWeight: 'bold',
     fontFamily: 'Corbel',
     alignSelf: 'flex-start'
   },
@@ -142,16 +186,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 22
   },
+  modalHeaderCloseText: {
+    fontSize: 20,
+    color: '#8296CA',
+    marginRight: 10
+  },
+  modalHeaderContent: {
+    flexGrow: 1
+  },
+  modalHeader: {
+    flexDirection: 'row'
+  },
   inputModal: {
-    width: 270,
-    marginBottom: 15,
+    width: 350,
+    marginBottom: 20,
     backgroundColor: '#DEE9FF',
-    borderRadius: 15,
-    height: 48,
+    borderRadius: 25,
+    paddingBottom: 12,
+    height: 43,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
-    shadowRadius: 2,
+    shadowRadius: 10,
     elevation: 5,
     padding: 15,
     textAlign: 'center',
@@ -162,11 +218,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'flex-start',
-    marginBottom: 10
+    marginBottom: 25
   },
   textIcons: {
     color: '#05233A',
-    marginLeft: 5,
+    marginLeft: 15,
     fontFamily: 'Corbel',
     fontSize: 16
   },
@@ -177,8 +233,21 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
     shadowRadius: 2,
-    //shadowBlur: 4,
     elevation: 5
+  },
+  calendarBtnSearch: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 2,
+    elevation: 5,
+    padding: 12,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    borderRadius: 25,
+    marginBottom: 10,
+    width: 163,
+    marginLeft: 'auto'
   },
   buttons: {
     flexDirection: 'row',

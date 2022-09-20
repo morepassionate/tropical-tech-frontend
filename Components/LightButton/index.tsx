@@ -35,7 +35,12 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     fontFamily: 'Corbel',
-    fontSize: 16
+    fontSize: 16,
+    color: '#4A5CAE',
+    fontWeight: 'bold',
+    lineHeight: 19,
+    alignItems: 'center',
+    textAlign: 'center'
   }
 })
 

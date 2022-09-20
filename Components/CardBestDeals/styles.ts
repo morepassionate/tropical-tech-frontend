@@ -28,6 +28,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Corbel',
     fontWeight: 'bold'
+  },
+  textTown: {
+    padding: 5,
+    fontSize: 16,
+    fontFamily: 'Corbel',
+    fontWeight: 'bold'
+  },
+  textCountry: {
+    padding: 5,
+    fontSize: 16,
+    fontFamily: 'Corbel'
   }
 })
 
