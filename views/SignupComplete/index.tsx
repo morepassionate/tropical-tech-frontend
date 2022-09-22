@@ -33,7 +33,7 @@ const SignupComplete = (props: any) => {
 
   async function generateCode(id: number) {
     //getUser();
-    console.log('ID 123 = ' + id)
+    // console.log('ID 123 = ' + id)
     let response = await fetch(`${config.urlRoot}signup/generateCode`, {
       method: 'POST',
       headers: {
@@ -61,7 +61,7 @@ const SignupComplete = (props: any) => {
     })
     let json = await response.json()
     if (json.success === true) {
-      console.log('OK - Success - ' + json)
+      // console.log('OK - Success - ' + json)
       // props.navigation.navigate('SignupStep2');
     } else {
       setErrorMsg(json.message)

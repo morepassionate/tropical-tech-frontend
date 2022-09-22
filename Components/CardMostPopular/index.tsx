@@ -1,184 +1,101 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import React, { useState, useEffect } from 'react'
-import {
-  View,
-  Text,
-  Image,
-  ScrollView,
-  TouchableOpacity,
-  SectionList,
-  SafeAreaView,
-  LogBox
-} from 'react-native'
-import styles from './styles'
-import config from '../../config/config.json'
+import React, { useEffect } from 'react'
+import { View, Text, Image, ScrollView, TouchableOpacity, LogBox } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { dataHotel } from '../../data'
-const img1 = require('../../assets/img/img1.png')
-const img2 = require('../../assets/img/img2.png')
-const img3 = require('../../assets/img/img3.png')
-const img4 = require('../../assets/img/img2.png')
-const img5 = require('../../assets/img/img1.png')
 
-interface DataHotelType {
-  name: string
-  image: string
-  ratings: number
-  reviews: number
-  location: {
-    lat: number
-    lon: number
-    address: string
-  }
-  beds: 3
-  value: 1000
-  taxesAndChargesInclude: boolean
-  freeCancellation: boolean
-  noPrepaymentNeeded: boolean
-  city: string
-  country: string
-  description: string
-}
+import * as Progress from 'react-native-progress'
+import { HotelInfoProps } from '../../Constants/data'
+
+import { hotelbedImg } from '../../Constants/styles'
+import styles from './styles'
+import { useRecoilValue } from 'recoil'
+import { IsMostPopularLoading, mostPopularHotelData } from '../../assets/atoms/MostPopularHotelData'
 
 const CardMostPopular = () => {
   const navigation = useNavigation()
-  const [data, setData] = useState(null)
-  const [code, setCode] = useState(null)
-  const [code1, setCode1] = useState(null)
-  const [code2, setCode2] = useState(null)
-  const [code3, setCode3] = useState(null)
-  const [code4, setCode4] = useState(null)
-  const [code5, setCode5] = useState(null)
-  const [hotelName, setHotelName] = useState(null)
-  const [hotelName1, setHotelName1] = useState(null)
-  const [hotelName2, setHotelName2] = useState(null)
-  const [hotelName3, setHotelName3] = useState(null)
-  const [hotelName4, setHotelName4] = useState(null)
-  const [hotelName5, setHotelName5] = useState(null)
-
-  const [city, setCity] = useState(null)
-  const [city1, setCity1] = useState(null)
-  const [city2, setCity2] = useState(null)
-  const [city3, setCity3] = useState(null)
-  const [city4, setCity4] = useState(null)
-  const [city5, setCity5] = useState(null)
-
-  const [country, setCountry] = useState(null)
-  const [description, setDescription] = useState(null)
-  const [gallery, setGallery] = useState(null)
-  const [gallery1, setGallery1] = useState(null)
-  const [gallery2, setGallery2] = useState(null)
-  const [gallery3, setGallery3] = useState(null)
-  const [gallery4, setGallery4] = useState(null)
-  const [gallery5, setGallery5] = useState(null)
+  const mostPopularHotels = useRecoilValue(mostPopularHotelData)
+  const isLoading = useRecoilValue(IsMostPopularLoading)
 
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
   }, [])
 
-  // useEffect(() => {
-  //   getHotels()
-  // }, [])
-
-  //Pegar o id do usuário
-  // async function getHotels() {
-  //   //console.log(config.urlRoot);
-  //   let response = await fetch(`${config.urlRoot}hotels`, {
-  //     method: 'GET',
-  //     headers: {
-  //       Accept: 'application/json',
-  //       'Content-Type': 'application/json'
-  //     }
-  //   })
-
-  //   let json = await response.json()
-
-  //   //setData(json);
-  //   //setBackground(j);
-  //   setCode(json.hotels[9].code)
-  //   setCode1(json.hotels[1].code)
-  //   setCode2(json.hotels[2].code)
-  //   setCode3(json.hotels[3].code)
-  //   setCode4(json.hotels[4].code)
-  //   setCode5(json.hotels[5].code)
-
-  //   setHotelName(json.hotels[9].name.content)
-  //   setHotelName1(json.hotels[1].name.content)
-  //   setHotelName2(json.hotels[2].name.content)
-  //   setHotelName3(json.hotels[3].name.content)
-  //   setHotelName4(json.hotels[4].name.content)
-  //   setHotelName5(json.hotels[5].name.content)
-  //   setCity(json.hotels[9].city.content)
-  //   setCity1(json.hotels[1].city.content)
-  //   setCity2(json.hotels[2].city.content)
-  //   setCity3(json.hotels[3].city.content)
-  //   setCity4(json.hotels[4].city.content)
-  //   setCity5(json.hotels[5].city.content)
-
-  //   //setCountry(json.hotels[0].country.description.content);
-  //   setGallery(config.hotel.urlPhotoBg + json.hotels[7].images[0].path)
-  //   setGallery1(config.hotel.urlPhotoBg + json.hotels[1].images[0].path)
-  //   setGallery2(config.hotel.urlPhotoBg + json.hotels[2].images[0].path)
-  //   setGallery3(config.hotel.urlPhotoBg + json.hotels[3].images[0].path)
-  //   setGallery4(config.hotel.urlPhotoBg + json.hotels[4].images[0].path)
-  //   setGallery5(config.hotel.urlPhotoBg + json.hotels[5].images[0].path)
-
-  // }
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Most Popular</Text>
-      <ScrollView horizontal style={styles.scrollview} showsHorizontalScrollIndicator={false}>
-        {dataHotel.map((item, index) => {
-          const limit = 4
-          if (index < limit) {
-            return (
-              <TouchableOpacity
-                key={`${item.name}%${index}`}
-                onPress={() =>
-                  navigation.navigate('HotelDetails' as never, { code: index } as never)
-                }
-              >
-                <View style={styles.containerCard}>
-                  <Image style={styles.imgCard} source={{ uri: item.image }} />
-                  <View>
-                    <Text numberOfLines={1} ellipsizeMode="tail" style={styles.text}>
-                      {item.city}
-                    </Text>
-                    <Text numberOfLines={1} ellipsizeMode="tail" style={styles.subtext}>
-                      {item.country}
-                    </Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            )
-          }
-        })}
-      </ScrollView>
-      <ScrollView horizontal style={styles.scrollview} showsHorizontalScrollIndicator={false}>
-        {dataHotel.map((item, index) => {
-          const min = 4
-          const limit = 9
-          if (index > min && index < limit) {
-            return (
-              <TouchableOpacity
-                key={`${item.name}!${index}`}
-                onPress={() =>
-                  navigation.navigate('HotelDetails' as never, { code: index } as never)
-                }
-              >
-                <View style={styles.containerCard}>
-                  <Image style={styles.imgCard} source={{ uri: item.image }} />
-                  <View>
-                    <Text style={styles.text}>{item.city}</Text>
-                    <Text style={styles.subtext}>{item.country}</Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            )
-          }
-        })}
-      </ScrollView>
+      {mostPopularHotels.length !== 0 || !isLoading.isLoading ? (
+        <View>
+          <ScrollView horizontal style={styles.scrollview} showsHorizontalScrollIndicator={false}>
+            {mostPopularHotels.map((item: HotelInfoProps, index: number) => {
+              const limit = Math.floor(mostPopularHotels.length / 2)
+              if (index < limit) {
+                return (
+                  <TouchableOpacity
+                    key={`${item.name}%${index}`}
+                    onPress={() =>
+                      navigation.navigate('HotelDetails' as never, { code: index } as never)
+                    }
+                  >
+                    <View style={styles.containerCard}>
+                      <Image
+                        style={styles.imgCard}
+                        source={{
+                          uri: `${hotelbedImg}${item.image}`
+                        }}
+                      />
+                      <View>
+                        <Text numberOfLines={1} ellipsizeMode="tail" style={styles.text}>
+                          {item.city}
+                        </Text>
+                        <Text numberOfLines={1} ellipsizeMode="tail" style={styles.subtext}>
+                          {item.country}
+                        </Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                )
+              }
+            })}
+          </ScrollView>
+          <ScrollView horizontal style={styles.scrollview} showsHorizontalScrollIndicator={false}>
+            {mostPopularHotels.map((item: HotelInfoProps, index: number) => {
+              const min = Math.floor(mostPopularHotels.length / 2)
+              const limit = mostPopularHotels.length
+              if (index >= min && index <= limit) {
+                return (
+                  <TouchableOpacity
+                    key={`${item.name}!${index}`}
+                    onPress={() =>
+                      navigation.navigate('HotelDetails' as never, { code: index } as never)
+                    }
+                  >
+                    <View style={styles.containerCard}>
+                      <Image
+                        style={styles.imgCard}
+                        source={{
+                          uri: `${hotelbedImg}${item.image}`
+                        }}
+                      />
+                      <View>
+                        <Text style={styles.text}>{item.city}</Text>
+                        <Text style={styles.subtext}>{item.country}</Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                )
+              }
+            })}
+          </ScrollView>
+        </View>
+      ) : (
+        <Progress.Circle
+          color="#1B4298"
+          borderWidth={5}
+          size={50}
+          indeterminate={true}
+          style={{ alignItems: 'center', justifyContent: 'center' }}
+        />
+      )}
     </View>
   )
 }

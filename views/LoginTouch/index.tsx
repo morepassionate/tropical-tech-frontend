@@ -45,7 +45,7 @@ const LoginTouch = (props: any) => {
   }
 
   function alert(msg: string) {
-    console.log(msg)
+    // console.log(msg)
   }
 
   //Chama Biometria

@@ -38,7 +38,7 @@ const SignupStep3 = (props: any) => {
 
   //Envio do form com documentos
   async function sendForm() {
-    console.log(userId)
+    // console.log(userId)
     let response = await fetch(`${config.urlRoot}signup/step4`, {
       method: 'POST',
       headers: {

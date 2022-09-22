@@ -18,3 +18,5 @@ export const COLORS = {
 }
 
 export default COLORS
+
+export const hotelbedImg = 'https://photos.hotelbeds.com/giata/original/'

@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     width: 256
   },
   title: {
-    fontSize: 21,
+    fontSize: 24,
     fontFamily: 'Corbel',
     fontWeight: 'bold',
     color: '#05233A',

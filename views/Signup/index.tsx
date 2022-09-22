@@ -41,7 +41,7 @@ const Signup = (props: any) => {
     })
     let json = await response.json()
     if (json.success === true) {
-      console.log('Ok ' + json)
+      // console.log('Ok ' + json)
       let userData = await AsyncStorage.setItem('userData', JSON.stringify(json))
       props.navigation.navigate('SignupStep1')
     } else {

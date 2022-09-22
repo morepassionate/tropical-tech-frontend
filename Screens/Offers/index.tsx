@@ -1,17 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
-import {
-  View,
-  Text,
-  ScrollView,
-  Image,
-  FlatList,
-  SafeAreaView,
-  TouchableOpacity,
-  Modal
-} from 'react-native'
+import { View, Text, ScrollView, TouchableOpacity, Modal } from 'react-native'
 import { Button, Checkbox, IconButton, TextInput } from 'react-native-paper'
-import { white } from 'react-native-paper/lib/typescript/styles/colors'
-import Carousel from 'react-native-snap-carousel'
+import { useRecoilValue } from 'recoil'
+import { IsLoading } from '../../assets/atoms/HotelData'
+import { SearchedHotelData } from '../../assets/atoms/SearchedHotelData'
+import { IsSearchLoading } from '../../assets/atoms/SearchedHotelData'
 import FilterIcon from '../../assets/icons/Filter'
 import LocationIcon from '../../assets/icons/Location'
 import SortIcon from '../../assets/icons/Sort'
@@ -19,34 +12,34 @@ import CardBestDeals from '../../Components/CardBestDeals'
 import CardDestinationIdea from '../../Components/CardDestinationIdeas'
 import CardMostPopular from '../../Components/CardMostPopular'
 import LightButton from '../../Components/LightButton'
-import ModalReviews from '../../Components/ModalReviews'
 import COLORS from '../../Constants/styles'
-import { dataHotel, destinationIdeas, popularHotels } from '../../data'
 import RenderHotelComponent from './components/RenderHotel'
 import styles from './styles'
 
 type ItemProps = {
   name: string
-  image: string
   ratings: number
-  reviews: number
-  location: {
-    lat: number
-    lon: number
-    address: string
-  }
-  beds: number
-  value: number
-  taxesAndChargesInclude: boolean
-  freeCancellation: boolean
-  noPrepaymentNeeded: boolean
-  city: string
+  reviewsCount: number
+  image: string
   country: string
-  description: string
+  city: string
+  address: string
+  coordinates: {
+    longitude: number
+    latitude: number
+  }
+  distance: number
+  roomType: string
+  freeCancellation: boolean
+  price: number
+  noprepaymentneeded: boolean
+  bedType: string
+  from: string
+  to: string
 }
 
 const Offers = ({ navigation }: any) => {
-  const [destinationIndex, setDestinationIndex] = useState(0)
+  const searchedHotelData = useRecoilValue(SearchedHotelData)
   const [travellingForWork, setTravellingForWork] = useState(false)
   const [modalSearch, setModalSearch] = useState(false)
   const [modalSort, setModalSort] = useState(false)
@@ -59,57 +52,44 @@ const Offers = ({ navigation }: any) => {
   const [minPrice, setMinPrice] = useState('')
   const [maxPrice, setMaxPrice] = useState('')
 
-  const searchFilter = dataHotel.filter((item) => {
+  const searchFilter = searchedHotelData.filter((item: ItemProps) => {
     return (
       item.city.charAt(0) === placeSearch.charAt(0) ||
       item.country.charAt(0) === placeSearch.charAt(0)
     )
   })
 
-  const sortFilterAsc = dataHotel.sort((item) => {
-    return item.value > item.value ? -1 : 1
+  const sortFilterAsc = searchedHotelData.sort((a: ItemProps, b: ItemProps) => {
+    return a.price - b.price
   })
 
-  const sortFilterDesc = dataHotel.sort((item) => {
-    return item.value > item.value ? -1 : 1
+  const sortFilterDesc = searchedHotelData.sort((a: ItemProps, b: ItemProps) => {
+    return b.price - a.price
   })
 
-  const priceFilter = dataHotel.sort((item) => {
-    return item.ratings > item.ratings ? -1 : 1
+  const sortDistanceAsc = searchedHotelData.sort((a: ItemProps, b: ItemProps) => {
+    return b.distance - a.distance
   })
 
   const getRenderActive = (item: string) => {
     switch (item) {
       case 'Normal':
-        return dataHotel
+        return searchedHotelData
       case 'Search':
         return searchFilter
       case 'SortAsc':
         return sortFilterAsc
       case 'SortDesc':
         return sortFilterDesc
-      case 'Price':
-        return priceFilter
+      case 'Distance':
+        return sortDistanceAsc
       default:
-        return dataHotel
+        return searchedHotelData
     }
   }
-  useEffect(() => {
-    // setFilterActive('Normal')
-    console.log(getRenderActive(filterActive))
-  }, [])
 
   const previousPrices = [10, 20, 25, 30, 15, 19]
   const mostPrices = [40, 35, 55, 15, 20, 25, 27, 30, 15, 10]
-
-  const renderItem = ({ item, index }: any) => {
-    return (
-      <View style={styles.carouselItem}>
-        <Image style={styles.imgHotel} source={{ uri: item.img }} />
-        <Text style={styles.text}>{item.text}</Text>
-      </View>
-    )
-  }
 
   return (
     <ScrollView style={{ backgroundColor: 'white' }}>
@@ -166,7 +146,6 @@ const Offers = ({ navigation }: any) => {
       </View>
       <Text style={styles.covidAlert}>Review COVID-19 travel restrictions before you book.</Text>
       <View style={styles.mostPopularContainer}>
-        {/* <Text style={styles.mostPopularText}>Most popular</Text> */}
         <CardMostPopular />
       </View>
       {getRenderActive(filterActive).map((item: ItemProps, index: number) => {
@@ -178,14 +157,21 @@ const Offers = ({ navigation }: any) => {
             >
               <RenderHotelComponent
                 hotelName={item.name}
-                imageHotel={item.image}
-                numberOfBeds={item.beds}
                 ratings={item.ratings}
-                value={item.value}
+                reviewsCount={item.reviewsCount}
+                hotelImage={item.image}
+                country={item.country}
+                city={item.city}
+                address={item.address}
+                coordinates={item.coordinates}
+                distance={item.distance}
+                roomType={item.roomType}
                 freeCancellation={item.freeCancellation}
-                noPrepaymentNeeded={item.noPrepaymentNeeded}
-                taxesAndCharges={item.taxesAndChargesInclude}
-                reviewsCount={item.reviews}
+                price={item.price}
+                noprepaymentneeded={item.noprepaymentneeded}
+                bedType={item.bedType}
+                from={item.from}
+                to={item.to}
                 onPressCard={() =>
                   navigation.navigate('HotelDetails', {
                     code: index
@@ -198,7 +184,7 @@ const Offers = ({ navigation }: any) => {
       })}
 
       <CardDestinationIdea />
-      {dataHotel.map((item, index) => {
+      {searchedHotelData.map((item: ItemProps, index: number) => {
         if (index < 6 && index >= 3) {
           return (
             <View
@@ -207,14 +193,21 @@ const Offers = ({ navigation }: any) => {
             >
               <RenderHotelComponent
                 hotelName={item.name}
-                imageHotel={item.image}
-                numberOfBeds={item.beds}
                 ratings={item.ratings}
-                value={item.value}
+                reviewsCount={item.reviewsCount}
+                hotelImage={item.image}
+                country={item.country}
+                city={item.city}
+                address={item.address}
+                coordinates={item.coordinates}
+                distance={item.distance}
+                roomType={item.roomType}
                 freeCancellation={item.freeCancellation}
-                noPrepaymentNeeded={item.noPrepaymentNeeded}
-                taxesAndCharges={item.taxesAndChargesInclude}
-                reviewsCount={item.reviews}
+                price={item.price}
+                noprepaymentneeded={item.noprepaymentneeded}
+                bedType={item.bedType}
+                from={item.from}
+                to={item.to}
                 onPressCard={() =>
                   navigation.navigate('HotelDetails', {
                     code: index
@@ -227,7 +220,7 @@ const Offers = ({ navigation }: any) => {
       })}
 
       <CardBestDeals />
-      {dataHotel.map((item, index) => {
+      {searchedHotelData.map((item: ItemProps, index: number) => {
         if (index >= 6) {
           return (
             <View
@@ -236,14 +229,21 @@ const Offers = ({ navigation }: any) => {
             >
               <RenderHotelComponent
                 hotelName={item.name}
-                imageHotel={item.image}
-                numberOfBeds={item.beds}
                 ratings={item.ratings}
-                value={item.value}
+                reviewsCount={item.reviewsCount}
+                hotelImage={item.image}
+                country={item.country}
+                city={item.city}
+                address={item.address}
+                coordinates={item.coordinates}
+                distance={item.distance}
+                roomType={item.roomType}
                 freeCancellation={item.freeCancellation}
-                noPrepaymentNeeded={item.noPrepaymentNeeded}
-                taxesAndCharges={item.taxesAndChargesInclude}
-                reviewsCount={item.reviews}
+                price={item.price}
+                noprepaymentneeded={item.noprepaymentneeded}
+                bedType={item.bedType}
+                from={item.from}
+                to={item.to}
                 onPressCard={() =>
                   navigation.navigate('HotelDetails', {
                     code: index

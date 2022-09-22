@@ -17,7 +17,7 @@ import Carousel from 'react-native-snap-carousel'
 
 import styles from './styles'
 import RenderHotelComponent from '../Offers/components/RenderHotel'
-import { dataHotel, popularHotels } from '../../data'
+import { dataHotel } from '../../data'
 import COLORS from '../../Constants/styles'
 import { Button, IconButton, TextInput } from 'react-native-paper'
 import { useRecoilState } from 'recoil'

@@ -99,7 +99,7 @@ const SignupStep1 = (props: any) => {
         })
         let json = await response.json()
         if (json.success === true) {
-          console.log(json)
+          // console.log(json)
           props.navigation.navigate('SignupStep2')
         } else {
           setErrorMsg(json.message)

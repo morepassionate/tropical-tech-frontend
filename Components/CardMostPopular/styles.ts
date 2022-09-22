@@ -21,8 +21,17 @@ const styles = StyleSheet.create({
     height: 65,
     width: 65
   },
+  circle: {
+    backgroundColor: 'transparent',
+    borderRadius: 100,
+    position: 'relative'
+  },
+  progress: {
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
   title: {
-    fontSize: 21,
+    fontSize: 24,
     fontFamily: 'Corbel',
     fontWeight: 'bold',
     color: '#05233A',

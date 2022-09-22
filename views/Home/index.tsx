@@ -1,32 +1,29 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
-  Image,
-  Dimensions,
   View,
   Text,
   ImageBackground,
   TouchableOpacity,
   TextInput,
-  SafeAreaView,
   ScrollView,
   Modal,
   Pressable,
-  SectionList,
   LogBox
 } from 'react-native'
-import { Hoverable } from 'react-native-web-hover'
-import { Calendar, CalendarList, Agenda } from 'react-native-calendars'
-import { Checkbox, IconButton, RadioButton, Switch } from 'react-native-paper'
-import Carousel from 'react-native-snap-carousel'
-import styles from './styles'
+import { Calendar } from 'react-native-calendars'
+import { IconButton, RadioButton } from 'react-native-paper'
 import { AntDesign } from '@expo/vector-icons'
-import { ToggleButton } from 'react-native-paper'
-import { TextInput as TextInputPaper, Button } from 'react-native-paper'
-// import Header from '../../components/Header'
+import { useRecoilState } from 'recoil'
+
+import {
+  getMostPopularHotels,
+  getRecentsearchHotels,
+  getSearchedHotelAll
+} from '../../api/apiCaller'
+
 import CardUpcomingTrips from '../../Components/CardUpcomingTrips'
 import CardDestinationIdeas from '../../Components/CardDestinationIdeas'
 import CardMostPopular from '../../Components/CardMostPopular'
-import CardPropertyType from '../../Components/CardPropertyType'
 import CardBestDeals from '../../Components/CardBestDeals'
 import LocationIcon from '../../assets/icons/Location'
 import IncrementDecrementInputComponent from './components/incrementDecrement'
@@ -34,10 +31,22 @@ import LightButton from '../../Components/LightButton'
 import CartoonPersonIcon from '../../assets/icons/CartoonPerson'
 import DoubleCartoonsIcon from '../../assets/icons/DoubleCartoons'
 import FamilyCartoonsIcon from '../../assets/icons/FamilyCartoons'
-import { Icon } from 'react-native-paper/lib/typescript/components/Avatar/Avatar'
-import { dataHotel } from '../../data'
+
+import { FilterQueryProps } from '../../Constants/data'
+
+import styles from './styles'
+import { hotelData, IsLoading } from '../../assets/atoms/HotelData'
+import { SearchedHotelData, IsSearchLoading } from '../../assets/atoms/SearchedHotelData'
+import { mostPopularHotelData, IsMostPopularLoading } from '../../assets/atoms/MostPopularHotelData'
 
 const Home = (props: any) => {
+  const [_, setHotelData] = useRecoilState(hotelData)
+  const [isLoading, setIsLoading] = useRecoilState(IsLoading)
+  const [__, setSearchedHotelData] = useRecoilState(SearchedHotelData)
+  const [isSearchLoading, setIsSearchLoading] = useRecoilState(IsSearchLoading)
+  const [___, setMostPopularHotels] = useRecoilState(mostPopularHotelData)
+  const [isMostPopularLoading, setIsMostPopularLoading] = useRecoilState(IsMostPopularLoading)
+
   const [modalWhereVisible, setModalWhereVisible] = useState(false)
   const [modalWhenVisible, setModalWhenVisible] = useState(false)
   const [modalHowManyVisible, setModalHowManyVisible] = useState(false)
@@ -50,9 +59,30 @@ const Home = (props: any) => {
 
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
-  }, [])
+    getMostPopularHotels()
+      .then((res) => {
+        setIsMostPopularLoading({ isLoading: false })
+        const data = res.data
+        console.log('most popular hotels', data)
+        setMostPopularHotels(data)
+      })
+      .catch((err) => {
+        setIsMostPopularLoading({ isLoading: false })
+        console.log('most popular error', err)
+      })
 
-  const [value, setValue] = useState()
+    getRecentsearchHotels()
+      .then((res) => {
+        setIsLoading({ isLoading: false })
+        const data = res.data
+        console.log('hotelAtomdata', data)
+        setHotelData(data)
+      })
+      .catch((err) => {
+        setIsLoading({ isLoading: false })
+        console.log('hotelAtomData', err)
+      })
+  }, [])
 
   const [where, setWhere] = useState('')
   const [tabsActive, setTabsActive] = useState('calendar')
@@ -120,23 +150,57 @@ const Home = (props: any) => {
     }
   }, [secondDateValue])
 
-  function sendWhere() {
-    setModalWhereVisible(false)
-    // setWhere(text);
-  }
-  function sendWen(text: string) {
+  function sendWhen(text: string) {
     setTabsActive('calendar')
     setNumberOfDays(1)
-    setDateValue('')
-    setSecondDateValue('')
     setModalWhenVisible(false)
   }
-  // function calendar() {
-  //   setFlexibleBtn()
-  // }
 
-  function sendForm() {
-    console.log('sendForm')
+  function handleSubmitForm() {
+    let filterQuery = {} as FilterQueryProps
+    const currentDate = new Date()
+    const nextDate = new Date(new Date().getTime() + 24 * 3600 * 1000)
+
+    const stay = {
+      checkIn: dateValue === '' ? currentDate.toISOString().split('T')[0] : dateValue,
+      checkOut: secondDateValue === '' ? nextDate.toISOString().split('T')[0] : secondDateValue
+    }
+    filterQuery.stay = stay
+
+    let rooms = 1
+    if (radioRoomsValues === 'Shared') {
+      rooms = 1
+    } else if (radioRoomsValues === 'Single') {
+      rooms = 1
+    } else if (radioRoomsValues === 'Double') {
+      rooms = 2
+    } else {
+      rooms = 3
+    }
+
+    const occupancies = [
+      {
+        rooms: rooms,
+        adults: inputAdults === 0 ? 1 : inputAdults,
+        children: inputChildren + inputInfants
+      }
+    ]
+    filterQuery.occupancies = occupancies
+
+    filterQuery.destination = where
+
+    console.log('filterQuery', filterQuery)
+    getSearchedHotelAll(filterQuery)
+      .then((res) => {
+        setIsSearchLoading({ isLoading: false })
+        const data = res.data
+        console.log('searchedHotelData', data)
+        setSearchedHotelData(data)
+      })
+      .catch((err) => {
+        setIsSearchLoading({ isLoading: false })
+        console.log('error', err)
+      })
   }
 
   const [inputAdults, setInputAdults] = useState(0)
@@ -146,7 +210,6 @@ const Home = (props: any) => {
 
   return (
     <>
-      {/* <Header /> */}
       <ScrollView>
         <ImageBackground
           style={styles.container}
@@ -156,8 +219,17 @@ const Home = (props: any) => {
             <View style={styles.inputBottom}>
               <TextInput
                 style={styles.input}
-                // value={`Adults-${inputAdults}, Children-${inputChildren}, Infants-${inputInfants}, Room-${radioRoomsValues}`}
+                value={
+                  inputAdults === 0 && inputChildren === 0 && inputInfants === 0
+                    ? ''
+                    : `Adults-${inputAdults}, Children-${
+                        inputChildren + inputInfants
+                      }, Room-${radioRoomsValues}`
+                }
                 placeholder="How many rooms & people?"
+                onChangeText={() => {
+                  return
+                }}
                 onFocus={() => {
                   setModalWhenVisible(false)
                   setModalWhereVisible(false)
@@ -168,25 +240,36 @@ const Home = (props: any) => {
             <View style={styles.inputBottom}>
               <TextInput
                 style={styles.input}
-                // value={`${dateValue} - ${secondDateValue}`}
+                value={
+                  dateValue === '' && secondDateValue === ''
+                    ? ''
+                    : `${dateValue} - ${secondDateValue}`
+                }
                 placeholder="When do you want to go?"
                 onFocus={() => {
                   setModalWhenVisible(true), setTabsActive('flexible')
                 }}
-                onChangeText={() => setModalWhenVisible(true)}
+                onChangeText={() => {
+                  return
+                }}
               />
             </View>
             <View style={styles.inputBottom}>
               <TextInput
                 style={styles.input}
-                value={where}
+                value={where === '' ? '' : where}
+                onChangeText={() => {
+                  return
+                }}
                 placeholder="Where are you going?"
                 onFocus={() => setModalWhereVisible(true)}
-                onChangeText={() => setModalWhereVisible(true)}
               />
             </View>
             <View>
-              <TouchableOpacity style={styles.loginButton} onPress={() => sendForm()}>
+              <TouchableOpacity
+                style={styles.loginButton}
+                onPress={() => [handleSubmitForm(), props.navigation.navigate('Offers')]}
+              >
                 <Text style={styles.loginButtonText}>
                   <AntDesign name="search1" size={20} color="#1B4298" style={{ margin: 50 }} />{' '}
                   Search
@@ -230,6 +313,7 @@ const Home = (props: any) => {
               <View style={styles.inputBottom}>
                 <TextInput
                   style={styles.inputModal}
+                  value={where}
                   placeholder="Search for destination"
                   onFocus={() => setWhereFocus(true)}
                   onBlur={() => setWhereFocus(false)}
@@ -295,7 +379,7 @@ const Home = (props: any) => {
                 {!whereFocus && (
                   <TouchableOpacity
                     style={[styles.loginWhereModalButton, styles.btnSearch]}
-                    onPress={() => sendWhere()}
+                    onPress={() => setModalWhereVisible(false)}
                   >
                     <Text style={styles.loginButtonText}>
                       <AntDesign name="search1" size={20} color="#1B4298" /> Search
@@ -331,31 +415,6 @@ const Home = (props: any) => {
                   <Text style={styles.modalTitle}>When do you want to go?</Text>
                 </View>
               </View>
-              {/* <View style={styles.buttons}> */}
-              {/* <Pressable
-                  onPress={() => {
-                    setTabsActive('calendar')
-                  }}
-                  style={
-                    tabsActive == 'calendar'
-                      ? { backgroundColor: '#fff', padding: 10, borderRadius: 25 }
-                      : { padding: 10 }
-                  }
-                >
-                  <Text style={styles.textIcons}>Calendar</Text>
-                </Pressable>
-                <Pressable
-                  style={
-                    tabsActive == 'flexible'
-                      ? { backgroundColor: '#fff', padding: 10, borderRadius: 25 }
-                      : { padding: 10 }
-                  }
-                  onPress={() => {
-                    setTabsActive('flexible')
-                  }}
-                >
-                  <Text style={styles.textIcons}>I'm flexible</Text>
-                </Pressable> */}
               {tabsActive !== 'calendar' && (
                 <LightButton
                   text="Calendar"
@@ -366,7 +425,6 @@ const Home = (props: any) => {
                   }}
                 />
               )}
-              {/* </View> */}
               <View style={{ display: tabsActive === 'calendar' ? 'flex' : 'none' }}>
                 <Calendar
                   markingType={'period'}
@@ -471,7 +529,7 @@ const Home = (props: any) => {
                   </View>
                   <View>
                     <Pressable
-                      onPress={() => setTabsActive('calendar')}
+                      onPress={() => [setTabsActive('calendar'), setNumberOfDays(0)]}
                       style={{
                         marginLeft: 90
                       }}
@@ -638,7 +696,7 @@ const Home = (props: any) => {
                 <TouchableOpacity
                   style={[styles.calendarBtnSearch]}
                   onPress={() => {
-                    sendWen(`${dateValue}${secondDateValue}`)
+                    sendWhen(`${dateValue}${secondDateValue}`)
                   }}
                 >
                   <Text style={styles.loginButtonText}>
@@ -683,7 +741,7 @@ const Home = (props: any) => {
                 title={'Children'}
                 subTitle={'Ages 2-12'}
                 inputValue={inputChildren}
-                onChangeText={() => setInputChildren(inputAdults)}
+                onChangeText={() => setInputChildren(inputChildren)}
                 Increment={() => setInputChildren(inputChildren + 1)}
                 Decrement={() => {
                   if (inputChildren === 0) {
@@ -697,7 +755,7 @@ const Home = (props: any) => {
                 title={'Infants'}
                 subTitle={'Under 2'}
                 inputValue={inputInfants}
-                onChangeText={() => setInputInfants(inputAdults)}
+                onChangeText={() => setInputInfants(inputInfants)}
                 Increment={() => setInputInfants(inputInfants + 1)}
                 Decrement={() => {
                   if (inputInfants === 0) {

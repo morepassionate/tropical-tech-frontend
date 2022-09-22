@@ -25,7 +25,7 @@ const ConfirmPayment = ({ navigation, route }: any) => {
   const [purchase, setPurchase] = useRecoilState(PurchaseAtom)
   const setCashback = useSetRecoilState(CashbackAtom)
   useEffect(() => {
-    console.log(code)
+    // console.log(code)
   }, [])
   return (
     <ScrollView>

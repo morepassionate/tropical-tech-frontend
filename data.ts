@@ -265,50 +265,50 @@ export const gallery = [
   'https://cf.bstatic.com/xdata/images/hotel/square200/284753992.webp?k=9b091d7813c2428bb2bbf389fc777f5e8febca241100183d4c3e786dd31c80a5&o=&s=1'
 ]
 
-export const popularHotels = [
-  {
-    img: 'https://cdn.pixabay.com/photo/2014/07/10/17/17/hotel-389256__340.jpg',
-    title: 'Town / City',
-    text: 'Country'
-  },
-  {
-    img: 'https://cdn.pixabay.com/photo/2017/03/09/06/30/pool-2128578__340.jpg',
-    title: 'Town / City',
-    text: 'Country'
-  },
-  {
-    img: 'https://cdn.pixabay.com/photo/2015/07/14/07/18/greece-844269__340.jpg',
-    title: 'Town / City',
-    text: 'Country'
-  },
-  {
-    img: 'https://cdn.pixabay.com/photo/2014/07/10/17/17/hotel-389256__340.jpg',
-    title: 'Town / City',
-    text: 'Country'
-  },
-  {
-    img: 'https://cdn.pixabay.com/photo/2017/03/09/06/30/pool-2128578__340.jpg',
-    title: 'Town / City',
-    text: 'Country'
-  },
-  {
-    img: 'https://cdn.pixabay.com/photo/2015/07/14/07/18/greece-844269__340.jpg',
-    title: 'Town / City',
-    text: 'Country'
-  }
-]
+// export const popularHotels = [
+//   {
+//     img: 'https://cdn.pixabay.com/photo/2014/07/10/17/17/hotel-389256__340.jpg',
+//     title: 'Town / City',
+//     text: 'Country'
+//   },
+//   {
+//     img: 'https://cdn.pixabay.com/photo/2017/03/09/06/30/pool-2128578__340.jpg',
+//     title: 'Town / City',
+//     text: 'Country'
+//   },
+//   {
+//     img: 'https://cdn.pixabay.com/photo/2015/07/14/07/18/greece-844269__340.jpg',
+//     title: 'Town / City',
+//     text: 'Country'
+//   },
+//   {
+//     img: 'https://cdn.pixabay.com/photo/2014/07/10/17/17/hotel-389256__340.jpg',
+//     title: 'Town / City',
+//     text: 'Country'
+//   },
+//   {
+//     img: 'https://cdn.pixabay.com/photo/2017/03/09/06/30/pool-2128578__340.jpg',
+//     title: 'Town / City',
+//     text: 'Country'
+//   },
+//   {
+//     img: 'https://cdn.pixabay.com/photo/2015/07/14/07/18/greece-844269__340.jpg',
+//     title: 'Town / City',
+//     text: 'Country'
+//   }
+// ]
 
-export const destinationIdeas = [
-  {
-    img: 'https://cdn.pixabay.com/photo/2014/07/10/17/17/hotel-389256__340.jpg',
-    text: 'Place   00 Date - 00 Date'
-  },
-  {
-    img: 'https://cdn.pixabay.com/photo/2017/03/09/06/30/pool-2128578__340.jpg',
-    text: 'Place   00 Date - 00 Date'
-  },
-  {
-    img: 'https://cdn.pixabay.com/photo/2015/07/14/07/18/greece-844269__340.jpg',
-    text: 'Place   00 Date - 00 Date'
-  }
-]
+// export const destinationIdeas = [
+//   {
+//     img: 'https://cdn.pixabay.com/photo/2014/07/10/17/17/hotel-389256__340.jpg',
+//     text: 'Place   00 Date - 00 Date'
+//   },
+//   {
+//     img: 'https://cdn.pixabay.com/photo/2017/03/09/06/30/pool-2128578__340.jpg',
+//     text: 'Place   00 Date - 00 Date'
+//   },
+//   {
+//     img: 'https://cdn.pixabay.com/photo/2015/07/14/07/18/greece-844269__340.jpg',
+//     text: 'Place   00 Date - 00 Date'
+//   }
+// ]

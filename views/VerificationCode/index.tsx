@@ -36,7 +36,7 @@ const VerificationCode = (props: any) => {
 
   async function generateCode(id: number) {
     //getUser();
-    console.log('ID 123 = ' + id)
+    // console.log('ID 123 = ' + id)
     let response = await fetch(`${config.urlRoot}signup/generateCode`, {
       method: 'POST',
       headers: {

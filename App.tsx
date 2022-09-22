@@ -9,7 +9,7 @@ import { RecoilRoot } from 'recoil'
 import AppLoading from 'expo-app-loading'
 import { configureFonts, DefaultTheme, Provider as PaperProvider } from 'react-native-paper'
 
-const App = (props) => {
+const App = (props: any) => {
   const [fontsLoaded] = useFonts({
     'Corbel-Bold': require('./assets/fonts/corbel-bold.ttf'),
     'Corbel-Italic': require('./assets/fonts/corbeli.ttf'),

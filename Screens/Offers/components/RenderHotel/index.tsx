@@ -3,34 +3,49 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import { IconButton } from 'react-native-paper'
 import PersonLocationIcon from '../../../../assets/icons/PersonLocationIcon'
 import COLORS from '../../../../Constants/styles'
-// import { Container } from './styles';
+import { hotelbedImg } from '../../../../Constants/styles'
 
 type RenderHotelProps = {
-  imageHotel: string
   hotelName: string
   ratings: number
-  numberOfBeds: number
-  value: number
-  cashbackValue?: number
-  taxesAndCharges?: boolean
-  freeCancellation?: boolean
-  noPrepaymentNeeded?: boolean
   reviewsCount: number
+  hotelImage: string
+  country: string
+  city: string
+  address: string
+  coordinates: {
+    longitude: number
+    latitude: number
+  }
+  distance: number
+  roomType: string
+  freeCancellation: boolean
+  price: number
+  noprepaymentneeded: boolean
+  bedType: string
+  from: string
+  to: string
   onPressCard: () => void
 }
 
 const RenderHotelComponent: React.FC<RenderHotelProps> = (props) => {
   const {
-    imageHotel,
     hotelName,
-    numberOfBeds,
     ratings,
-    value,
-    cashbackValue,
-    noPrepaymentNeeded,
-    taxesAndCharges,
-    freeCancellation,
     reviewsCount,
+    hotelImage,
+    country,
+    city,
+    address,
+    coordinates,
+    distance,
+    roomType,
+    freeCancellation,
+    price,
+    noprepaymentneeded,
+    bedType,
+    from,
+    to,
     onPressCard
   } = props
   return (
@@ -46,7 +61,7 @@ const RenderHotelComponent: React.FC<RenderHotelProps> = (props) => {
         </View>
         <Image
           source={{
-            uri: imageHotel
+            uri: `${hotelbedImg}${hotelImage}`
           }}
           resizeMode={'cover'}
           style={styles.imgStyle}
@@ -83,26 +98,23 @@ const RenderHotelComponent: React.FC<RenderHotelProps> = (props) => {
               <PersonLocationIcon />
             </View>
             <Text style={styles.areaText}>Area</Text>
-            <Text style={styles.point}>.</Text>
+            <Text style={styles.point}>
+              {address} {city} {country}
+            </Text>
           </View>
           <View style={styles.rowContent}>
-            <Text style={styles.starText}>{`0.0 km from location`}</Text>
+            <Text style={styles.starText}>{`${distance.toFixed(2)} mile from location`}</Text>
           </View>
-          <Text style={styles.typeRoomText}>Type of room with type of bathroom</Text>
-          {numberOfBeds === 0 ? (
-            <Text style={styles.text16}>No of beds</Text>
-          ) : (
-            <Text style={styles.text16}>{`${numberOfBeds} beds`}</Text>
-          )}
+          <Text style={styles.typeRoomText}>{roomType}</Text>
+          <Text style={styles.text16}>{bedType}</Text>
           <View style={[styles.rowContent]}>
             <View style={styles.pinCashback}>
               <Text style={styles.pinText}>{`0 CASHBACK`}</Text>
             </View>
-            <Text style={styles.value}>{`$ ${0}`}</Text>
+            <Text style={styles.value}>{`$ ${price}`}</Text>
           </View>
-          {taxesAndCharges && <Text style={styles.includesText}>includes taxes and charges</Text>}
           {freeCancellation && <Text style={styles.includesText}>free cancellation</Text>}
-          {noPrepaymentNeeded && <Text style={styles.includesText}>no prepayment needed</Text>}
+          {noprepaymentneeded && <Text style={styles.includesText}>no prepayment needed</Text>}
         </View>
       </View>
     </TouchableOpacity>

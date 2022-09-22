@@ -26,7 +26,7 @@ import ModalReviews from '../../Components/ModalReviews'
 
 const HotelDetails = ({ navigation, route }: any) => {
   const code: number = route.params?.code
-  console.log('code=ID', code)
+  // console.log('code=ID', code)
   const [hotelName, setHotelName] = useState('')
   const [background, setBackground] = useState('')
   const [position, setPosition] = useState({
@@ -62,7 +62,7 @@ const HotelDetails = ({ navigation, route }: any) => {
 
   //Pegar o id do usuário
   const getHotel = async (id: number) => {
-    console.log('idHotel', id)
+    // console.log('idHotel', id)
     let response = await fetch(`${config.urlRoot}hotel/details/${id}`, {
       method: 'GET',
       headers: {
