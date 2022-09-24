@@ -7,26 +7,38 @@ import PurchaseAtom, { PurchaseProps } from '../../assets/atoms/Purchase'
 import CashbackAtom from '../../assets/atoms/Purchase/cashback'
 import UserData from '../../assets/atoms/UserData'
 import MasterCardIcon from '../../assets/icons/MasterCard'
-import COLORS from '../../Constants/styles'
+import { hotelbedImg } from '../../Constants/styles'
 import { dataHotel } from '../../data'
 import styles from './styles'
 
 const ConfirmPayment = ({ navigation, route }: any) => {
+  const {
+    code,
+    ratings,
+    reviewsCount,
+    hotelName,
+    hotelImg,
+    price,
+    from,
+    to,
+    numberofnights,
+    lastUpadate,
+    numberofadults,
+    country
+  } = route.params
+  console.log('confirmpayment route.params', route.params)
   const mock = [
-    { title: 'Date', info: 'Day, Date' },
-    { title: 'Check-in time', info: '08:00' },
+    { title: 'Date', info: `${from}` },
+    { title: 'Check-in time', info: '10:00' },
     { title: 'Check-out time', info: '18:00' },
-    { title: 'Guests', info: '1 adult' }
+    { title: 'Guests', info: '2 adult' }
   ]
   const [addNewCard, setAddNewCard] = useState(false)
-  const code = route.params?.hotelId
   const authStatus = useRecoilValue(AuthStatus)
   const userData = useRecoilValue(UserData)
   const [purchase, setPurchase] = useRecoilState(PurchaseAtom)
   const setCashback = useSetRecoilState(CashbackAtom)
-  useEffect(() => {
-    // console.log(code)
-  }, [])
+
   return (
     <ScrollView>
       <View style={{ height: 40 }}>
@@ -44,22 +56,22 @@ const ConfirmPayment = ({ navigation, route }: any) => {
           <View style={{ width: '40%' }}>
             <Image
               source={{
-                uri:
-                  dataHotel[code]?.image ??
-                  'https://cdn.pixabay.com/photo/2016/11/21/17/34/las-vegas-1846684__340.jpg'
+                uri: hotelImg
+                  ? `${hotelbedImg}${hotelImg}`
+                  : 'https://cdn.pixabay.com/photo/2016/11/21/17/34/las-vegas-1846684__340.jpg'
               }}
               resizeMode={'cover'}
               style={{ width: 100, height: 100, borderRadius: 12 }}
             />
             <View style={[styles.rowContainer, { alignItems: 'center' }]}>
               <IconButton icon={'star'} size={12} />
-              <Text>{`4.91(155)`}</Text>
+              <Text>{`${ratings}(${reviewsCount})`}</Text>
             </View>
           </View>
           <View style={{ width: '60%' }}>
-            <Text style={styles.title}>{`${dataHotel[code].name}`}</Text>
-            <Text style={styles.vertical12}>{`${dataHotel[code].country}`}</Text>
-            <Text style={styles.vertical12}> nº nights</Text>
+            <Text style={styles.title}>{`${hotelName}`}</Text>
+            <Text style={styles.vertical12}>{`${country}`}</Text>
+            <Text style={styles.vertical12}> `${numberofnights} nights`</Text>
             <Text style={styles.vertical12}>Languages spoken: English, Portuguese and Spanish</Text>
           </View>
         </View>
@@ -84,14 +96,14 @@ const ConfirmPayment = ({ navigation, route }: any) => {
                 fontSize: 16,
                 lineHeight: 19
               }}
-            >{`${dataHotel[code].value.toFixed(2)}$ X 1 adult`}</Text>
+            >{`${price}$ X ${numberofadults} adult`}</Text>
             <Text
               style={{
                 fontFamily: 'Corbel',
                 fontSize: 16,
                 lineHeight: 19
               }}
-            >{`${dataHotel[code].value.toFixed(2)}$`}</Text>
+            >{`${price * numberofadults}$`}</Text>
           </View>
           <View style={[styles.rowContainer, { justifyContent: 'space-between', marginTop: 15 }]}>
             <Text style={[styles.boldText, { fontSize: 16 }]}>{`Total ($)`}</Text>
@@ -101,7 +113,7 @@ const ConfirmPayment = ({ navigation, route }: any) => {
                 fontSize: 16,
                 lineHeight: 19
               }}
-            >{`${dataHotel[code].value.toFixed(2)}$`}</Text>
+            >{`${numberofadults * price}$`}</Text>
           </View>
         </View>
         {authStatus?.isAuthenticated ? (
@@ -118,9 +130,7 @@ const ConfirmPayment = ({ navigation, route }: any) => {
               >{`Earnings`}</Text>
 
               <View style={styles.pinCashback}>
-                <Text style={styles.pinText}>{`${
-                  (dataHotel[code].value * 10) / 100
-                }$ CASHBACK`}</Text>
+                <Text style={styles.pinText}>{`${(price * 10) / 100}$ CASHBACK`}</Text>
               </View>
             </View>
           </>
@@ -224,7 +234,7 @@ const ConfirmPayment = ({ navigation, route }: any) => {
           labelStyle={{ color: 'white', fontFamily: 'Corbel' }}
           onPress={() => {
             if (userData?.creditCard.length === 0 || userData?.creditCard.length === undefined) {
-              navigation.navigate('ReservationAccepted')
+              // navigation.navigate('ReservationAccepted')
               setAddNewCard(true)
               return
             } else {
@@ -232,16 +242,16 @@ const ConfirmPayment = ({ navigation, route }: any) => {
                 setPurchase([
                   {
                     day: new Date().toUTCString(),
-                    outValue: dataHotel[code].value,
-                    transactionName: `Reservation-${dataHotel[code].name}`,
+                    outValue: dataHotel[1].value,
+                    transactionName: `Reservation-${dataHotel[1].name}`,
                     type: 'OUT'
                   }
                 ])
                 setCashback([
                   {
                     day: new Date().toUTCString(),
-                    inValue: authStatus?.isAuthenticated ? (dataHotel[code].value * 10) / 100 : 0,
-                    transactionName: `Reservation-${dataHotel[code].name}`,
+                    inValue: authStatus?.isAuthenticated ? (dataHotel[1].value * 10) / 100 : 0,
+                    transactionName: `Reservation-${dataHotel[1].name}`,
                     type: 'IN'
                   }
                 ])
@@ -250,8 +260,8 @@ const ConfirmPayment = ({ navigation, route }: any) => {
                   ...(prevStatus || []),
                   {
                     day: new Date().toUTCString(),
-                    outValue: dataHotel[code].value,
-                    transactionName: `Reservation-${dataHotel[code].name}`,
+                    outValue: dataHotel[1].value,
+                    transactionName: `Reservation-${dataHotel[1].name}`,
                     type: 'OUT'
                   }
                 ])
@@ -259,13 +269,15 @@ const ConfirmPayment = ({ navigation, route }: any) => {
                   ...(prevStatus || []),
                   {
                     day: new Date().toUTCString(),
-                    inValue: authStatus?.isAuthenticated ? (dataHotel[code].value * 10) / 100 : 0,
-                    transactionName: `Reservation-${dataHotel[code].name}`,
+                    inValue: authStatus?.isAuthenticated ? (dataHotel[1].value * 10) / 100 : 0,
+                    transactionName: `Reservation-${dataHotel[1].name}`,
                     type: 'IN'
                   }
                 ])
               }
-              navigation.navigate('ReservationAccepted')
+              navigation.navigate('ReservationAccepted', {
+                hotelImg: hotelImg
+              })
             }
           }}
         >

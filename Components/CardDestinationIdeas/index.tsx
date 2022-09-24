@@ -5,14 +5,16 @@ import { useNavigation } from '@react-navigation/native'
 import * as Progress from 'react-native-progress'
 
 import styles from './styles'
+import { hotelbedImg } from '../../Constants/styles'
 import { HotelInfoProps } from '../../Constants/data'
 import { useRecoilValue } from 'recoil'
-import { hotelData, IsLoading } from '../../assets/atoms/HotelData'
+import { destinationideas, isLoadingDestinationIdeas } from '../../assets/atoms/HotelHomeData'
 
-function CardDestinationIdea() {
+function CardDestinationIdea(props: { numberofadults: number }) {
+  const numberofadults = props.numberofadults
   const navigation = useNavigation()
-  const destinationIdeas = useRecoilValue(hotelData)
-  const isLoading = useRecoilValue(IsLoading)
+  const destinationIdeas = useRecoilValue(destinationideas)
+  const isLoading = useRecoilValue(isLoadingDestinationIdeas)
 
   return (
     <View style={styles.container}>
@@ -20,26 +22,34 @@ function CardDestinationIdea() {
       {destinationIdeas.length !== 0 || !isLoading.isLoading ? (
         <ScrollView horizontal style={styles.scrollview} showsHorizontalScrollIndicator={false}>
           {destinationIdeas.map((item: HotelInfoProps, index) => {
-            const limit = Math.floor((destinationIdeas.length * 2) / 3)
-            const min = Math.floor(destinationIdeas.length / 3)
-            if (index >= min && index < limit) {
-              return (
-                <TouchableOpacity
-                  key={`${item.name}@${index}`}
-                  onPress={() =>
-                    navigation.navigate('HotelDetails' as never, { code: index } as never)
-                  }
-                >
-                  <View style={styles.containerCard}>
-                    <Image style={styles.imgCard} source={{ uri: item.image }} />
-                    <Text>
-                      <Text style={styles.textTown}>{item.name} </Text>
-                      <Text style={styles.textCountry}>{item.country}</Text>
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              )
-            }
+            return (
+              <TouchableOpacity
+                key={`${item.name}@${index}`}
+                onPress={() =>
+                  navigation.navigate(
+                    'HotelDetails' as never,
+                    {
+                      code: item.code,
+                      price: item.price,
+                      ratings: item.ratings,
+                      reviewsCount: item.reviewsCount,
+                      cancellationPolicies: item.cancellationPolicies,
+                      from: item.from,
+                      to: item.to,
+                      numberofadults: numberofadults
+                    } as never
+                  )
+                }
+              >
+                <View style={styles.containerCard}>
+                  <Image style={styles.imgCard} source={{ uri: `${hotelbedImg}${item.image}` }} />
+                  <Text>
+                    <Text style={styles.textTown}>{item.name} </Text>
+                    <Text style={styles.textCountry}>{item.country}</Text>
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            )
           })}
         </ScrollView>
       ) : (

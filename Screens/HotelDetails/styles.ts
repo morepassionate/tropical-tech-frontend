@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     maxHeight: 300
   },
   name: {
-    fontSize: 24,
+    fontSize: 21,
     fontFamily: 'Corbel',
     color: 'white'
   },

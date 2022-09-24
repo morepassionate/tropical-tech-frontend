@@ -2,9 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { View, Text, ScrollView, TouchableOpacity, Modal } from 'react-native'
 import { Button, Checkbox, IconButton, TextInput } from 'react-native-paper'
 import { useRecoilValue } from 'recoil'
-import { IsLoading } from '../../assets/atoms/HotelData'
-import { SearchedHotelData } from '../../assets/atoms/SearchedHotelData'
-import { IsSearchLoading } from '../../assets/atoms/SearchedHotelData'
+import { searched, isLoadingSearched } from '../../assets/atoms/HotelHomeData'
 import FilterIcon from '../../assets/icons/Filter'
 import LocationIcon from '../../assets/icons/Location'
 import SortIcon from '../../assets/icons/Sort'
@@ -28,6 +26,11 @@ type ItemProps = {
     longitude: number
     latitude: number
   }
+  cancellationPolicies: {
+    amount: string
+    from: string
+  }
+  code: number
   distance: number
   roomType: string
   freeCancellation: boolean
@@ -39,15 +42,16 @@ type ItemProps = {
 }
 
 const Offers = ({ navigation }: any) => {
-  const searchedHotelData = useRecoilValue(SearchedHotelData)
+  const searchedHotelData = useRecoilValue(searched)
+  const isLoading = useRecoilValue(isLoadingSearched)
   const [travellingForWork, setTravellingForWork] = useState(false)
   const [modalSearch, setModalSearch] = useState(false)
   const [modalSort, setModalSort] = useState(false)
   const [modalFilterPrice, setModalFilterPrice] = useState(false)
-  const [sort, setSort] = useState('') //Lower, Higher, Distance, Top
   const [placeSearch, setPlaceSearch] = useState('')
   const [dateSearch, setDateSearch] = useState('')
   const [personsAndRooms, setPersonsAndRooms] = useState('')
+  const [sort, setSort] = useState('') //Lower, Higher, Distance, Top
   const [filterActive, setFilterActive] = useState('Normal') //Normal ,Search, SortAsc, SortDesc, Price
   const [minPrice, setMinPrice] = useState('')
   const [maxPrice, setMaxPrice] = useState('')
@@ -146,7 +150,7 @@ const Offers = ({ navigation }: any) => {
       </View>
       <Text style={styles.covidAlert}>Review COVID-19 travel restrictions before you book.</Text>
       <View style={styles.mostPopularContainer}>
-        <CardMostPopular />
+        <CardMostPopular numberofadults={1} />
       </View>
       {getRenderActive(filterActive).map((item: ItemProps, index: number) => {
         if (index < 3) {
@@ -156,6 +160,7 @@ const Offers = ({ navigation }: any) => {
               key={`${item.name}-${index}`}
             >
               <RenderHotelComponent
+                code={item.code}
                 hotelName={item.name}
                 ratings={item.ratings}
                 reviewsCount={item.reviewsCount}
@@ -174,7 +179,13 @@ const Offers = ({ navigation }: any) => {
                 to={item.to}
                 onPressCard={() =>
                   navigation.navigate('HotelDetails', {
-                    code: index
+                    code: item.code,
+                    price: item.price,
+                    ratings: item.ratings,
+                    reviewsCount: item.reviewsCount,
+                    cancellationPolicies: item.cancellationPolicies,
+                    from: item.from,
+                    to: item.to
                   })
                 }
               />
@@ -183,7 +194,7 @@ const Offers = ({ navigation }: any) => {
         }
       })}
 
-      <CardDestinationIdea />
+      <CardDestinationIdea numberofadults={1} />
       {searchedHotelData.map((item: ItemProps, index: number) => {
         if (index < 6 && index >= 3) {
           return (
@@ -192,6 +203,7 @@ const Offers = ({ navigation }: any) => {
               key={`${item.name}-${index}`}
             >
               <RenderHotelComponent
+                code={item.code}
                 hotelName={item.name}
                 ratings={item.ratings}
                 reviewsCount={item.reviewsCount}
@@ -210,7 +222,10 @@ const Offers = ({ navigation }: any) => {
                 to={item.to}
                 onPressCard={() =>
                   navigation.navigate('HotelDetails', {
-                    code: index
+                    code: item.code,
+                    price: item.price,
+                    ratings: item.ratings,
+                    reviewsCount: item.reviewsCount
                   })
                 }
               />
@@ -219,7 +234,7 @@ const Offers = ({ navigation }: any) => {
         }
       })}
 
-      <CardBestDeals />
+      <CardBestDeals numberofadults={1} />
       {searchedHotelData.map((item: ItemProps, index: number) => {
         if (index >= 6) {
           return (
@@ -228,6 +243,7 @@ const Offers = ({ navigation }: any) => {
               key={`${item.name}-${index}`}
             >
               <RenderHotelComponent
+                code={item.code}
                 hotelName={item.name}
                 ratings={item.ratings}
                 reviewsCount={item.reviewsCount}
@@ -246,7 +262,10 @@ const Offers = ({ navigation }: any) => {
                 to={item.to}
                 onPressCard={() =>
                   navigation.navigate('HotelDetails', {
-                    code: index
+                    code: item.code,
+                    price: item.price,
+                    ratings: item.ratings,
+                    reviewsCount: item.reviewsCount
                   })
                 }
               />

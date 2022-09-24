@@ -1,14 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {
-  ScrollView,
-  View,
-  Image,
-  Text,
-  TouchableOpacity,
-  FlatList,
-  Modal,
-  LogBox
-} from 'react-native'
+import { ScrollView, View, Image, Text, TouchableOpacity, Modal, LogBox } from 'react-native'
 import { Button, IconButton } from 'react-native-paper'
 import PoolIcon from '../../assets/icons/Pool'
 import GridGalleryImages from '../../Components/GridGalleryImages'
@@ -16,28 +7,39 @@ import Reviews from '../../Components/Reviews'
 import COLORS from '../../Constants/styles'
 import { commentsReviews, dataHotel, gallery } from '../../data'
 import MapView, { Marker } from 'react-native-maps'
-import config from '../../config/config.json'
 
 import styles from './styles'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import AuthStatus from '../../assets/atoms/AuthStatus'
 import LightButton from '../../Components/LightButton'
 import ModalReviews from '../../Components/ModalReviews'
+import { getHotelById } from '../../api/apiCaller'
+import { hotelbedImg } from '../../Constants/styles'
+import { Item } from 'react-native-paper/lib/typescript/components/List/List'
+
+interface HotelDetailProps {
+  hotelName: string
+  hotelImg: string
+  city: string
+  country: string
+  description: string
+  lastUpadate: string
+  gallery: string[]
+}
 
 const HotelDetails = ({ navigation, route }: any) => {
-  const code: number = route.params?.code
-  // console.log('code=ID', code)
-  const [hotelName, setHotelName] = useState('')
-  const [background, setBackground] = useState('')
+  const { code, price, ratings, reviewsCount, cancellationPolicies, from, to, numberofadults } =
+    route.params
+  const numberofnights = (new Date(to).getTime() - new Date(from).getTime()) / 24 / 3600 / 1000
+
+  const [hotelDetailData, setHotelDetailData] = useState({} as HotelDetailProps)
+  const [isLoading, setIsLoading] = useState(true)
   const [position, setPosition] = useState({
     latitude: 37.78825,
     longitude: -122.4324,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421
   })
-  const [city, setCity] = useState(null)
-  const [country, setCountry] = useState(null)
-  const [description, setDescription] = useState(null)
   const [modalConfirm, setModalConfirm] = useState(false)
   const [modalPolicy, setModalPolicy] = useState(false)
   const [authStatus, setAuthStatus] = useRecoilState(AuthStatus)
@@ -45,47 +47,23 @@ const HotelDetails = ({ navigation, route }: any) => {
   const [reviewModalVisible, setReviewModalVisible] = useState(false)
 
   useEffect(() => {
-    setMoreDetailDescription(false)
-    // setReviewModalVisible(false)
     LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
+    setMoreDetailDescription(false)
   }, [])
-  // const [gallery, setGallery] = useState(null)
+  useEffect(() => {
+    getHotelById(code)
+      .then((res) => {
+        const data = res.data
+        console.log('hotelDetail', data)
+        setHotelDetailData(data)
+        setIsLoading(false)
+      })
+      .catch((err) => {
+        setIsLoading(false)
+        console.log('error', err)
+      })
+  }, [code])
 
-  // useEffect(() => {
-  //   getHotel(code)
-  // }, [])
-  // useEffect(() => {
-  //   fetch(`${config.urlRoot}hotel/details/2`)
-  //     .then((resposta) => resposta.json())
-  //     .then((body) => console.log(body))
-  // }, [])
-
-  //Pegar o id do usuário
-  const getHotel = async (id: number) => {
-    // console.log('idHotel', id)
-    let response = await fetch(`${config.urlRoot}hotel/details/${id}`, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
-    })
-
-    let json = await response.json()
-    //setBackground(j);
-    setHotelName(json.hotel.name.content)
-    setCity(json.hotel.city.content)
-    setCountry(json.hotel.country.description.content)
-    setDescription(json.hotel.description.content)
-    setBackground(config.hotel.urlPhotoBg + json.hotel.images[0].path)
-    setPosition({
-      latitude: json.hotel.coordinates.latitude,
-      longitude: json.hotel.coordinates.longitude,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421
-    })
-    // setGallery(config.hotel.urlPhotoBg + json.hotel.images.map((item) => item))
-  }
   const iconsAndInfos = [
     { icon: 'wifi', info: 'Wifi' },
     { icon: 'coffee', info: 'Coffee' },
@@ -93,52 +71,39 @@ const HotelDetails = ({ navigation, route }: any) => {
     { icon: PoolIcon, info: 'Pool' },
     { icon: 'youtube-tv', info: 'Digital TV' }
   ]
-  // const renderItem = ({
-  //   item
-  // }: {
-  //   item: { comment: string; datePublish: string; user: string; userImage: string }
-  // }) => (
-  //   <View style={{ marginRight: 20 }}>
-  //     <Reviews
-  //       comment={item.comment}
-  //       dateOfPost={item.datePublish}
-  //       user={item.user}
-  //       userImage={item.userImage}
-  //     />
-  //   </View>
-  // )
 
   return (
     <ScrollView style={{ backgroundColor: 'white' }}>
       <View style={styles.imgContainer}>
         <View style={styles.borderNav} />
         <Image
-          source={{ uri: dataHotel[code].image }}
+          source={{ uri: `${hotelbedImg}${hotelDetailData.hotelImg}` }}
           resizeMode={'cover'}
           style={{ height: 300, width: '100%' }}
         />
         <View style={styles.hotelNameContainer}>
-          <Text style={styles.name}>{dataHotel[code].name}</Text>
-          <Text style={styles.city}>{`${dataHotel[code].city},${dataHotel[code].country}`}</Text>
+          <Text style={styles.name}>{hotelDetailData.hotelName}</Text>
+          <Text style={styles.city}>{`${hotelDetailData.city},${hotelDetailData.country}`}</Text>
         </View>
       </View>
       <View style={[styles.rowContent, { justifyContent: 'space-between', marginHorizontal: 24 }]}>
         <View>
           <View style={[styles.rowContent, { marginTop: 14 }]}>
-            <Text style={styles.value}>{`${dataHotel[code].value.toFixed(2)}$`} </Text>
+            <Text style={styles.value}>{`${price}$`} </Text>
             <Text style={styles.person}>per person</Text>
           </View>
           <View style={styles.pinCashback}>
-            <Text style={styles.pinText}>{`${(dataHotel[code].value * 10) / 100}$ CASHBACK`}</Text>
+            <Text style={styles.pinText}>{`${(price * 10) / 100}$ CASHBACK`}</Text>
           </View>
           <Text style={{ marginBottom: 15, fontSize: 16, fontFamily: 'Corbel', color: '#979FA9' }}>
             08 Oct - 10 Oct, 1 guest
           </Text>
         </View>
         <View style={{ justifyContent: 'center', marginTop: 20 }}>
-          <Text style={styles.ratings}>{`${dataHotel[code].ratings}`}</Text>
+          <Text style={styles.ratings}>{`${ratings}`}</Text>
+
           <Text style={{ color: COLORS.blue, fontFamily: 'Corbel', fontSize: 14 }}>
-            {`${dataHotel[code].reviews} Reviews`}
+            {`${reviewsCount} Reviews`}
           </Text>
         </View>
       </View>
@@ -166,7 +131,7 @@ const HotelDetails = ({ navigation, route }: any) => {
         <Text
           numberOfLines={moreDetailDescription ? 1000 : 5}
           style={styles.description}
-        >{`${dataHotel[code].description}`}</Text>
+        >{`${hotelDetailData.description}`}</Text>
         <TouchableOpacity onPress={() => setMoreDetailDescription(!moreDetailDescription)}>
           <Text style={styles.moreReadButton}>
             {!moreDetailDescription ? 'Read More' : 'Read Less'}
@@ -185,12 +150,16 @@ const HotelDetails = ({ navigation, route }: any) => {
           })
         }
       >
-        <Marker coordinate={position} title={`${dataHotel[code].name}`} description={'Hotel'} />
+        <Marker
+          coordinate={position}
+          title={`${hotelDetailData.hotelName}`}
+          description={'Hotel'}
+        />
       </MapView>
       {/*  */}
       <View style={[styles.marginHorizontal, { marginTop: 19 }]}>
         <Text style={styles.galleryText}>Gallery</Text>
-        <GridGalleryImages imagesArray={gallery} />
+        <GridGalleryImages imagesArray={hotelDetailData.gallery} />
       </View>
       <View style={styles.line} />
       {/* REVIEWS */}
@@ -208,13 +177,6 @@ const HotelDetails = ({ navigation, route }: any) => {
           <Text style={styles.font18}>{`4.91 (155 Reviews)`}</Text>
         </TouchableOpacity>
         <View style={styles.reviewsContent}>
-          {/* <FlatList
-            data={commentsReviews}
-            keyExtractor={(item, index) => `${item}@${index}`}
-            horizontal
-            style={{ marginRight: -25 }}
-            renderItem={renderItem}
-          /> */}
           <ScrollView horizontal style={{ marginRight: -25 }}>
             {commentsReviews.map((item, index) => (
               <View key={index} style={{ marginRight: 20 }}>
@@ -261,7 +223,18 @@ const HotelDetails = ({ navigation, route }: any) => {
         onPress={() => {
           if (authStatus?.isAuthenticated) {
             navigation.navigate('ConfirmPayment', {
-              hotelId: code
+              hotelId: code,
+              ratings: ratings,
+              reviewsCount: reviewsCount,
+              hotelName: hotelDetailData.hotelName,
+              hotelImg: hotelDetailData.hotelImg,
+              from: from,
+              to: to,
+              price: price,
+              numberofadults: numberofadults,
+              country: hotelDetailData.country,
+              numberofnights: numberofnights,
+              lastUpdate: hotelDetailData.lastUpadate
             })
           } else {
             setModalConfirm(true)
@@ -329,7 +302,20 @@ const HotelDetails = ({ navigation, route }: any) => {
                 textStyle={{ color: '#4A5CAE', textTransform: 'capitalize', textAlign: 'center' }}
                 onPress={() => {
                   setModalConfirm(false)
-                  navigation.navigate('ConfirmPayment', { hotelId: code })
+                  navigation.navigate('ConfirmPayment', {
+                    hotelId: code,
+                    ratings: ratings,
+                    reviewsCount: reviewsCount,
+                    hotelName: hotelDetailData.hotelName,
+                    hotelImg: hotelDetailData.hotelImg,
+                    from: from,
+                    to: to,
+                    price: price,
+                    numberofadults: numberofadults,
+                    country: hotelDetailData.country,
+                    numberofnights: numberofnights,
+                    lastUpdate: hotelDetailData.lastUpadate
+                  })
                 }}
               />
             </View>
@@ -369,20 +355,8 @@ const HotelDetails = ({ navigation, route }: any) => {
                 Cancellation policy
               </Text>
               <Text>
-                By selecting the button below, you agree to the Guest Release and Waiver, the
-                Cancellation Policy, the Guest Refund Policy and social-distancing and other
-                COVID-19-related guidelines. Payment Terms between you and UHR.By selecting the
-                button below, you agree to the Guest Release and Waiver, the Cancellation Policy,
-                the Guest Refund Policy and social-distancing and other COVID-19-related guidelines.
-                Payment Terms between you and UHR.By selecting the button below, you agree to the
-                Guest Release and Waiver, the Cancellation Policy, the Guest Refund Policy and
-                social-distancing and other COVID-19-related guidelines. Payment Terms between you
-                and UHR.By selecting the button below, you agree to the Guest Release and Waiver,
-                the Cancellation Policy, the Guest Refund Policy and social-distancing and other
-                COVID-19-related guidelines. Payment Terms between you and UHR.By selecting the
-                button below, you agree to the Guest Release and Waiver, the Cancellation Policy,
-                the Guest Refund Policy and social-distancing and other COVID-19-related guidelines.
-                Payment Terms between you and UHR.By selecting the button below, you agree to the
+                You can cancel hotel booking and you can return ${cancellationPolicies.amount} from{' '}
+                {cancellationPolicies.from}.{'    '} By selecting the button below, you agree to the
                 Guest Release and Waiver, the Cancellation Policy, the Guest Refund Policy and
                 social-distancing and other COVID-19-related guidelines. Payment Terms between you
                 and UHR.By selecting the button below, you agree to the Guest Release and Waiver,

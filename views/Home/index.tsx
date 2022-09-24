@@ -14,8 +14,11 @@ import { Calendar } from 'react-native-calendars'
 import { IconButton, RadioButton } from 'react-native-paper'
 import { AntDesign } from '@expo/vector-icons'
 import { useRecoilState } from 'recoil'
+import axios from 'axios'
 
 import {
+  getBestDealHotels,
+  getDestinationIdeaHotels,
   getMostPopularHotels,
   getRecentsearchHotels,
   getSearchedHotelAll
@@ -35,17 +38,32 @@ import FamilyCartoonsIcon from '../../assets/icons/FamilyCartoons'
 import { FilterQueryProps } from '../../Constants/data'
 
 import styles from './styles'
-import { hotelData, IsLoading } from '../../assets/atoms/HotelData'
-import { SearchedHotelData, IsSearchLoading } from '../../assets/atoms/SearchedHotelData'
-import { mostPopularHotelData, IsMostPopularLoading } from '../../assets/atoms/MostPopularHotelData'
+import {
+  searched,
+  isLoadingSearched,
+  mostpopular,
+  isLoadingMostPopular,
+  recentsearches,
+  isLoadingRecentSearches,
+  destinationideas,
+  isLoadingDestinationIdeas,
+  bestdeals,
+  isLoadingBestDeals
+} from '../../assets/atoms/HotelHomeData'
 
 const Home = (props: any) => {
-  const [_, setHotelData] = useRecoilState(hotelData)
-  const [isLoading, setIsLoading] = useRecoilState(IsLoading)
-  const [__, setSearchedHotelData] = useRecoilState(SearchedHotelData)
-  const [isSearchLoading, setIsSearchLoading] = useRecoilState(IsSearchLoading)
-  const [___, setMostPopularHotels] = useRecoilState(mostPopularHotelData)
-  const [isMostPopularLoading, setIsMostPopularLoading] = useRecoilState(IsMostPopularLoading)
+  const [_, setSearched] = useRecoilState(searched)
+  const [isSearchLoading, setIsLoadingSearched] = useRecoilState(isLoadingSearched)
+  const [__, setMostpopular] = useRecoilState(mostpopular)
+  const [isMostPopularLoading, setIsLoadingMostPopular] = useRecoilState(isLoadingMostPopular)
+  const [___, setrecentsearches] = useRecoilState(recentsearches)
+  const [isRecentSearchesLoading, setIsLoadingRecentSearches] =
+    useRecoilState(isLoadingRecentSearches)
+  const [____, setDestinationideas] = useRecoilState(destinationideas)
+  const [isDestinationIdeasLoading, setIsLoadingDestinationIdeas] =
+    useRecoilState(isLoadingDestinationIdeas)
+  const [_____, setBestdeals] = useRecoilState(bestdeals)
+  const [isBestDealsLoading, setIsLoadingBestDeals] = useRecoilState(isLoadingBestDeals)
 
   const [modalWhereVisible, setModalWhereVisible] = useState(false)
   const [modalWhenVisible, setModalWhenVisible] = useState(false)
@@ -61,26 +79,50 @@ const Home = (props: any) => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
     getMostPopularHotels()
       .then((res) => {
-        setIsMostPopularLoading({ isLoading: false })
+        setIsLoadingMostPopular({ isLoading: false })
         const data = res.data
         console.log('most popular hotels', data)
-        setMostPopularHotels(data)
+        setMostpopular(data)
       })
       .catch((err) => {
-        setIsMostPopularLoading({ isLoading: false })
+        setIsLoadingMostPopular({ isLoading: false })
         console.log('most popular error', err)
       })
 
     getRecentsearchHotels()
       .then((res) => {
-        setIsLoading({ isLoading: false })
+        setIsLoadingRecentSearches({ isLoading: false })
         const data = res.data
-        console.log('hotelAtomdata', data)
-        setHotelData(data)
+        console.log('recent search hotels', data)
+        setrecentsearches(data)
       })
       .catch((err) => {
-        setIsLoading({ isLoading: false })
-        console.log('hotelAtomData', err)
+        setIsLoadingRecentSearches({ isLoading: false })
+        console.log('recent search error', err)
+      })
+
+    getDestinationIdeaHotels()
+      .then((res) => {
+        setIsLoadingDestinationIdeas({ isLoading: false })
+        const data = res.data
+        console.log('destination hotels', data)
+        setDestinationideas(data)
+      })
+      .catch((err) => {
+        setIsLoadingDestinationIdeas({ isLoading: false })
+        console.log('destination hotel error', err)
+      })
+
+    getBestDealHotels()
+      .then((res) => {
+        setIsLoadingBestDeals({ isLoading: false })
+        const data = res.data
+        console.log('best deal hotels', data)
+        setBestdeals(data)
+      })
+      .catch((err) => {
+        setIsLoadingBestDeals({ isLoading: false })
+        console.log('best deal error', err)
       })
   }, [])
 
@@ -161,6 +203,18 @@ const Home = (props: any) => {
     const currentDate = new Date()
     const nextDate = new Date(new Date().getTime() + 24 * 3600 * 1000)
 
+    let currentLocation = {} as { latitude: number; longitude: number }
+    axios
+      .get('http://ipinfo.io/json')
+      .then((res) => {
+        currentLocation.latitude = Number(res.data.loc.split(',')[0])
+        currentLocation.longitude = Number(res.data.loc.split(',')[1])
+      })
+      .catch((err) => {
+        console.log('error', err)
+      })
+    filterQuery.currentLocation = currentLocation
+
     const stay = {
       checkIn: dateValue === '' ? currentDate.toISOString().split('T')[0] : dateValue,
       checkOut: secondDateValue === '' ? nextDate.toISOString().split('T')[0] : secondDateValue
@@ -187,18 +241,18 @@ const Home = (props: any) => {
     ]
     filterQuery.occupancies = occupancies
 
-    filterQuery.destination = where
+    filterQuery.destination = { destination: where }
 
     console.log('filterQuery', filterQuery)
     getSearchedHotelAll(filterQuery)
       .then((res) => {
-        setIsSearchLoading({ isLoading: false })
+        setIsLoadingSearched({ isLoading: false })
         const data = res.data
         console.log('searchedHotelData', data)
-        setSearchedHotelData(data)
+        setSearched(data)
       })
       .catch((err) => {
-        setIsSearchLoading({ isLoading: false })
+        setIsLoadingSearched({ isLoading: false })
         console.log('error', err)
       })
   }
@@ -279,11 +333,10 @@ const Home = (props: any) => {
           </View>
         </ImageBackground>
         <View style={styles.containerHotels}>
-          <CardMostPopular />
-          <CardUpcomingTrips />
-          <CardDestinationIdeas />
-          {/* <CardPropertyType /> */}
-          <CardBestDeals />
+          <CardMostPopular numberofadults={inputAdults} />
+          <CardUpcomingTrips numberofadults={inputAdults} />
+          <CardDestinationIdeas numberofadults={inputAdults} />
+          <CardBestDeals numberofadults={inputAdults} />
         </View>
         <Modal
           animationType="fade"

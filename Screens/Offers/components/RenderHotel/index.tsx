@@ -6,6 +6,7 @@ import COLORS from '../../../../Constants/styles'
 import { hotelbedImg } from '../../../../Constants/styles'
 
 type RenderHotelProps = {
+  code: number
   hotelName: string
   ratings: number
   reviewsCount: number
@@ -30,6 +31,7 @@ type RenderHotelProps = {
 
 const RenderHotelComponent: React.FC<RenderHotelProps> = (props) => {
   const {
+    code: number,
     hotelName,
     ratings,
     reviewsCount,
@@ -71,7 +73,7 @@ const RenderHotelComponent: React.FC<RenderHotelProps> = (props) => {
         <View
           style={[
             styles.rowContent,
-            { marginBottom: 8, justifyContent: 'space-between', width: '70%' }
+            { marginBottom: 10, justifyContent: 'space-between', width: '70%' }
           ]}
         >
           <Text style={styles.name}>{hotelName}</Text>
@@ -87,19 +89,34 @@ const RenderHotelComponent: React.FC<RenderHotelProps> = (props) => {
           />
         </View>
         <View>
-          <View style={[styles.rowContent, { marginBottom: 8 }]}>
+          <View style={[styles.rowContent, { marginBottom: 10 }]}>
             <IconButton icon={'star'} size={14} color={COLORS.blue} style={styles.notMargin} />
             <Text style={styles.starText}>{ratings.toFixed(2)}</Text>
             <Text style={styles.point}>.</Text>
             <Text style={styles.starText}>{`${reviewsCount ?? 0} reviews`}</Text>
           </View>
-          <View style={[styles.rowContent, { marginBottom: 8 }]}>
+          <View style={[styles.rowContent, { marginBottom: 10 }]}>
             <View style={{ marginTop: 4 }}>
               <PersonLocationIcon />
             </View>
             <Text style={styles.areaText}>Area</Text>
-            <Text style={styles.point}>
-              {address} {city} {country}
+            {/* <Text numberOfLines={2} ellipsizeMode="tail" style={styles.point}>
+              {address}
+            </Text> */}
+            <Text style={[styles.point, { marginTop: 5 }]}>
+              {city}
+              {','}
+            </Text>
+            <Text
+              style={{
+                marginTop: 5,
+                fontSize: 14,
+                lineHeight: 10,
+                fontFamily: 'Corbel',
+                alignSelf: 'center'
+              }}
+            >
+              {country}
             </Text>
           </View>
           <View style={styles.rowContent}>
@@ -159,11 +176,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 28
   },
   point: {
-    fontSize: 24,
-    lineHeight: 15,
-    fontWeight: 'bold',
+    fontSize: 14,
+    lineHeight: 10,
     fontFamily: 'Corbel',
-    marginHorizontal: 8
+    alignSelf: 'center',
+    marginLeft: 8
   },
   pinCashback: {
     backgroundColor: COLORS.orange,

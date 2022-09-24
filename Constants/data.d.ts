@@ -5,6 +5,14 @@ export interface HotelInfoProps {
   name: string
   from: string
   to: string
+  code: number
+  price: number
+  ratings: number
+  reviewsCount: number
+  cancellationPolicies: {
+    amount: string
+    from: string
+  }
 }
 
 export interface OccupanciesProps {
@@ -19,7 +27,13 @@ export interface FilterQueryProps {
     checkOut: string
   }
   occupancies: Array<OccupanciesProps>
-  destination: string
+  destination: {
+    destination: string
+  }
+  currentLocation: {
+    latitude: number
+    longitude: number
+  }
 }
 
 export interface ReviewProps {

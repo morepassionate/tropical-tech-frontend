@@ -21,3 +21,7 @@ export const getDestinationIdeaHotels = () => {
 export const getBestDealHotels = () => {
   return axios.get(`${base_url}/hotels/bestdeal`)
 }
+
+export const getHotelById = (id: number) => {
+  return axios.get(`${base_url}/hotels/${id}/details`)
+}

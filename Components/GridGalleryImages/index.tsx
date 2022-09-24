@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Image, StyleSheet, TouchableOpacity, Text } from 'react-native'
 import COLORS from '../../Constants/styles'
+import { hotelbedImg } from '../../Constants/styles'
 
 type GalleryProps = {
   imagesArray?: string[]
@@ -11,22 +12,34 @@ const GridGalleryImages: React.FC<GalleryProps> = (props) => {
     <>
       {!!imagesArray && imagesArray?.length < 5 ? (
         <View style={styles.flexImgs}>
-          <Image style={styles.firstImage} source={{ uri: imagesArray[0] }} />
+          <Image style={styles.firstImage} source={{ uri: `${hotelbedImg}${imagesArray[0]}` }} />
           <View style={styles.column60}>
-            <Image style={styles.secondImage} source={{ uri: imagesArray[1] }} />
+            <Image style={styles.secondImage} source={{ uri: `${hotelbedImg}${imagesArray[1]}` }} />
             <View style={styles.row100}>
-              <Image style={styles.thirdImage} source={{ uri: imagesArray[2] }} />
-              <Image style={styles.fourtyImage} source={{ uri: imagesArray[3] }} />
+              <Image
+                style={styles.thirdImage}
+                source={{ uri: `${hotelbedImg}${imagesArray[2]}` }}
+              />
+              <Image
+                style={styles.fourtyImage}
+                source={{ uri: `${hotelbedImg}${imagesArray[3]}` }}
+              />
             </View>
           </View>
         </View>
       ) : (
         <View style={styles.flexImgs}>
-          <Image style={styles.firstImage} source={{ uri: imagesArray?.[0] }} />
+          <Image style={styles.firstImage} source={{ uri: `${hotelbedImg}${imagesArray?.[0]}` }} />
           <View style={styles.column60}>
-            <Image style={styles.secondImage} source={{ uri: imagesArray?.[1] }} />
+            <Image
+              style={styles.secondImage}
+              source={{ uri: `${hotelbedImg}${imagesArray?.[1]}` }}
+            />
             <View style={styles.row100}>
-              <Image style={styles.thirdImage} source={{ uri: imagesArray?.[2] }} />
+              <Image
+                style={styles.thirdImage}
+                source={{ uri: `${hotelbedImg}${imagesArray?.[2]}` }}
+              />
               <View style={styles.fourtyImage}>
                 <TouchableOpacity style={styles.moreBackground}>
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -36,7 +49,10 @@ const GridGalleryImages: React.FC<GalleryProps> = (props) => {
                     <Text style={styles.more}>+</Text>
                   </View>
                 </TouchableOpacity>
-                <Image style={styles.imgMore} source={{ uri: imagesArray?.[3] }} />
+                <Image
+                  style={styles.imgMore}
+                  source={{ uri: `${hotelbedImg}${imagesArray?.[3]}` }}
+                />
               </View>
             </View>
           </View>

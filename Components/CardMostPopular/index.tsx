@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import React, { useEffect } from 'react'
 import { View, Text, Image, ScrollView, TouchableOpacity, LogBox } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
@@ -9,12 +8,13 @@ import { HotelInfoProps } from '../../Constants/data'
 import { hotelbedImg } from '../../Constants/styles'
 import styles from './styles'
 import { useRecoilValue } from 'recoil'
-import { IsMostPopularLoading, mostPopularHotelData } from '../../assets/atoms/MostPopularHotelData'
+import { isLoadingMostPopular, mostpopular } from '../../assets/atoms/HotelHomeData'
 
-const CardMostPopular = () => {
+const CardMostPopular = (props: { numberofadults: number }) => {
+  const numberofadults = props.numberofadults
   const navigation = useNavigation()
-  const mostPopularHotels = useRecoilValue(mostPopularHotelData)
-  const isLoading = useRecoilValue(IsMostPopularLoading)
+  const mostPopularHotels = useRecoilValue(mostpopular)
+  const isLoading = useRecoilValue(isLoadingMostPopular)
 
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
@@ -33,7 +33,19 @@ const CardMostPopular = () => {
                   <TouchableOpacity
                     key={`${item.name}%${index}`}
                     onPress={() =>
-                      navigation.navigate('HotelDetails' as never, { code: index } as never)
+                      navigation.navigate(
+                        'HotelDetails' as never,
+                        {
+                          code: item.code,
+                          price: item.price,
+                          ratings: item.ratings,
+                          reviewsCount: item.reviewsCount,
+                          cancellationPolicies: item.cancellationPolicies,
+                          from: item.from,
+                          to: item.to,
+                          numberofadults: numberofadults
+                        } as never
+                      )
                     }
                   >
                     <View style={styles.containerCard}>
@@ -61,12 +73,24 @@ const CardMostPopular = () => {
             {mostPopularHotels.map((item: HotelInfoProps, index: number) => {
               const min = Math.floor(mostPopularHotels.length / 2)
               const limit = mostPopularHotels.length
-              if (index >= min && index <= limit) {
+              if (index >= min && index < limit) {
                 return (
                   <TouchableOpacity
                     key={`${item.name}!${index}`}
                     onPress={() =>
-                      navigation.navigate('HotelDetails' as never, { code: index } as never)
+                      navigation.navigate(
+                        'HotelDetails' as never,
+                        {
+                          code: item.code,
+                          price: item.price,
+                          ratings: item.ratings,
+                          reviewsCount: item.reviewsCount,
+                          cancellationPolicies: item.cancellationPolicies,
+                          from: item.from,
+                          to: item.to,
+                          numberofadults: numberofadults
+                        } as never
+                      )
                     }
                   >
                     <View style={styles.containerCard}>

@@ -2,10 +2,12 @@ import React from 'react'
 import { ScrollView, View, Text, Image, TouchableOpacity, Platform, Linking } from 'react-native'
 import { IconButton } from 'react-native-paper'
 import EyeIcon from '../../assets/icons/Eye'
+import { hotelbedImg } from '../../Constants/styles'
 
 import styles from './styles'
 
-const ReservationAccepted = ({ navigation }: { navigation: any }) => {
+const ReservationAccepted = ({ navigation, route }: any) => {
+  const { hotelImg } = route.params
   const mock = [
     { icon: 'map-marker', title: 'Get directions' },
     { icon: 'phone-outgoing', title: 'Call host' },
@@ -48,7 +50,7 @@ const ReservationAccepted = ({ navigation }: { navigation: any }) => {
         <Text style={styles.h1}>Your reservation is accepted</Text>
         <Image
           source={{
-            uri: 'https://cf.bstatic.com/xdata/images/hotel/square200/381306642.webp?k=449bd6750c9e9c663fcd6ce7d1c2f5c36e1ae248d6424bb06dcd9fbe6a79394d&o=&s=1'
+            uri: `${hotelbedImg}${hotelImg}`
           }}
           resizeMode={'cover'}
           style={{ width: '100%', height: 215, borderRadius: 12, marginTop: 8 }}
