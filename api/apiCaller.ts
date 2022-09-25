@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const base_url = 'http://192.168.115.130:7676/api'
+const base_url = 'https://tropical-backend.herokuapp.com/api'
 
 export const getSearchedHotelAll = (filter: any) => {
   return axios.post(`${base_url}/hotels`, filter)

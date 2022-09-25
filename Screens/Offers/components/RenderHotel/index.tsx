@@ -31,7 +31,7 @@ type RenderHotelProps = {
 
 const RenderHotelComponent: React.FC<RenderHotelProps> = (props) => {
   const {
-    code: number,
+    code,
     hotelName,
     ratings,
     reviewsCount,
@@ -91,7 +91,7 @@ const RenderHotelComponent: React.FC<RenderHotelProps> = (props) => {
         <View>
           <View style={[styles.rowContent, { marginBottom: 10 }]}>
             <IconButton icon={'star'} size={14} color={COLORS.blue} style={styles.notMargin} />
-            <Text style={styles.starText}>{ratings.toFixed(2)}</Text>
+            <Text style={styles.starText}>{ratings}</Text>
             <Text style={styles.point}>.</Text>
             <Text style={styles.starText}>{`${reviewsCount ?? 0} reviews`}</Text>
           </View>
@@ -128,7 +128,7 @@ const RenderHotelComponent: React.FC<RenderHotelProps> = (props) => {
             <View style={styles.pinCashback}>
               <Text style={styles.pinText}>{`0 CASHBACK`}</Text>
             </View>
-            <Text style={styles.value}>{`$ ${price}`}</Text>
+            <Text style={styles.value}>{`$${price}`}</Text>
           </View>
           {freeCancellation && <Text style={styles.includesText}>free cancellation</Text>}
           {noprepaymentneeded && <Text style={styles.includesText}>no prepayment needed</Text>}

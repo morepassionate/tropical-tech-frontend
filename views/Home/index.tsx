@@ -74,6 +74,7 @@ const Home = (props: any) => {
   const [isSwitchOn, setIsSwitchOn] = useState(false)
   const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn)
   const [whereFocus, setWhereFocus] = useState(false)
+  const [initialDate, setInitialDate] = useState('')
 
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
@@ -157,16 +158,16 @@ const Home = (props: any) => {
         }
       })
     }
-  }, [dateValue])
+  }, [dateValue, secondDateValue])
 
   const adicionarDiasData = (dias: number) => {
     let hoje = new Date(dateValue)
     let dataVenc = new Date(hoje.getTime() + dias * 24 * 60 * 60 * 1000)
-    let nine =
-      dataVenc.getFullYear() + '-' + 0 + (dataVenc.getMonth() + 1) + '-' + 0 + dataVenc.getDate()
-    let notNine =
-      dataVenc.getFullYear() + '-' + 0 + (dataVenc.getMonth() + 1) + '-' + dataVenc.getDate()
-    return dataVenc.getDate() > 9 ? notNine : nine
+    const y = dataVenc.getFullYear(),
+      m = dataVenc.getMonth() + 1,
+      d = dataVenc.getDate()
+
+    return `${y}-${m > 9 ? m : `0${m}`}-${d > 9 ? d : `0${d}`}`
   }
 
   useEffect(() => {
@@ -198,62 +199,62 @@ const Home = (props: any) => {
     setModalWhenVisible(false)
   }
 
-  function handleSubmitForm() {
-    let filterQuery = {} as FilterQueryProps
-    const currentDate = new Date()
-    const nextDate = new Date(new Date().getTime() + 24 * 3600 * 1000)
-
-    let currentLocation = {} as { latitude: number; longitude: number }
+  const handleSubmitForm = () => {
     axios
       .get('http://ipinfo.io/json')
       .then((res) => {
+        let filterQuery = {} as FilterQueryProps
+        const currentDate = new Date()
+        const nextDate = new Date(new Date().getTime() + 24 * 3600 * 1000)
+        let currentLocation = {} as { latitude: number; longitude: number }
+
         currentLocation.latitude = Number(res.data.loc.split(',')[0])
         currentLocation.longitude = Number(res.data.loc.split(',')[1])
+        filterQuery.currentLocation = currentLocation
+
+        const stay = {
+          checkIn: dateValue === '' ? currentDate.toISOString().split('T')[0] : dateValue,
+          checkOut: secondDateValue === '' ? nextDate.toISOString().split('T')[0] : secondDateValue
+        }
+        filterQuery.stay = stay
+
+        let rooms = 1
+        if (radioRoomsValues === 'Shared') {
+          rooms = 1
+        } else if (radioRoomsValues === 'Single') {
+          rooms = 1
+        } else if (radioRoomsValues === 'Double') {
+          rooms = 2
+        } else {
+          rooms = 3
+        }
+
+        const occupancies = [
+          {
+            rooms: rooms,
+            adults: inputAdults === 0 ? 1 : inputAdults,
+            children: inputChildren + inputInfants
+          }
+        ]
+        filterQuery.occupancies = occupancies
+
+        filterQuery.destination = { destination: where }
+
+        console.log('filterQuery', filterQuery)
+        getSearchedHotelAll(filterQuery)
+          .then((res) => {
+            setIsLoadingSearched({ isLoading: false })
+            const data = res.data
+            console.log('searchedHotelData', data)
+            setSearched(data)
+          })
+          .catch((err) => {
+            setIsLoadingSearched({ isLoading: false })
+            console.log('error', err)
+          })
       })
       .catch((err) => {
-        console.log('error', err)
-      })
-    filterQuery.currentLocation = currentLocation
-
-    const stay = {
-      checkIn: dateValue === '' ? currentDate.toISOString().split('T')[0] : dateValue,
-      checkOut: secondDateValue === '' ? nextDate.toISOString().split('T')[0] : secondDateValue
-    }
-    filterQuery.stay = stay
-
-    let rooms = 1
-    if (radioRoomsValues === 'Shared') {
-      rooms = 1
-    } else if (radioRoomsValues === 'Single') {
-      rooms = 1
-    } else if (radioRoomsValues === 'Double') {
-      rooms = 2
-    } else {
-      rooms = 3
-    }
-
-    const occupancies = [
-      {
-        rooms: rooms,
-        adults: inputAdults === 0 ? 1 : inputAdults,
-        children: inputChildren + inputInfants
-      }
-    ]
-    filterQuery.occupancies = occupancies
-
-    filterQuery.destination = { destination: where }
-
-    console.log('filterQuery', filterQuery)
-    getSearchedHotelAll(filterQuery)
-      .then((res) => {
-        setIsLoadingSearched({ isLoading: false })
-        const data = res.data
-        console.log('searchedHotelData', data)
-        setSearched(data)
-      })
-      .catch((err) => {
-        setIsLoadingSearched({ isLoading: false })
-        console.log('error', err)
+        console.log('ip info err', err)
       })
   }
 
@@ -460,6 +461,7 @@ const Home = (props: any) => {
                 style={{ alignSelf: 'flex-end' }}
                 onPress={() => {
                   setModalWhenVisible(false), setTabsActive('flexible'), setNumberOfDays(1)
+                  setDateValue(''), setSecondDateValue(''), setInitialDate('')
                 }}
                 rippleColor={'white'}
               />
@@ -480,6 +482,8 @@ const Home = (props: any) => {
               )}
               <View style={{ display: tabsActive === 'calendar' ? 'flex' : 'none' }}>
                 <Calendar
+                  initialDate={initialDate}
+                  minDate={new Date().toISOString().split('T')[0].toString()}
                   markingType={'period'}
                   markedDates={teste}
                   style={{
@@ -495,11 +499,29 @@ const Home = (props: any) => {
                     if (dateValue) {
                       setSecondDateValue(day.dateString.toString())
                     } else {
-                      setDateValue(day.dateString.toString())
+                      if (numberOfDays > 1) {
+                        let secondday = new Date(day.dateString)
+                        secondday = new Date(
+                          secondday.setDate(secondday.getDate() + numberOfDays - 1)
+                        )
+                        setDateValue(day.dateString.toString())
+                        setSecondDateValue(secondday.toISOString().split('T')[0].toString())
+                      } else {
+                        setDateValue(day.dateString.toString())
+                      }
                     }
                     if (dateValue && secondDateValue) {
-                      setDateValue(day.dateString.toString())
-                      setSecondDateValue('')
+                      if (numberOfDays > 1) {
+                        let secondday = new Date(day.dateString)
+                        secondday = new Date(
+                          secondday.setDate(secondday.getDate() + numberOfDays - 1)
+                        )
+                        setDateValue(day.dateString.toString())
+                        setSecondDateValue(secondday.toISOString().split('T')[0].toString())
+                      } else {
+                        setDateValue(day.dateString.toString())
+                        setSecondDateValue('')
+                      }
                     }
                   }}
                 />
@@ -582,7 +604,12 @@ const Home = (props: any) => {
                   </View>
                   <View>
                     <Pressable
-                      onPress={() => [setTabsActive('calendar'), setNumberOfDays(0)]}
+                      onPress={() => [
+                        setTabsActive('calendar'),
+                        setNumberOfDays(1),
+                        setDateValue(''),
+                        setSecondDateValue('')
+                      ]}
                       style={{
                         marginLeft: 90
                       }}
@@ -613,7 +640,7 @@ const Home = (props: any) => {
                   </Text>
 
                   <View style={{ flexDirection: 'row', marginTop: 30 }}>
-                    <View
+                    <TouchableOpacity
                       style={{
                         borderWidth: 2,
                         borderRadius: 12,
@@ -622,6 +649,7 @@ const Home = (props: any) => {
                         height: 80,
                         marginRight: 10
                       }}
+                      onPress={() => [setInitialDate('2022-09-01'), setTabsActive('calendar')]}
                     >
                       <IconButton
                         style={{ marginLeft: 'auto', marginRight: 'auto' }}
@@ -641,8 +669,8 @@ const Home = (props: any) => {
                       >
                         Sep
                       </Text>
-                    </View>
-                    <View
+                    </TouchableOpacity>
+                    <TouchableOpacity
                       style={{
                         borderWidth: 2,
                         borderRadius: 12,
@@ -651,6 +679,7 @@ const Home = (props: any) => {
                         height: 80,
                         marginRight: 10
                       }}
+                      onPress={() => [setInitialDate('2022-10-01'), setTabsActive('calendar')]}
                     >
                       <IconButton
                         style={{ marginLeft: 'auto', marginRight: 'auto' }}
@@ -670,8 +699,8 @@ const Home = (props: any) => {
                       >
                         Oct
                       </Text>
-                    </View>
-                    <View
+                    </TouchableOpacity>
+                    <TouchableOpacity
                       style={{
                         borderWidth: 2,
                         borderRadius: 12,
@@ -680,6 +709,7 @@ const Home = (props: any) => {
                         height: 80,
                         marginRight: 10
                       }}
+                      onPress={() => [setInitialDate('2022-11-01'), setTabsActive('calendar')]}
                     >
                       <IconButton
                         style={{ marginLeft: 'auto', marginRight: 'auto' }}
@@ -699,8 +729,8 @@ const Home = (props: any) => {
                       >
                         Dec
                       </Text>
-                    </View>
-                    <View
+                    </TouchableOpacity>
+                    <TouchableOpacity
                       style={{
                         borderWidth: 2,
                         borderRadius: 12,
@@ -709,6 +739,7 @@ const Home = (props: any) => {
                         height: 80,
                         marginRight: 10
                       }}
+                      onPress={() => [setInitialDate('2022-12-01'), setTabsActive('calendar')]}
                     >
                       <IconButton
                         style={{ marginLeft: 'auto', marginRight: 'auto' }}
@@ -728,7 +759,7 @@ const Home = (props: any) => {
                       >
                         Dec
                       </Text>
-                    </View>
+                    </TouchableOpacity>
                   </View>
                 </View>
               </View>
@@ -750,6 +781,7 @@ const Home = (props: any) => {
                   style={[styles.calendarBtnSearch]}
                   onPress={() => {
                     sendWhen(`${dateValue}${secondDateValue}`)
+                    setInitialDate('')
                   }}
                 >
                   <Text style={styles.loginButtonText}>

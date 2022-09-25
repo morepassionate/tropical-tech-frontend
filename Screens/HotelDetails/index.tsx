@@ -15,7 +15,6 @@ import LightButton from '../../Components/LightButton'
 import ModalReviews from '../../Components/ModalReviews'
 import { getHotelById } from '../../api/apiCaller'
 import { hotelbedImg } from '../../Constants/styles'
-import { Item } from 'react-native-paper/lib/typescript/components/List/List'
 
 interface HotelDetailProps {
   hotelName: string
@@ -355,13 +354,15 @@ const HotelDetails = ({ navigation, route }: any) => {
                 Cancellation policy
               </Text>
               <Text>
-                You can cancel hotel booking and you can return ${cancellationPolicies.amount} from{' '}
-                {cancellationPolicies.from}.{'    '} By selecting the button below, you agree to the
-                Guest Release and Waiver, the Cancellation Policy, the Guest Refund Policy and
+                You can cancel hotel booking and you can return $
+                {cancellationPolicies && cancellationPolicies.amount} from{' '}
+                {cancellationPolicies && cancellationPolicies.from}.{'    '} By selecting the button
+                below, you agree to the Guest Release and Waiver, the Cancellation Policy, the Guest
+                Refund Policy and social-distancing and other COVID-19-related guidelines. Payment
+                Terms between you and UHR.By selecting the button below, you agree to the Guest
+                Release and Waiver, the Cancellation Policy, the Guest Refund Policy and
                 social-distancing and other COVID-19-related guidelines. Payment Terms between you
-                and UHR.By selecting the button below, you agree to the Guest Release and Waiver,
-                the Cancellation Policy, the Guest Refund Policy and social-distancing and other
-                COVID-19-related guidelines. Payment Terms between you and UHR.
+                and UHR.
               </Text>
             </View>
           </View>

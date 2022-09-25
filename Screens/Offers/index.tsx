@@ -13,6 +13,7 @@ import LightButton from '../../Components/LightButton'
 import COLORS from '../../Constants/styles'
 import RenderHotelComponent from './components/RenderHotel'
 import styles from './styles'
+import * as Progress from 'react-native-progress'
 
 type ItemProps = {
   name: string
@@ -43,35 +44,36 @@ type ItemProps = {
 
 const Offers = ({ navigation }: any) => {
   const searchedHotelData = useRecoilValue(searched)
+  console.log('searchedHotelData', searchedHotelData)
   const isLoading = useRecoilValue(isLoadingSearched)
   const [travellingForWork, setTravellingForWork] = useState(false)
   const [modalSearch, setModalSearch] = useState(false)
   const [modalSort, setModalSort] = useState(false)
-  const [modalFilterPrice, setModalFilterPrice] = useState(false)
-  const [placeSearch, setPlaceSearch] = useState('')
-  const [dateSearch, setDateSearch] = useState('')
+  const [filterActive, setFilterActive] = useState('Normal') //Normal ,Search, SortAsc, SortDesc, Price
   const [personsAndRooms, setPersonsAndRooms] = useState('')
   const [sort, setSort] = useState('') //Lower, Higher, Distance, Top
-  const [filterActive, setFilterActive] = useState('Normal') //Normal ,Search, SortAsc, SortDesc, Price
+  const [modalFilterPrice, setModalFilterPrice] = useState(false)
+  const [dateSearch, setDateSearch] = useState('')
+  const [placeSearch, setPlaceSearch] = useState('')
   const [minPrice, setMinPrice] = useState('')
   const [maxPrice, setMaxPrice] = useState('')
 
-  const searchFilter = searchedHotelData.filter((item: ItemProps) => {
+  const searchFilterData = searchedHotelData.filter((item: ItemProps) => {
     return (
       item.city.charAt(0) === placeSearch.charAt(0) ||
       item.country.charAt(0) === placeSearch.charAt(0)
     )
   })
 
-  const sortFilterAsc = searchedHotelData.sort((a: ItemProps, b: ItemProps) => {
+  const sortFilterAsc = searchedHotelData.slice().sort((a: ItemProps, b: ItemProps) => {
     return a.price - b.price
   })
 
-  const sortFilterDesc = searchedHotelData.sort((a: ItemProps, b: ItemProps) => {
+  const sortFilterDesc = searchedHotelData.slice().sort((a: ItemProps, b: ItemProps) => {
     return b.price - a.price
   })
 
-  const sortDistanceAsc = searchedHotelData.sort((a: ItemProps, b: ItemProps) => {
+  const sortDistanceAsc = searchedHotelData.slice().sort((a: ItemProps, b: ItemProps) => {
     return b.distance - a.distance
   })
 
@@ -80,7 +82,7 @@ const Offers = ({ navigation }: any) => {
       case 'Normal':
         return searchedHotelData
       case 'Search':
-        return searchFilter
+        return placeSearch === '' ? searchedHotelData : searchFilterData
       case 'SortAsc':
         return sortFilterAsc
       case 'SortDesc':
@@ -92,8 +94,8 @@ const Offers = ({ navigation }: any) => {
     }
   }
 
-  const previousPrices = [10, 20, 25, 30, 15, 19]
-  const mostPrices = [40, 35, 55, 15, 20, 25, 27, 30, 15, 10]
+  const previousPrices = [100, 200, 300, 400, 500, 600]
+  const mostPrices = [400, 350, 550, 150, 200, 250, 270, 300, 150, 100]
 
   return (
     <ScrollView style={{ backgroundColor: 'white' }}>
@@ -152,127 +154,158 @@ const Offers = ({ navigation }: any) => {
       <View style={styles.mostPopularContainer}>
         <CardMostPopular numberofadults={1} />
       </View>
-      {getRenderActive(filterActive).map((item: ItemProps, index: number) => {
-        if (index < 3) {
-          return (
-            <View
-              style={[styles.marginHorizontal15, { marginBottom: 10 }]}
-              key={`${item.name}-${index}`}
-            >
-              <RenderHotelComponent
-                code={item.code}
-                hotelName={item.name}
-                ratings={item.ratings}
-                reviewsCount={item.reviewsCount}
-                hotelImage={item.image}
-                country={item.country}
-                city={item.city}
-                address={item.address}
-                coordinates={item.coordinates}
-                distance={item.distance}
-                roomType={item.roomType}
-                freeCancellation={item.freeCancellation}
-                price={item.price}
-                noprepaymentneeded={item.noprepaymentneeded}
-                bedType={item.bedType}
-                from={item.from}
-                to={item.to}
-                onPressCard={() =>
-                  navigation.navigate('HotelDetails', {
-                    code: item.code,
-                    price: item.price,
-                    ratings: item.ratings,
-                    reviewsCount: item.reviewsCount,
-                    cancellationPolicies: item.cancellationPolicies,
-                    from: item.from,
-                    to: item.to
-                  })
-                }
-              />
-            </View>
-          )
-        }
-      })}
+      {isLoading.isLoading ? (
+        <Progress.Circle
+          color="#1B4298"
+          borderWidth={5}
+          size={50}
+          indeterminate={true}
+          style={{ alignItems: 'center', justifyContent: 'center' }}
+        />
+      ) : (
+        getRenderActive(filterActive).map((item: ItemProps, index: number) => {
+          if (index < 3) {
+            return (
+              <View
+                style={[styles.marginHorizontal15, { marginBottom: 10 }]}
+                key={`${item.name}-${index}`}
+              >
+                <RenderHotelComponent
+                  code={item.code}
+                  hotelName={item.name}
+                  ratings={item.ratings}
+                  reviewsCount={item.reviewsCount}
+                  hotelImage={item.image}
+                  country={item.country}
+                  city={item.city}
+                  address={item.address}
+                  coordinates={item.coordinates}
+                  distance={item.distance}
+                  roomType={item.roomType}
+                  freeCancellation={item.freeCancellation}
+                  price={item.price}
+                  noprepaymentneeded={item.noprepaymentneeded}
+                  bedType={item.bedType}
+                  from={item.from}
+                  to={item.to}
+                  onPressCard={() =>
+                    navigation.navigate('HotelDetails', {
+                      code: item.code,
+                      price: item.price,
+                      ratings: item.ratings,
+                      reviewsCount: item.reviewsCount,
+                      cancellationPolicies: item.cancellationPolicies,
+                      from: item.from,
+                      to: item.to
+                    })
+                  }
+                />
+              </View>
+            )
+          }
+        })
+      )}
 
       <CardDestinationIdea numberofadults={1} />
-      {searchedHotelData.map((item: ItemProps, index: number) => {
-        if (index < 6 && index >= 3) {
-          return (
-            <View
-              style={[styles.marginHorizontal15, { marginBottom: 10 }]}
-              key={`${item.name}-${index}`}
-            >
-              <RenderHotelComponent
-                code={item.code}
-                hotelName={item.name}
-                ratings={item.ratings}
-                reviewsCount={item.reviewsCount}
-                hotelImage={item.image}
-                country={item.country}
-                city={item.city}
-                address={item.address}
-                coordinates={item.coordinates}
-                distance={item.distance}
-                roomType={item.roomType}
-                freeCancellation={item.freeCancellation}
-                price={item.price}
-                noprepaymentneeded={item.noprepaymentneeded}
-                bedType={item.bedType}
-                from={item.from}
-                to={item.to}
-                onPressCard={() =>
-                  navigation.navigate('HotelDetails', {
-                    code: item.code,
-                    price: item.price,
-                    ratings: item.ratings,
-                    reviewsCount: item.reviewsCount
-                  })
-                }
-              />
-            </View>
-          )
-        }
-      })}
+      {isLoading.isLoading ? (
+        <Progress.Circle
+          color="#1B4298"
+          borderWidth={5}
+          size={50}
+          indeterminate={true}
+          style={{ alignItems: 'center', justifyContent: 'center' }}
+        />
+      ) : (
+        searchedHotelData.map((item: ItemProps, index: number) => {
+          console.log('searchitem', item)
+          if (index < 6 && index >= 3) {
+            return (
+              <View
+                style={[styles.marginHorizontal15, { marginBottom: 10 }]}
+                key={`${item.name}-${index}`}
+              >
+                <RenderHotelComponent
+                  code={item.code}
+                  hotelName={item.name}
+                  ratings={item.ratings}
+                  reviewsCount={item.reviewsCount}
+                  hotelImage={item.image}
+                  country={item.country}
+                  city={item.city}
+                  address={item.address}
+                  coordinates={item.coordinates}
+                  distance={item.distance}
+                  roomType={item.roomType}
+                  freeCancellation={item.freeCancellation}
+                  price={item.price}
+                  noprepaymentneeded={item.noprepaymentneeded}
+                  bedType={item.bedType}
+                  from={item.from}
+                  to={item.to}
+                  onPressCard={() =>
+                    navigation.navigate('HotelDetails', {
+                      code: item.code,
+                      price: item.price,
+                      ratings: item.ratings,
+                      reviewsCount: item.reviewsCount
+                    })
+                  }
+                />
+              </View>
+            )
+          }
+        })
+      )}
 
       <CardBestDeals numberofadults={1} />
-      {searchedHotelData.map((item: ItemProps, index: number) => {
-        if (index >= 6) {
-          return (
-            <View
-              style={[styles.marginHorizontal15, { marginBottom: 10 }]}
-              key={`${item.name}-${index}`}
-            >
-              <RenderHotelComponent
-                code={item.code}
-                hotelName={item.name}
-                ratings={item.ratings}
-                reviewsCount={item.reviewsCount}
-                hotelImage={item.image}
-                country={item.country}
-                city={item.city}
-                address={item.address}
-                coordinates={item.coordinates}
-                distance={item.distance}
-                roomType={item.roomType}
-                freeCancellation={item.freeCancellation}
-                price={item.price}
-                noprepaymentneeded={item.noprepaymentneeded}
-                bedType={item.bedType}
-                from={item.from}
-                to={item.to}
-                onPressCard={() =>
-                  navigation.navigate('HotelDetails', {
-                    code: item.code,
-                    price: item.price,
-                    ratings: item.ratings,
-                    reviewsCount: item.reviewsCount
-                  })
-                }
-              />
-            </View>
-          )
-        }
-      })}
+      {isLoading.isLoading ? (
+        <Progress.Circle
+          color="#1B4298"
+          borderWidth={5}
+          size={50}
+          indeterminate={true}
+          style={{ alignItems: 'center', justifyContent: 'center' }}
+        />
+      ) : (
+        searchedHotelData.map((item: ItemProps, index: number) => {
+          if (index >= 6) {
+            return (
+              <View
+                style={[styles.marginHorizontal15, { marginBottom: 10 }]}
+                key={`${item.name}-${index}`}
+              >
+                <RenderHotelComponent
+                  code={item.code}
+                  hotelName={item.name}
+                  ratings={item.ratings}
+                  reviewsCount={item.reviewsCount}
+                  hotelImage={item.image}
+                  country={item.country}
+                  city={item.city}
+                  address={item.address}
+                  coordinates={item.coordinates}
+                  distance={item.distance}
+                  roomType={item.roomType}
+                  freeCancellation={item.freeCancellation}
+                  price={item.price}
+                  noprepaymentneeded={item.noprepaymentneeded}
+                  bedType={item.bedType}
+                  from={item.from}
+                  to={item.to}
+                  onPressCard={() =>
+                    navigation.navigate('HotelDetails', {
+                      code: item.code,
+                      price: item.price,
+                      ratings: item.ratings,
+                      reviewsCount: item.reviewsCount
+                    })
+                  }
+                />
+              </View>
+            )
+          }
+        })
+      )}
       <Button style={styles.loadMore} labelStyle={{ color: 'white' }}>
         Load more
       </Button>
@@ -519,7 +552,7 @@ const Offers = ({ navigation }: any) => {
                     key={`${item}@${index}`}
                     style={{
                       width: 5,
-                      height: item,
+                      height: item / 10,
                       backgroundColor: '#5163B0',
                       opacity: 0.5,
                       marginHorizontal: 2,
@@ -532,7 +565,7 @@ const Offers = ({ navigation }: any) => {
                     key={`${item}@${index}`}
                     style={{
                       width: 5,
-                      height: item,
+                      height: item / 10,
                       backgroundColor: '#5163B0',
                       marginHorizontal: 2,
                       alignSelf: 'flex-end'
