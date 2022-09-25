@@ -252,6 +252,7 @@ const Home = (props: any) => {
             setIsLoadingSearched({ isLoading: false })
             console.log('error', err)
           })
+        setIsLoadingSearched({ isLoading: true })
       })
       .catch((err) => {
         console.log('ip info err', err)
