@@ -36,6 +36,8 @@ function CardUpcomingTrips(props: { numberofadults: number }) {
                       cancellationPolicies: item.cancellationPolicies,
                       from: item.from,
                       to: item.to,
+                      image: item.image,
+                      currency: item.currency,
                       numberofadults
                     } as never
                   )

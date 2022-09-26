@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import { IconButton } from 'react-native-paper'
 import PersonLocationIcon from '../../../../assets/icons/PersonLocationIcon'
@@ -20,6 +20,7 @@ type RenderHotelProps = {
   }
   distance: number
   roomType: string
+  currency: string
   freeCancellation: boolean
   price: number
   noprepaymentneeded: boolean
@@ -30,6 +31,7 @@ type RenderHotelProps = {
 }
 
 const RenderHotelComponent: React.FC<RenderHotelProps> = (props) => {
+  const [isFavor, setIsFavor] = useState(false)
   const {
     code,
     hotelName,
@@ -44,6 +46,7 @@ const RenderHotelComponent: React.FC<RenderHotelProps> = (props) => {
     roomType,
     freeCancellation,
     price,
+    currency,
     noprepaymentneeded,
     bedType,
     from,
@@ -57,7 +60,7 @@ const RenderHotelComponent: React.FC<RenderHotelProps> = (props) => {
           <View style={[styles.rowContent, { marginTop: 2 }]}>
             <Text
               style={{ color: COLORS.primary, fontSize: 20, fontFamily: 'Corbel' }}
-            >{`15%`}</Text>
+            >{`10%`}</Text>
             <Text style={styles.cashbackText}>CASHBACK</Text>
           </View>
         </View>
@@ -73,51 +76,47 @@ const RenderHotelComponent: React.FC<RenderHotelProps> = (props) => {
         <View
           style={[
             styles.rowContent,
-            { marginBottom: 10, justifyContent: 'space-between', width: '70%' }
+            { marginBottom: 5, justifyContent: 'space-between', width: '70%' }
           ]}
         >
           <Text style={styles.name}>{hotelName}</Text>
           <IconButton
             icon={'heart'}
             size={17}
-            color={COLORS.blue}
-            style={styles.notMargin}
+            color={!isFavor ? COLORS.grey : COLORS.blue}
+            style={[styles.notMargin, { marginLeft: 40 }]}
             onPress={() => {
-              return
+              return setIsFavor(!isFavor)
             }}
-            rippleColor={'white'}
+            rippleColor={'blue'}
           />
         </View>
         <View>
-          <View style={[styles.rowContent, { marginBottom: 10 }]}>
+          <View style={[styles.rowContent]}>
             <IconButton icon={'star'} size={14} color={COLORS.blue} style={styles.notMargin} />
             <Text style={styles.starText}>{ratings}</Text>
             <Text style={styles.point}>.</Text>
             <Text style={styles.starText}>{`${reviewsCount ?? 0} reviews`}</Text>
           </View>
           <View style={[styles.rowContent, { marginBottom: 10 }]}>
-            <View style={{ marginTop: 4 }}>
+            <View style={{ marginTop: 'auto', marginBottom: 'auto' }}>
               <PersonLocationIcon />
             </View>
             <Text style={styles.areaText}>Area</Text>
-            {/* <Text numberOfLines={2} ellipsizeMode="tail" style={styles.point}>
-              {address}
-            </Text> */}
-            <Text style={[styles.point, { marginTop: 5 }]}>
-              {city}
-              {','}
-            </Text>
-            <Text
-              style={{
-                marginTop: 5,
-                fontSize: 14,
-                lineHeight: 10,
-                fontFamily: 'Corbel',
-                alignSelf: 'center'
-              }}
-            >
-              {country}
-            </Text>
+            <View style={{ marginLeft: 5 }}>
+              <Text
+                numberOfLines={4}
+                ellipsizeMode="tail"
+                style={[styles.point, { width: 150, marginTop: 7 }]}
+              >
+                {address}
+              </Text>
+              <Text style={[styles.point, { marginTop: 5 }]}>
+                {city}
+                {','}
+              </Text>
+              <Text style={styles.point}>{country}</Text>
+            </View>
           </View>
           <View style={styles.rowContent}>
             <Text style={styles.starText}>{`${distance.toFixed(2)} mile from location`}</Text>
@@ -128,7 +127,10 @@ const RenderHotelComponent: React.FC<RenderHotelProps> = (props) => {
             <View style={styles.pinCashback}>
               <Text style={styles.pinText}>{`0 CASHBACK`}</Text>
             </View>
-            <Text style={styles.value}>{`$${price}`}</Text>
+            <Text style={{ fontFamily: 'Corbel', marginLeft: 5, fontSize: 12, marginTop: 20 }}>
+              {currency}
+            </Text>
+            <Text style={styles.value}>{`${price}`}</Text>
           </View>
           {freeCancellation && <Text style={styles.includesText}>free cancellation</Text>}
           {noprepaymentneeded && <Text style={styles.includesText}>no prepayment needed</Text>}
@@ -172,15 +174,15 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     width: '60%',
-    marginVertical: 24,
-    marginHorizontal: 28
+    marginVertical: 15,
+    marginHorizontal: 18
   },
   point: {
     fontSize: 14,
-    lineHeight: 10,
+    lineHeight: 14,
     fontFamily: 'Corbel',
-    alignSelf: 'center',
-    marginLeft: 8
+    alignSelf: 'auto',
+    marginLeft: 5
   },
   pinCashback: {
     backgroundColor: COLORS.orange,
@@ -196,9 +198,9 @@ const styles = StyleSheet.create({
   },
   value: {
     fontFamily: 'Corbel',
-    marginLeft: 24,
+    marginLeft: 0,
     fontSize: 20,
-    marginTop: 12
+    marginTop: 10
   },
   includesText: {
     fontSize: 14,
@@ -211,7 +213,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Corbel',
     fontWeight: 'bold',
     fontSize: 16,
-    marginVertical: 12
+    marginVertical: 5
   },
   areaText: {
     fontFamily: 'Corbel',

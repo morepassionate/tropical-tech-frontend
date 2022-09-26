@@ -33,6 +33,7 @@ type ItemProps = {
   }
   code: number
   distance: number
+  currency: string
   roomType: string
   freeCancellation: boolean
   price: number
@@ -44,8 +45,8 @@ type ItemProps = {
 
 const Offers = ({ navigation }: any) => {
   const searchedHotelData = useRecoilValue(searched)
-  console.log('searchedHotelData', searchedHotelData)
   const isLoading = useRecoilValue(isLoadingSearched)
+  // const handleLoadMore = useRecoilValue(handleSubmitFormFunc)
   const [travellingForWork, setTravellingForWork] = useState(false)
   const [modalSearch, setModalSearch] = useState(false)
   const [modalSort, setModalSort] = useState(false)
@@ -152,7 +153,7 @@ const Offers = ({ navigation }: any) => {
       </View>
       <Text style={styles.covidAlert}>Review COVID-19 travel restrictions before you book.</Text>
       <View style={styles.mostPopularContainer}>
-        <CardMostPopular numberofadults={1} />
+        <CardMostPopular isOfferPage={true} numberofadults={1} />
       </View>
       {isLoading.isLoading ? (
         <Progress.Circle
@@ -172,6 +173,7 @@ const Offers = ({ navigation }: any) => {
               >
                 <RenderHotelComponent
                   code={item.code}
+                  currency={item.currency}
                   hotelName={item.name}
                   ratings={item.ratings}
                   reviewsCount={item.reviewsCount}
@@ -190,13 +192,16 @@ const Offers = ({ navigation }: any) => {
                   to={item.to}
                   onPressCard={() =>
                     navigation.navigate('HotelDetails', {
+                      image: item.image,
                       code: item.code,
+                      currency: item.currency,
                       price: item.price,
                       ratings: item.ratings,
                       reviewsCount: item.reviewsCount,
                       cancellationPolicies: item.cancellationPolicies,
                       from: item.from,
-                      to: item.to
+                      to: item.to,
+                      numberofadults: 1
                     })
                   }
                 />
@@ -228,6 +233,7 @@ const Offers = ({ navigation }: any) => {
                   code={item.code}
                   hotelName={item.name}
                   ratings={item.ratings}
+                  currency={item.currency}
                   reviewsCount={item.reviewsCount}
                   hotelImage={item.image}
                   country={item.country}
@@ -244,10 +250,16 @@ const Offers = ({ navigation }: any) => {
                   to={item.to}
                   onPressCard={() =>
                     navigation.navigate('HotelDetails', {
+                      image: item.image,
                       code: item.code,
+                      currency: item.currency,
                       price: item.price,
                       ratings: item.ratings,
-                      reviewsCount: item.reviewsCount
+                      reviewsCount: item.reviewsCount,
+                      cancellationPolicies: item.cancellationPolicies,
+                      from: item.from,
+                      to: item.to,
+                      numberofadults: 1
                     })
                   }
                 />
@@ -281,6 +293,7 @@ const Offers = ({ navigation }: any) => {
                   reviewsCount={item.reviewsCount}
                   hotelImage={item.image}
                   country={item.country}
+                  currency={item.currency}
                   city={item.city}
                   address={item.address}
                   coordinates={item.coordinates}
@@ -294,10 +307,16 @@ const Offers = ({ navigation }: any) => {
                   to={item.to}
                   onPressCard={() =>
                     navigation.navigate('HotelDetails', {
+                      image: item.image,
                       code: item.code,
+                      currency: item.currency,
                       price: item.price,
                       ratings: item.ratings,
-                      reviewsCount: item.reviewsCount
+                      reviewsCount: item.reviewsCount,
+                      cancellationPolicies: item.cancellationPolicies,
+                      from: item.from,
+                      to: item.to,
+                      numberofadults: 1
                     })
                   }
                 />

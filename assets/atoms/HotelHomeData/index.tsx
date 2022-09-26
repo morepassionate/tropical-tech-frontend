@@ -63,3 +63,10 @@ export const isLoadingBestDeals = atom({
     isLoading: true
   }
 })
+
+// export const handleSubmitFormFunc = atom({
+//   key: 'handleSubmitFormFuntion',
+//   default: () => {
+//     return
+//   }
+// })

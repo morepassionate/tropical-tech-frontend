@@ -10,7 +10,13 @@ import styles from './styles'
 import { useRecoilValue } from 'recoil'
 import { isLoadingMostPopular, mostpopular } from '../../assets/atoms/HotelHomeData'
 
-const CardMostPopular = (props: { numberofadults: number }) => {
+interface CardMostPropsType {
+  numberofadults: number
+  isOfferPage?: boolean
+}
+
+const CardMostPopular = (props: CardMostPropsType) => {
+  const isOfferPage = props.isOfferPage
   const numberofadults = props.numberofadults
   const navigation = useNavigation()
   const mostPopularHotels = useRecoilValue(mostpopular)
@@ -43,6 +49,8 @@ const CardMostPopular = (props: { numberofadults: number }) => {
                           cancellationPolicies: item.cancellationPolicies,
                           from: item.from,
                           to: item.to,
+                          currency: item.currency,
+                          image: item.image,
                           numberofadults: numberofadults
                         } as never
                       )
@@ -88,6 +96,8 @@ const CardMostPopular = (props: { numberofadults: number }) => {
                           cancellationPolicies: item.cancellationPolicies,
                           from: item.from,
                           to: item.to,
+                          currency: item.currency,
+                          image: item.image,
                           numberofadults: numberofadults
                         } as never
                       )

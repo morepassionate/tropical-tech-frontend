@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { ScrollView, View, Text, Image, TouchableOpacity } from 'react-native'
+import { ScrollView, View, Text, Image, TouchableOpacity, Modal } from 'react-native'
 import { Button, IconButton, Paragraph } from 'react-native-paper'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import AuthStatus from '../../assets/atoms/AuthStatus'
@@ -13,6 +13,7 @@ import styles from './styles'
 
 const ConfirmPayment = ({ navigation, route }: any) => {
   const {
+    isShow,
     code,
     ratings,
     reviewsCount,
@@ -24,20 +25,23 @@ const ConfirmPayment = ({ navigation, route }: any) => {
     numberofnights,
     lastUpadate,
     numberofadults,
-    country
+    country,
+    cancellationPolicies,
+    currency
   } = route.params
-  console.log('confirmpayment route.params', route.params)
+
   const mock = [
-    { title: 'Date', info: `${from}` },
-    { title: 'Check-in time', info: '10:00' },
-    { title: 'Check-out time', info: '18:00' },
-    { title: 'Guests', info: '2 adult' }
+    { title: 'Date', info: `${isShow && from}` },
+    { title: 'Check-in time', info: `${isShow && '10:00'}` },
+    { title: 'Check-out time', info: `${isShow && '18:00'}` },
+    { title: 'Guests', info: `${isShow && '2 adult'}` }
   ]
   const [addNewCard, setAddNewCard] = useState(false)
   const authStatus = useRecoilValue(AuthStatus)
   const userData = useRecoilValue(UserData)
   const [purchase, setPurchase] = useRecoilState(PurchaseAtom)
   const setCashback = useSetRecoilState(CashbackAtom)
+  const [modalPolicy, setModalPolicy] = useState(false)
 
   return (
     <ScrollView>
@@ -65,14 +69,19 @@ const ConfirmPayment = ({ navigation, route }: any) => {
             />
             <View style={[styles.rowContainer, { alignItems: 'center' }]}>
               <IconButton icon={'star'} size={12} />
-              <Text>{`${ratings}(${reviewsCount})`}</Text>
+              <Text>{isShow ? `${ratings} (${reviewsCount})` : '0 (0)'}</Text>
             </View>
           </View>
           <View style={{ width: '60%' }}>
             <Text style={styles.title}>{`${hotelName}`}</Text>
             <Text style={styles.vertical12}>{`${country}`}</Text>
-            <Text style={styles.vertical12}> `${numberofnights} nights`</Text>
-            <Text style={styles.vertical12}>Languages spoken: English, Portuguese and Spanish</Text>
+            <Text style={styles.vertical12}>
+              {' '}
+              {isShow ? `${numberofnights} nights` : `0 nights`}
+            </Text>
+            <Text style={styles.vertical12}>
+              {isShow ? `Languages spoken: English, Portuguese and Spanish` : ''}
+            </Text>
           </View>
         </View>
         <View style={styles.line} />
@@ -96,7 +105,7 @@ const ConfirmPayment = ({ navigation, route }: any) => {
                 fontSize: 16,
                 lineHeight: 19
               }}
-            >{`${price}$ X ${numberofadults} adult`}</Text>
+            >{`${isShow && price}$ X ${numberofadults} adult`}</Text>
             <Text
               style={{
                 fontFamily: 'Corbel',
@@ -208,10 +217,26 @@ const ConfirmPayment = ({ navigation, route }: any) => {
         </View>
         <View style={[styles.line, { marginTop: 30 }]} />
         <Text style={styles.policy}>Cancellation policy</Text>
-        <Text style={{ fontFamily: 'Corbel', fontSize: 16, lineHeight: 19, marginBottom: 15 }}>
+        {/* <Text style={{ fontFamily: 'Corbel', fontSize: 16, lineHeight: 19, marginBottom: 15 }}>
           Any experience can be cancelled and fully refunded within 24 hours of purchase, or at
           least 7 days before the experience starts.
-        </Text>
+        </Text> */}
+        {isShow && (
+          <Text
+            numberOfLines={2}
+            ellipsizeMode="tail"
+            style={{ fontSize: 16, fontFamily: 'Corbel', marginBottom: 15, lineHeight: 19 }}
+          >
+            If cancel: {'\n'}- Before{' '}
+            {cancellationPolicies && cancellationPolicies.from.split('T')[1]},
+            {cancellationPolicies && cancellationPolicies.from.split('T')[0]} : No cancellations
+            charges. {'\n'}- After {cancellationPolicies && cancellationPolicies.from.split('T')[1]}
+            ,{cancellationPolicies && cancellationPolicies.from.split('T')[0]} :{' '}
+            {cancellationPolicies && cancellationPolicies.amount}
+            <Text style={{ fontFamily: 'Corbel', fontSize: 10 }}>({currency})</Text> will be
+            charged.
+          </Text>
+        )}
         <TouchableOpacity>
           <Text style={{ textDecorationLine: 'underline', fontFamily: 'Corbel', fontSize: 16 }}>
             Learn more
@@ -286,6 +311,55 @@ const ConfirmPayment = ({ navigation, route }: any) => {
           </Text>
         </Button>
       </View>
+      <Modal
+        animationType={'slide'}
+        transparent={true}
+        visible={modalPolicy}
+        onRequestClose={() => {
+          setModalPolicy(!modalPolicy)
+        }}
+      >
+        <View>
+          <View
+            style={{
+              backgroundColor: 'white',
+              position: 'relative',
+              width: '90%',
+              alignSelf: 'center',
+              height: '90%',
+              marginVertical: 50,
+              borderRadius: 30
+            }}
+          >
+            <IconButton
+              icon={'close'}
+              size={24}
+              color={'#5691B5'}
+              style={{ margin: 0, alignSelf: 'flex-end', marginRight: 20, marginTop: 10 }}
+              onPress={() => setModalPolicy(false)}
+              rippleColor={'white'}
+            />
+            <View style={{ alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+              <Text style={{ fontSize: 24, fontFamily: 'Corbel-Bold', alignSelf: 'flex-start' }}>
+                Cancellation policy
+              </Text>
+              {isShow && (
+                <Text style={{ fontFamily: 'Corbel', fontSize: 18 }}>
+                  If cancel: {'\n'}- Before{' '}
+                  {cancellationPolicies && cancellationPolicies.from.split('T')[1]},
+                  {cancellationPolicies && cancellationPolicies.from.split('T')[0]} : No
+                  cancellations charges. {'\n'}- After{' '}
+                  {cancellationPolicies && cancellationPolicies.from.split('T')[1]},
+                  {cancellationPolicies && cancellationPolicies.from.split('T')[0]} :{' '}
+                  {cancellationPolicies && cancellationPolicies.amount}
+                  <Text style={{ fontFamily: 'Corbel', fontSize: 10 }}>({currency})</Text> will be
+                  charged.
+                </Text>
+              )}
+            </View>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   )
 }

@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   fullRefunds: {
-    fontSize: 16,
+    fontSize: 18,
     fontFamily: 'Corbel',
     marginBottom: 35,
     lineHeight: 19

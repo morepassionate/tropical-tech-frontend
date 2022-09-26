@@ -7,6 +7,7 @@ export interface HotelInfoProps {
   to: string
   code: number
   price: number
+  currency: string
   ratings: number
   reviewsCount: number
   cancellationPolicies: {
@@ -33,6 +34,10 @@ export interface FilterQueryProps {
   currentLocation: {
     latitude: number
     longitude: number
+  }
+  rooms: {
+    included: boolean
+    room: string[]
   }
 }
 

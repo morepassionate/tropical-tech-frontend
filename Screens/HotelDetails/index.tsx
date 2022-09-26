@@ -5,11 +5,11 @@ import PoolIcon from '../../assets/icons/Pool'
 import GridGalleryImages from '../../Components/GridGalleryImages'
 import Reviews from '../../Components/Reviews'
 import COLORS from '../../Constants/styles'
-import { commentsReviews, dataHotel, gallery } from '../../data'
+import { commentsReviews } from '../../data'
 import MapView, { Marker } from 'react-native-maps'
 
 import styles from './styles'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilState } from 'recoil'
 import AuthStatus from '../../assets/atoms/AuthStatus'
 import LightButton from '../../Components/LightButton'
 import ModalReviews from '../../Components/ModalReviews'
@@ -27,8 +27,18 @@ interface HotelDetailProps {
 }
 
 const HotelDetails = ({ navigation, route }: any) => {
-  const { code, price, ratings, reviewsCount, cancellationPolicies, from, to, numberofadults } =
-    route.params
+  const {
+    code,
+    price,
+    ratings,
+    reviewsCount,
+    cancellationPolicies,
+    image,
+    currency,
+    from,
+    to,
+    numberofadults
+  } = route.params
   const numberofnights = (new Date(to).getTime() - new Date(from).getTime()) / 24 / 3600 / 1000
 
   const [hotelDetailData, setHotelDetailData] = useState({} as HotelDetailProps)
@@ -76,7 +86,12 @@ const HotelDetails = ({ navigation, route }: any) => {
       <View style={styles.imgContainer}>
         <View style={styles.borderNav} />
         <Image
-          source={{ uri: `${hotelbedImg}${hotelDetailData.hotelImg}` }}
+          source={{
+            uri:
+              Object.keys(hotelDetailData).length > 1
+                ? `${hotelbedImg}${image}`
+                : 'There is no image.'
+          }}
           resizeMode={'cover'}
           style={{ height: 300, width: '100%' }}
         />
@@ -88,21 +103,30 @@ const HotelDetails = ({ navigation, route }: any) => {
       <View style={[styles.rowContent, { justifyContent: 'space-between', marginHorizontal: 24 }]}>
         <View>
           <View style={[styles.rowContent, { marginTop: 14 }]}>
-            <Text style={styles.value}>{`${price}$`} </Text>
+            <Text style={{ fontFamily: 'Corbel', fontSize: 12, marginTop: 20 }}>{currency}</Text>
+            <Text style={styles.value}>
+              {Object.keys(hotelDetailData).length > 1 ? `${price}` : `0`}{' '}
+            </Text>
             <Text style={styles.person}>per person</Text>
           </View>
           <View style={styles.pinCashback}>
-            <Text style={styles.pinText}>{`${(price * 10) / 100}$ CASHBACK`}</Text>
+            <Text style={styles.pinText}>
+              {Object.keys(hotelDetailData).length > 1
+                ? `${currency}${(price * 10) / 100} CASHBACK`
+                : `${currency}0 CASHBACK`}
+            </Text>
           </View>
           <Text style={{ marginBottom: 15, fontSize: 16, fontFamily: 'Corbel', color: '#979FA9' }}>
             08 Oct - 10 Oct, 1 guest
           </Text>
         </View>
         <View style={{ justifyContent: 'center', marginTop: 20 }}>
-          <Text style={styles.ratings}>{`${ratings}`}</Text>
+          <Text style={styles.ratings}>
+            {Object.keys(hotelDetailData).length > 1 ? `${ratings}` : '0'}
+          </Text>
 
           <Text style={{ color: COLORS.blue, fontFamily: 'Corbel', fontSize: 14 }}>
-            {`${reviewsCount} Reviews`}
+            {Object.keys(hotelDetailData).length > 1 ? `${reviewsCount} Reviews` : '0 Reviews'}
           </Text>
         </View>
       </View>
@@ -173,21 +197,27 @@ const HotelDetails = ({ navigation, route }: any) => {
             color={COLORS.primary90}
             style={[styles.notMargin, { top: 2 }]}
           />
-          <Text style={styles.font18}>{`4.91 (155 Reviews)`}</Text>
+          <Text style={styles.font18}>
+            {Object.keys(hotelDetailData).length > 1
+              ? `${ratings} (${reviewsCount} Reviews)`
+              : `${'0'} (${'0'} Reviews)`}
+          </Text>
         </TouchableOpacity>
         <View style={styles.reviewsContent}>
-          <ScrollView horizontal style={{ marginRight: -25 }}>
-            {commentsReviews.map((item, index) => (
-              <View key={index} style={{ marginRight: 20 }}>
-                <Reviews
-                  comment={item.comment}
-                  dateOfPost={item.datePublish}
-                  user={item.user}
-                  userImage={item.userImage}
-                />
-              </View>
-            ))}
-          </ScrollView>
+          {Object.keys(hotelDetailData).length > 1 && (
+            <ScrollView horizontal style={{ marginRight: -25 }}>
+              {commentsReviews.map((item, index) => (
+                <View key={index} style={{ marginRight: 20 }}>
+                  <Reviews
+                    comment={item.comment}
+                    dateOfPost={item.datePublish}
+                    user={item.user}
+                    userImage={item.userImage}
+                  />
+                </View>
+              ))}
+            </ScrollView>
+          )}
         </View>
       </View>
       <ModalReviews
@@ -211,9 +241,18 @@ const HotelDetails = ({ navigation, route }: any) => {
           <Text style={styles.font24}>Cancellation policy</Text>
           <IconButton icon={'chevron-right'} size={24} style={styles.notMargin} />
         </TouchableOpacity>
-        <Text style={styles.fullRefunds}>
-          Full refund if within 24 hrs of booking or 7 days before start date
-        </Text>
+        {Object.keys(hotelDetailData).length > 1 && (
+          <Text numberOfLines={2} ellipsizeMode="tail" style={styles.fullRefunds}>
+            If cancel: {'\n'}- Before{' '}
+            {cancellationPolicies && cancellationPolicies.from.split('T')[1]},
+            {cancellationPolicies && cancellationPolicies.from.split('T')[0]} : No cancellations
+            charges. {'\n'}- After {cancellationPolicies && cancellationPolicies.from.split('T')[1]}
+            ,{cancellationPolicies && cancellationPolicies.from.split('T')[0]} :{' '}
+            {cancellationPolicies && cancellationPolicies.amount}
+            <Text style={{ fontFamily: 'Corbel', fontSize: 10 }}>({currency})</Text> will be
+            charged.
+          </Text>
+        )}
       </View>
       <View style={styles.line} />
       <Button
@@ -222,18 +261,21 @@ const HotelDetails = ({ navigation, route }: any) => {
         onPress={() => {
           if (authStatus?.isAuthenticated) {
             navigation.navigate('ConfirmPayment', {
+              isShow: Object.keys(hotelDetailData).length > 0 ? true : false,
               hotelId: code,
               ratings: ratings,
               reviewsCount: reviewsCount,
               hotelName: hotelDetailData.hotelName,
-              hotelImg: hotelDetailData.hotelImg,
+              hotelImg: image,
               from: from,
               to: to,
               price: price,
               numberofadults: numberofadults,
               country: hotelDetailData.country,
               numberofnights: numberofnights,
-              lastUpdate: hotelDetailData.lastUpadate
+              lastUpdate: hotelDetailData.lastUpadate,
+              cancellationPolicies: cancellationPolicies,
+              currency: currency
             })
           } else {
             setModalConfirm(true)
@@ -302,18 +344,21 @@ const HotelDetails = ({ navigation, route }: any) => {
                 onPress={() => {
                   setModalConfirm(false)
                   navigation.navigate('ConfirmPayment', {
+                    isShow: Object.keys(hotelDetailData).length > 0 ? true : false,
                     hotelId: code,
                     ratings: ratings,
                     reviewsCount: reviewsCount,
                     hotelName: hotelDetailData.hotelName,
-                    hotelImg: hotelDetailData.hotelImg,
+                    hotelImg: image,
                     from: from,
                     to: to,
                     price: price,
                     numberofadults: numberofadults,
                     country: hotelDetailData.country,
                     numberofnights: numberofnights,
-                    lastUpdate: hotelDetailData.lastUpadate
+                    lastUpdate: hotelDetailData.lastUpadate,
+                    cancellationPolicies: cancellationPolicies,
+                    currency: currency
                   })
                 }}
               />
@@ -353,17 +398,19 @@ const HotelDetails = ({ navigation, route }: any) => {
               <Text style={{ fontSize: 24, fontFamily: 'Corbel-Bold', alignSelf: 'flex-start' }}>
                 Cancellation policy
               </Text>
-              <Text>
-                You can cancel hotel booking and you can return $
-                {cancellationPolicies && cancellationPolicies.amount} from{' '}
-                {cancellationPolicies && cancellationPolicies.from}.{'    '} By selecting the button
-                below, you agree to the Guest Release and Waiver, the Cancellation Policy, the Guest
-                Refund Policy and social-distancing and other COVID-19-related guidelines. Payment
-                Terms between you and UHR.By selecting the button below, you agree to the Guest
-                Release and Waiver, the Cancellation Policy, the Guest Refund Policy and
-                social-distancing and other COVID-19-related guidelines. Payment Terms between you
-                and UHR.
-              </Text>
+              {Object.keys(hotelDetailData).length > 1 && (
+                <Text style={{ fontFamily: 'Corbel', fontSize: 18 }}>
+                  If cancel: {'\n'}- Before{' '}
+                  {cancellationPolicies && cancellationPolicies.from.split('T')[1]},
+                  {cancellationPolicies && cancellationPolicies.from.split('T')[0]} : No
+                  cancellations charges. {'\n'}- After{' '}
+                  {cancellationPolicies && cancellationPolicies.from.split('T')[1]},
+                  {cancellationPolicies && cancellationPolicies.from.split('T')[0]} :{' '}
+                  {cancellationPolicies && cancellationPolicies.amount}
+                  <Text style={{ fontFamily: 'Corbel', fontSize: 10 }}>({currency})</Text> will be
+                  charged.
+                </Text>
+              )}
             </View>
           </View>
         </View>

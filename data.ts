@@ -231,28 +231,22 @@ export const dataHotel = [
 
 export const commentsReviews = [
   {
-    userImage:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUPpSjzdwuLErHgbBc5vAnXPBT4qge9TSNJflVOKwINRoxYAdQS7atVd_OevSh3WYgHKc&usqp=CAU',
-    user: 'Usuário',
-    datePublish: 'August 2021',
-    comment:
-      'The design and style are stunning.The blinds didn’t close properly, so we could always see sunlight or city light. The smoke detector also flashed a lot. Too much light stimulation. The decor of the hotel is on point. The lobby and the ground floor are beautifully designed and the space feels warm and welcoming whilst also trendy and edgy. The room was perfectly clean and there was everything that I would have needed inside. And more.The staff on duty when I arrived were lovely. The rest were rude. The menu was limited and the food was over priced.'
+    userImage: 'There is no image.',
+    user: '',
+    datePublish: '',
+    comment: ''
   },
   {
-    userImage:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUPpSjzdwuLErHgbBc5vAnXPBT4qge9TSNJflVOKwINRoxYAdQS7atVd_OevSh3WYgHKc&usqp=CAU',
-    user: 'Usuário',
-    datePublish: 'August 2021',
-    comment:
-      'Yes, Hotel Executive Suites is popular with guests booking family stays. The prices at Hotel Executive Suites may vary depending on your stay (e.g. dates you select, hotel policy etc.). See the prices by entering your dates. Check-in at Hotel Executive Suites is from 15:00, and check-out is until 11:00. From the nearest airport, you can get to Hotel Executive Suites by airport.'
+    userImage: 'There is no image.',
+    user: '',
+    datePublish: '',
+    comment: ''
   },
   {
-    userImage:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUPpSjzdwuLErHgbBc5vAnXPBT4qge9TSNJflVOKwINRoxYAdQS7atVd_OevSh3WYgHKc&usqp=CAU',
-    user: 'Usuário',
-    datePublish: 'August 2021',
-    comment:
-      'Guests staying at Radisson Blu Atlantic Hotel, Stavanger can enjoy a highly-rated breakfast during their stay. The prices at Radisson Blu Atlantic Hotel, Stavanger may vary depending on your stay (e.g. dates you select, hotel policy etc.). See the prices by entering your dates. This is our guests favourite part of Stavanger, according to independent reviews.'
+    userImage: 'There is no image.',
+    user: '',
+    datePublish: '',
+    comment: ''
   }
 ]
 

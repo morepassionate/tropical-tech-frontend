@@ -1,6 +1,24 @@
 import { StyleSheet } from 'react-native'
+import COLORS from '../../Constants/styles'
 
 const styles = StyleSheet.create({
+  coverImage: {
+    height: '49%',
+    width: '49%',
+    borderRadius: 12,
+    marginHorizontal: '1%',
+    marginTop: '1%'
+  },
+  moreBackground: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    borderRadius: 12,
+    backgroundColor: COLORS.primary80,
+    opacity: 0.9,
+    zIndex: 2,
+    alignItems: 'center'
+  },
   container: {
     padding: 5
   },

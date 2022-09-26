@@ -77,54 +77,56 @@ const Home = (props: any) => {
   const [initialDate, setInitialDate] = useState('')
 
   useEffect(() => {
-    LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
-    getMostPopularHotels()
-      .then((res) => {
-        setIsLoadingMostPopular({ isLoading: false })
-        const data = res.data
-        console.log('most popular hotels', data)
-        setMostpopular(data)
-      })
-      .catch((err) => {
-        setIsLoadingMostPopular({ isLoading: false })
-        console.log('most popular error', err)
-      })
+    ;(async () => {
+      LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
+      await getMostPopularHotels()
+        .then((res) => {
+          setIsLoadingMostPopular({ isLoading: false })
+          const data = res.data
+          console.log('most popular hotels', data)
+          setMostpopular(data)
+        })
+        .catch((err) => {
+          setIsLoadingMostPopular({ isLoading: false })
+          console.log('most popular error', err)
+        })
 
-    getRecentsearchHotels()
-      .then((res) => {
-        setIsLoadingRecentSearches({ isLoading: false })
-        const data = res.data
-        console.log('recent search hotels', data)
-        setrecentsearches(data)
-      })
-      .catch((err) => {
-        setIsLoadingRecentSearches({ isLoading: false })
-        console.log('recent search error', err)
-      })
+      await getRecentsearchHotels()
+        .then((res) => {
+          setIsLoadingRecentSearches({ isLoading: false })
+          const data = res.data
+          console.log('recent search hotels', data)
+          setrecentsearches(data)
+        })
+        .catch((err) => {
+          setIsLoadingRecentSearches({ isLoading: false })
+          console.log('recent search error', err)
+        })
 
-    getDestinationIdeaHotels()
-      .then((res) => {
-        setIsLoadingDestinationIdeas({ isLoading: false })
-        const data = res.data
-        console.log('destination hotels', data)
-        setDestinationideas(data)
-      })
-      .catch((err) => {
-        setIsLoadingDestinationIdeas({ isLoading: false })
-        console.log('destination hotel error', err)
-      })
+      await getDestinationIdeaHotels()
+        .then((res) => {
+          setIsLoadingDestinationIdeas({ isLoading: false })
+          const data = res.data
+          console.log('destination hotels', data)
+          setDestinationideas(data)
+        })
+        .catch((err) => {
+          setIsLoadingDestinationIdeas({ isLoading: false })
+          console.log('destination hotel error', err)
+        })
 
-    getBestDealHotels()
-      .then((res) => {
-        setIsLoadingBestDeals({ isLoading: false })
-        const data = res.data
-        console.log('best deal hotels', data)
-        setBestdeals(data)
-      })
-      .catch((err) => {
-        setIsLoadingBestDeals({ isLoading: false })
-        console.log('best deal error', err)
-      })
+      await getBestDealHotels()
+        .then((res) => {
+          setIsLoadingBestDeals({ isLoading: false })
+          const data = res.data
+          console.log('best deal hotels', data)
+          setBestdeals(data)
+        })
+        .catch((err) => {
+          setIsLoadingBestDeals({ isLoading: false })
+          console.log('best deal error', err)
+        })
+    })()
   }, [])
 
   const [where, setWhere] = useState('')
@@ -218,21 +220,26 @@ const Home = (props: any) => {
         }
         filterQuery.stay = stay
 
-        let rooms = 1
+        let roomType = 'Shared'
         if (radioRoomsValues === 'Shared') {
-          rooms = 1
+          roomType = 'Shared'
         } else if (radioRoomsValues === 'Single') {
-          rooms = 1
+          roomType = 'Single'
         } else if (radioRoomsValues === 'Double') {
-          rooms = 2
+          roomType = 'Double'
         } else {
-          rooms = 3
+          roomType = 'Family'
         }
+        const rooms = {
+          included: true,
+          room: [roomType]
+        }
+        filterQuery.rooms = rooms
 
         const occupancies = [
           {
-            rooms: rooms,
-            adults: inputAdults === 0 ? 1 : inputAdults,
+            rooms: 1,
+            adults: inputAdults,
             children: inputChildren + inputInfants
           }
         ]
@@ -247,6 +254,13 @@ const Home = (props: any) => {
             const data = res.data
             console.log('searchedHotelData', data)
             setSearched(data)
+            setInputAdults(0)
+            setInputChildren(0)
+            setInputInfants(0)
+            setRadioRoomsValues('Shared')
+            setDateValue('')
+            setSecondDateValue('')
+            setWhere('')
           })
           .catch((err) => {
             setIsLoadingSearched({ isLoading: false })
@@ -287,9 +301,11 @@ const Home = (props: any) => {
                   return
                 }}
                 onFocus={() => {
-                  setModalWhenVisible(false)
-                  setModalWhereVisible(false)
                   setModalHowManyVisible(true)
+                  setInputAdults(0)
+                  setInputChildren(0)
+                  setInputInfants(0)
+                  setRadioRoomsValues('Shared')
                 }}
               />
             </View>
@@ -303,7 +319,10 @@ const Home = (props: any) => {
                 }
                 placeholder="When do you want to go?"
                 onFocus={() => {
-                  setModalWhenVisible(true), setTabsActive('flexible')
+                  setModalWhenVisible(true),
+                    setTabsActive('flexible'),
+                    setDateValue(''),
+                    setSecondDateValue('')
                 }}
                 onChangeText={() => {
                   return
@@ -318,7 +337,7 @@ const Home = (props: any) => {
                   return
                 }}
                 placeholder="Where are you going?"
-                onFocus={() => setModalWhereVisible(true)}
+                onFocus={() => [setModalWhereVisible(true), setWhere('')]}
               />
             </View>
             <View>
@@ -356,7 +375,7 @@ const Home = (props: any) => {
                 color={'#8296CA'}
                 style={{ alignSelf: 'flex-end' }}
                 onPress={() => {
-                  setModalWhereVisible(false), setDateValue(''), setSecondDateValue('')
+                  setModalWhereVisible(false), setWhere('')
                 }}
                 rippleColor={'white'}
               />
@@ -370,7 +389,7 @@ const Home = (props: any) => {
                   style={styles.inputModal}
                   value={where}
                   placeholder="Search for destination"
-                  onFocus={() => setWhereFocus(true)}
+                  onFocus={() => [setWhereFocus(true), setWhere('')]}
                   onBlur={() => setWhereFocus(false)}
                   onChangeText={(text) => setWhere(text)}
                 />
@@ -498,7 +517,13 @@ const Home = (props: any) => {
                   }}
                   onDayPress={(day) => {
                     if (dateValue) {
-                      setSecondDateValue(day.dateString.toString())
+                      let first = new Date(dateValue)
+                      let second = new Date(day.dateString)
+                      if (first.getTime() > second.getTime()) {
+                        second = first
+                        setSecondDateValue(dateValue)
+                        setDateValue(day.dateString.toString())
+                      } else setSecondDateValue(day.dateString.toString())
                     } else {
                       if (numberOfDays > 1) {
                         let secondday = new Date(day.dateString)
@@ -868,7 +893,14 @@ const Home = (props: any) => {
                   paddingHorizontal: 20
                 }}
               >
-                <Text style={{ fontFamily: 'Corbel', fontSize: 16 }}>Clear</Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    setInputAdults(0), setInputChildren(0), setInputInfants(0)
+                    setRadioRoomsValues('Shared')
+                  }}
+                >
+                  <Text style={{ fontFamily: 'Corbel', fontSize: 16 }}>Clear</Text>
+                </TouchableOpacity>
                 <LightButton
                   text="Save"
                   textStyle={{ paddingHorizontal: 50 }}
@@ -1022,7 +1054,14 @@ const Home = (props: any) => {
                   paddingHorizontal: 20
                 }}
               >
-                <Text style={{ fontFamily: 'Corbel', fontSize: 16 }}>Clear</Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    setInputAdults(0), setInputChildren(0), setInputInfants(0)
+                    setRadioRoomsValues('Shared')
+                  }}
+                >
+                  <Text style={{ fontFamily: 'Corbel', fontSize: 16 }}>Clear</Text>
+                </TouchableOpacity>
                 <LightButton
                   text="Save"
                   textStyle={{ paddingHorizontal: 50 }}
