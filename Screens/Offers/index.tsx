@@ -331,6 +331,7 @@ const Offers = ({ navigation }: any) => {
       )}
       {!isLoadmoreLoading ? (
         <Button
+          mode={'contained'}
           onPress={() => handleLoadmore()}
           style={styles.loadMore}
           labelStyle={{ color: 'white' }}
