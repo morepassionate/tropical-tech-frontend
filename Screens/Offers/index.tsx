@@ -1,8 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, Text, ScrollView, TouchableOpacity, Modal } from 'react-native'
 import { Button, Checkbox, IconButton, TextInput } from 'react-native-paper'
-import { useRecoilValue } from 'recoil'
-import { searched, isLoadingSearched } from '../../assets/atoms/HotelHomeData'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import * as Progress from 'react-native-progress'
+
+import {
+  SearchItemType,
+  searched,
+  isLoadingSearched,
+  filterQueryForSearch
+} from '../../assets/atoms/HotelHomeData'
 import FilterIcon from '../../assets/icons/Filter'
 import LocationIcon from '../../assets/icons/Location'
 import SortIcon from '../../assets/icons/Sort'
@@ -12,41 +19,16 @@ import CardMostPopular from '../../Components/CardMostPopular'
 import LightButton from '../../Components/LightButton'
 import COLORS from '../../Constants/styles'
 import RenderHotelComponent from './components/RenderHotel'
-import styles from './styles'
-import * as Progress from 'react-native-progress'
+import { getSearchedHotelAll } from '../../api/apiCaller'
 
-type ItemProps = {
-  name: string
-  ratings: number
-  reviewsCount: number
-  image: string
-  country: string
-  city: string
-  address: string
-  coordinates: {
-    longitude: number
-    latitude: number
-  }
-  cancellationPolicies: {
-    amount: string
-    from: string
-  }
-  code: number
-  distance: number
-  currency: string
-  roomType: string
-  freeCancellation: boolean
-  price: number
-  noprepaymentneeded: boolean
-  bedType: string
-  from: string
-  to: string
-}
+import styles from './styles'
 
 const Offers = ({ navigation }: any) => {
+  const [_, setSearchedMore] = useRecoilState(searched)
   const searchedHotelData = useRecoilValue(searched)
   const isLoading = useRecoilValue(isLoadingSearched)
-  // const handleLoadMore = useRecoilValue(handleSubmitFormFunc)
+  const filterQuery = useRecoilValue(filterQueryForSearch)
+  const [isLoadmoreLoading, setIsLoadmoreLoading] = useState(false)
   const [travellingForWork, setTravellingForWork] = useState(false)
   const [modalSearch, setModalSearch] = useState(false)
   const [modalSort, setModalSort] = useState(false)
@@ -58,23 +40,24 @@ const Offers = ({ navigation }: any) => {
   const [placeSearch, setPlaceSearch] = useState('')
   const [minPrice, setMinPrice] = useState('')
   const [maxPrice, setMaxPrice] = useState('')
+  console.log('offersearchedHotelData', searchedHotelData)
 
-  const searchFilterData = searchedHotelData.filter((item: ItemProps) => {
+  const searchFilterData = searchedHotelData.filter((item: SearchItemType) => {
     return (
       item.city.charAt(0) === placeSearch.charAt(0) ||
       item.country.charAt(0) === placeSearch.charAt(0)
     )
   })
 
-  const sortFilterAsc = searchedHotelData.slice().sort((a: ItemProps, b: ItemProps) => {
+  const sortFilterAsc = searchedHotelData.slice().sort((a: SearchItemType, b: SearchItemType) => {
     return a.price - b.price
   })
 
-  const sortFilterDesc = searchedHotelData.slice().sort((a: ItemProps, b: ItemProps) => {
+  const sortFilterDesc = searchedHotelData.slice().sort((a: SearchItemType, b: SearchItemType) => {
     return b.price - a.price
   })
 
-  const sortDistanceAsc = searchedHotelData.slice().sort((a: ItemProps, b: ItemProps) => {
+  const sortDistanceAsc = searchedHotelData.slice().sort((a: SearchItemType, b: SearchItemType) => {
     return b.distance - a.distance
   })
 
@@ -93,6 +76,23 @@ const Offers = ({ navigation }: any) => {
       default:
         return searchedHotelData
     }
+  }
+
+  const handleLoadmore = () => {
+    console.log('handleLoadmore')
+    setIsLoadmoreLoading(true)
+    getSearchedHotelAll(filterQuery)
+      .then((res) => {
+        const data = res.data
+        console.log('loadmore hotel data', data)
+        const newData = [...searchedHotelData, ...data]
+        setSearchedMore(newData)
+        setIsLoadmoreLoading(false)
+      })
+      .catch((err) => {
+        setIsLoadmoreLoading(false)
+        console.log('error', err)
+      })
   }
 
   const previousPrices = [100, 200, 300, 400, 500, 600]
@@ -164,7 +164,7 @@ const Offers = ({ navigation }: any) => {
           style={{ alignItems: 'center', justifyContent: 'center' }}
         />
       ) : (
-        getRenderActive(filterActive).map((item: ItemProps, index: number) => {
+        getRenderActive(filterActive).map((item: SearchItemType, index: number) => {
           if (index < 3) {
             return (
               <View
@@ -221,7 +221,7 @@ const Offers = ({ navigation }: any) => {
           style={{ alignItems: 'center', justifyContent: 'center' }}
         />
       ) : (
-        searchedHotelData.map((item: ItemProps, index: number) => {
+        searchedHotelData.map((item: SearchItemType, index: number) => {
           console.log('searchitem', item)
           if (index < 6 && index >= 3) {
             return (
@@ -279,7 +279,7 @@ const Offers = ({ navigation }: any) => {
           style={{ alignItems: 'center', justifyContent: 'center' }}
         />
       ) : (
-        searchedHotelData.map((item: ItemProps, index: number) => {
+        searchedHotelData.map((item: SearchItemType, index: number) => {
           if (index >= 6) {
             return (
               <View
@@ -325,9 +325,23 @@ const Offers = ({ navigation }: any) => {
           }
         })
       )}
-      <Button style={styles.loadMore} labelStyle={{ color: 'white' }}>
-        Load more
-      </Button>
+      {!isLoadmoreLoading ? (
+        <Button
+          onPress={() => handleLoadmore()}
+          style={styles.loadMore}
+          labelStyle={{ color: 'white' }}
+        >
+          Load more
+        </Button>
+      ) : (
+        <Progress.Circle
+          color="#1B4298"
+          borderWidth={5}
+          size={50}
+          indeterminate={true}
+          style={{ alignItems: 'center', justifyContent: 'center' }}
+        />
+      )}
       <Modal
         animationType={'fade'}
         transparent={true}

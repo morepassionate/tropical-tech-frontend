@@ -4,9 +4,37 @@ export interface IsLoadingType {
   isLoading: boolean
 }
 
+export type SearchItemType = {
+  name: string
+  ratings: number
+  reviewsCount: number
+  image: string
+  country: string
+  city: string
+  address: string
+  coordinates: {
+    longitude: number
+    latitude: number
+  }
+  cancellationPolicies: {
+    amount: string
+    from: string
+  }
+  code: number
+  distance: number
+  currency: string
+  roomType: string
+  freeCancellation: boolean
+  price: number
+  noprepaymentneeded: boolean
+  bedType: string
+  from: string
+  to: string
+}
+
 export const searched = atom({
   key: 'searchedhoteldata',
-  default: []
+  default: [] as Array<SearchItemType>
 })
 
 export const isLoadingSearched = atom<IsLoadingType>({
@@ -64,9 +92,7 @@ export const isLoadingBestDeals = atom({
   }
 })
 
-// export const handleSubmitFormFunc = atom({
-//   key: 'handleSubmitFormFuntion',
-//   default: () => {
-//     return
-//   }
-// })
+export const filterQueryForSearch = atom({
+  key: 'filterQueryForSearch',
+  default: {}
+})

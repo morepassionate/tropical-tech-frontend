@@ -48,7 +48,8 @@ import {
   destinationideas,
   isLoadingDestinationIdeas,
   bestdeals,
-  isLoadingBestDeals
+  isLoadingBestDeals,
+  filterQueryForSearch
 } from '../../assets/atoms/HotelHomeData'
 
 const Home = (props: any) => {
@@ -64,6 +65,7 @@ const Home = (props: any) => {
     useRecoilState(isLoadingDestinationIdeas)
   const [_____, setBestdeals] = useRecoilState(bestdeals)
   const [isBestDealsLoading, setIsLoadingBestDeals] = useRecoilState(isLoadingBestDeals)
+  const [______, setFilterQueryForSearch] = useRecoilState(filterQueryForSearch)
 
   const [modalWhereVisible, setModalWhereVisible] = useState(false)
   const [modalWhenVisible, setModalWhenVisible] = useState(false)
@@ -248,6 +250,7 @@ const Home = (props: any) => {
         filterQuery.destination = { destination: where }
 
         console.log('filterQuery', filterQuery)
+        setFilterQueryForSearch(filterQuery)
         getSearchedHotelAll(filterQuery)
           .then((res) => {
             setIsLoadingSearched({ isLoading: false })

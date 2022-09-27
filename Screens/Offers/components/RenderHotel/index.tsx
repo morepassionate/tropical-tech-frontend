@@ -84,7 +84,7 @@ const RenderHotelComponent: React.FC<RenderHotelProps> = (props) => {
             icon={'heart'}
             size={17}
             color={!isFavor ? COLORS.grey : COLORS.blue}
-            style={[styles.notMargin, { marginLeft: 40 }]}
+            style={[styles.notMargin, { marginLeft: 20 }]}
             onPress={() => {
               return setIsFavor(!isFavor)
             }}
@@ -152,7 +152,8 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 18,
     fontFamily: 'Corbel',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    width: 150
   },
   notMargin: {
     margin: 0
