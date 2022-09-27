@@ -29,6 +29,7 @@ const ConfirmPayment = ({ navigation, route }: any) => {
     cancellationPolicies,
     currency
   } = route.params
+  console.log('isSHow', isShow)
 
   const mock = [
     { title: 'Date', info: `${isShow && from}` },
@@ -237,7 +238,11 @@ const ConfirmPayment = ({ navigation, route }: any) => {
             charged.
           </Text>
         )}
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            setModalPolicy(true)
+          }}
+        >
           <Text style={{ textDecorationLine: 'underline', fontFamily: 'Corbel', fontSize: 16 }}>
             Learn more
           </Text>

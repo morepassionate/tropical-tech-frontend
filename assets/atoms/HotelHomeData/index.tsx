@@ -40,7 +40,7 @@ export const searched = atom({
 export const isLoadingSearched = atom<IsLoadingType>({
   key: 'isLoadingSearched',
   default: {
-    isLoading: true
+    isLoading: false
   }
 })
 
@@ -52,7 +52,7 @@ export const mostpopular = atom({
 export const isLoadingMostPopular = atom<IsLoadingType>({
   key: 'isLoadingMostPopular',
   default: {
-    isLoading: true
+    isLoading: false
   }
 })
 
@@ -64,7 +64,7 @@ export const recentsearches = atom({
 export const isLoadingRecentSearches = atom<IsLoadingType>({
   key: 'isLoadingRecentSearches',
   default: {
-    isLoading: true
+    isLoading: false
   }
 })
 
@@ -76,7 +76,7 @@ export const destinationideas = atom({
 export const isLoadingDestinationIdeas = atom({
   key: 'isLoadingDestinationIdeas',
   default: {
-    isLoading: true
+    isLoading: false
   }
 })
 
@@ -88,7 +88,7 @@ export const bestdeals = atom({
 export const isLoadingBestDeals = atom({
   key: 'isLoadingBestDeals',
   default: {
-    isLoading: true
+    isLoading: false
   }
 })
 

@@ -18,7 +18,6 @@ function CardBestDeals(props: { numberofadults: number }) {
 
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
-    console.log('bestDealHotels', bestDealHotels)
   })
 
   return (

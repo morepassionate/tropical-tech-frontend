@@ -54,6 +54,7 @@ const HotelDetails = ({ navigation, route }: any) => {
   const [authStatus, setAuthStatus] = useRecoilState(AuthStatus)
   const [moreDetailDescription, setMoreDetailDescription] = useState(false)
   const [reviewModalVisible, setReviewModalVisible] = useState(false)
+  console.log('hotelDetailData', hotelDetailData)
 
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
@@ -63,7 +64,6 @@ const HotelDetails = ({ navigation, route }: any) => {
     getHotelById(code)
       .then((res) => {
         const data = res.data
-        console.log('hotelDetail', data)
         setHotelDetailData(data)
         setIsLoading(false)
       })
@@ -261,7 +261,7 @@ const HotelDetails = ({ navigation, route }: any) => {
         onPress={() => {
           if (authStatus?.isAuthenticated) {
             navigation.navigate('ConfirmPayment', {
-              isShow: Object.keys(hotelDetailData).length > 0 ? true : false,
+              isShow: Object.keys(hotelDetailData).length > 1 ? true : false,
               hotelId: code,
               ratings: ratings,
               reviewsCount: reviewsCount,
@@ -344,7 +344,7 @@ const HotelDetails = ({ navigation, route }: any) => {
                 onPress={() => {
                   setModalConfirm(false)
                   navigation.navigate('ConfirmPayment', {
-                    isShow: Object.keys(hotelDetailData).length > 0 ? true : false,
+                    isShow: Object.keys(hotelDetailData).length > 1 ? true : false,
                     hotelId: code,
                     ratings: ratings,
                     reviewsCount: reviewsCount,

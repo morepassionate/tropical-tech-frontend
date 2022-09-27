@@ -40,7 +40,6 @@ const Offers = ({ navigation }: any) => {
   const [placeSearch, setPlaceSearch] = useState('')
   const [minPrice, setMinPrice] = useState('')
   const [maxPrice, setMaxPrice] = useState('')
-  console.log('offersearchedHotelData', searchedHotelData)
 
   const searchFilterData = searchedHotelData.filter((item: SearchItemType) => {
     return (
@@ -79,12 +78,10 @@ const Offers = ({ navigation }: any) => {
   }
 
   const handleLoadmore = () => {
-    console.log('handleLoadmore')
     setIsLoadmoreLoading(true)
     getSearchedHotelAll(filterQuery)
       .then((res) => {
         const data = res.data
-        console.log('loadmore hotel data', data)
         const newData = [...searchedHotelData, ...data]
         setSearchedMore(newData)
         setIsLoadmoreLoading(false)
@@ -221,8 +218,7 @@ const Offers = ({ navigation }: any) => {
           style={{ alignItems: 'center', justifyContent: 'center' }}
         />
       ) : (
-        searchedHotelData.map((item: SearchItemType, index: number) => {
-          console.log('searchitem', item)
+        getRenderActive(filterActive).map((item: SearchItemType, index: number) => {
           if (index < 6 && index >= 3) {
             return (
               <View
@@ -279,7 +275,7 @@ const Offers = ({ navigation }: any) => {
           style={{ alignItems: 'center', justifyContent: 'center' }}
         />
       ) : (
-        searchedHotelData.map((item: SearchItemType, index: number) => {
+        getRenderActive(filterActive).map((item: SearchItemType, index: number) => {
           if (index >= 6) {
             return (
               <View

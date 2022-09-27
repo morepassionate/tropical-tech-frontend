@@ -81,11 +81,11 @@ const Home = (props: any) => {
   useEffect(() => {
     ;(async () => {
       LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
+      setIsLoadingMostPopular({ isLoading: true })
       await getMostPopularHotels()
         .then((res) => {
           setIsLoadingMostPopular({ isLoading: false })
           const data = res.data
-          console.log('most popular hotels', data)
           setMostpopular(data)
         })
         .catch((err) => {
@@ -93,11 +93,11 @@ const Home = (props: any) => {
           console.log('most popular error', err)
         })
 
+      setIsLoadingRecentSearches({ isLoading: true })
       await getRecentsearchHotels()
         .then((res) => {
           setIsLoadingRecentSearches({ isLoading: false })
           const data = res.data
-          console.log('recent search hotels', data)
           setrecentsearches(data)
         })
         .catch((err) => {
@@ -105,11 +105,11 @@ const Home = (props: any) => {
           console.log('recent search error', err)
         })
 
+      setIsLoadingDestinationIdeas({ isLoading: true })
       await getDestinationIdeaHotels()
         .then((res) => {
           setIsLoadingDestinationIdeas({ isLoading: false })
           const data = res.data
-          console.log('destination hotels', data)
           setDestinationideas(data)
         })
         .catch((err) => {
@@ -117,11 +117,11 @@ const Home = (props: any) => {
           console.log('destination hotel error', err)
         })
 
+      setIsLoadingBestDeals({ isLoading: true })
       await getBestDealHotels()
         .then((res) => {
           setIsLoadingBestDeals({ isLoading: false })
           const data = res.data
-          console.log('best deal hotels', data)
           setBestdeals(data)
         })
         .catch((err) => {
@@ -249,13 +249,12 @@ const Home = (props: any) => {
 
         filterQuery.destination = { destination: where }
 
-        console.log('filterQuery', filterQuery)
         setFilterQueryForSearch(filterQuery)
+        setIsLoadingSearched({ isLoading: true })
         getSearchedHotelAll(filterQuery)
           .then((res) => {
             setIsLoadingSearched({ isLoading: false })
             const data = res.data
-            console.log('searchedHotelData', data)
             setSearched(data)
             setInputAdults(0)
             setInputChildren(0)
@@ -263,13 +262,13 @@ const Home = (props: any) => {
             setRadioRoomsValues('Shared')
             setDateValue('')
             setSecondDateValue('')
+            setTeste({})
             setWhere('')
           })
           .catch((err) => {
             setIsLoadingSearched({ isLoading: false })
             console.log('error', err)
           })
-        setIsLoadingSearched({ isLoading: true })
       })
       .catch((err) => {
         console.log('ip info err', err)
@@ -325,7 +324,8 @@ const Home = (props: any) => {
                   setModalWhenVisible(true),
                     setTabsActive('flexible'),
                     setDateValue(''),
-                    setSecondDateValue('')
+                    setSecondDateValue(''),
+                    setTeste({})
                 }}
                 onChangeText={() => {
                   return
@@ -484,7 +484,7 @@ const Home = (props: any) => {
                 style={{ alignSelf: 'flex-end' }}
                 onPress={() => {
                   setModalWhenVisible(false), setTabsActive('flexible'), setNumberOfDays(1)
-                  setDateValue(''), setSecondDateValue(''), setInitialDate('')
+                  setDateValue(''), setSecondDateValue(''), setInitialDate(''), setTeste({})
                 }}
                 rippleColor={'white'}
               />
@@ -637,7 +637,8 @@ const Home = (props: any) => {
                         setTabsActive('calendar'),
                         setNumberOfDays(1),
                         setDateValue(''),
-                        setSecondDateValue('')
+                        setSecondDateValue(''),
+                        setTeste({})
                       ]}
                       style={{
                         marginLeft: 90
