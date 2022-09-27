@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-// const base_url = 'http://tropicaltechcom-env.eba-a5mekaip.us-east-1.elasticbeanstalk.com/api'
-const base_url = 'http://192.168.115.130:7676/api'
+const base_url = 'http://tropicaltechcom-env.eba-a5mekaip.us-east-1.elasticbeanstalk.com/api'
+// const base_url = 'http://192.168.115.130:7676/api'
 
 export const getSearchedHotelAll = (filter: any) => {
   return axios.post(`${base_url}/hotels`, filter)
