@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
   modalSearchContainer: {
     backgroundColor: 'white',
     width: '90%',
-    height: '60%',
+    height: 350,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,

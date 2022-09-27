@@ -32,7 +32,7 @@ const Offers = ({ navigation }: any) => {
   const [travellingForWork, setTravellingForWork] = useState(false)
   const [modalSearch, setModalSearch] = useState(false)
   const [modalSort, setModalSort] = useState(false)
-  const [filterActive, setFilterActive] = useState('Normal') //Normal ,Search, SortAsc, SortDesc, Price
+  const [filterActive, setFilterActive] = useState('Normal') //Normal ,Search, SortAsc, SortDesc, Price, MinMaxPrice
   const [personsAndRooms, setPersonsAndRooms] = useState('')
   const [sort, setSort] = useState('') //Lower, Higher, Distance, Top
   const [modalFilterPrice, setModalFilterPrice] = useState(false)
@@ -60,6 +60,12 @@ const Offers = ({ navigation }: any) => {
     return b.distance - a.distance
   })
 
+  const getRangePrice = () => {
+    return searchedHotelData.filter(
+      (item) => Number(item.price) > Number(minPrice) && Number(item.price) < Number(maxPrice)
+    )
+  }
+
   const getRenderActive = (item: string) => {
     switch (item) {
       case 'Normal':
@@ -72,6 +78,8 @@ const Offers = ({ navigation }: any) => {
         return sortFilterDesc
       case 'Distance':
         return sortDistanceAsc
+      case 'MinMaxPrice':
+        return getRangePrice()
       default:
         return searchedHotelData
     }
@@ -518,8 +526,7 @@ const Offers = ({ navigation }: any) => {
             <TouchableOpacity
               style={styles.sortTexts}
               onPress={() => {
-                setModalSort(false)
-                setSort('Distance')
+                setModalSort(false), setSort('Distance')
               }}
             >
               <Text style={styles.text16}>Distance from city center</Text>
@@ -527,8 +534,7 @@ const Offers = ({ navigation }: any) => {
             <TouchableOpacity
               style={styles.sortTexts}
               onPress={() => {
-                setModalSort(false)
-                setSort('Top')
+                setModalSort(false), setSort('Top')
               }}
             >
               <Text style={styles.text16}>Top revived</Text>
@@ -548,7 +554,7 @@ const Offers = ({ navigation }: any) => {
             style={{
               backgroundColor: 'white',
               width: '70%',
-              height: '45%',
+              height: 400,
               borderRadius: 20,
               padding: 10,
               marginTop: 20,
@@ -631,11 +637,10 @@ const Offers = ({ navigation }: any) => {
                     height: 30,
                     borderRadius: 12
                   }}
+                  keyboardType="numeric"
                   value={minPrice}
-                  onChangeText={(e) => setMinPrice(e)}
-                >
-                  <Text>$</Text>
-                </TextInput>
+                  onChangeText={(e) => setMinPrice(e.replace(/[^0-9]/g, ''))}
+                ></TextInput>
               </View>
               <View
                 style={{
@@ -661,11 +666,10 @@ const Offers = ({ navigation }: any) => {
                     height: 30,
                     borderRadius: 12
                   }}
+                  keyboardType="numeric"
                   value={maxPrice}
-                  onChangeText={(e) => setMaxPrice(e)}
-                >
-                  <Text>$</Text>
-                </TextInput>
+                  onChangeText={(e) => setMaxPrice(e.replace(/[^0-9]/g, ''))}
+                ></TextInput>
               </View>
             </View>
             <View
@@ -680,12 +684,21 @@ const Offers = ({ navigation }: any) => {
                 paddingHorizontal: 20
               }}
             >
-              <Text style={{ fontFamily: 'Corbel', fontSize: 16 }}>Clear</Text>
+              <TouchableOpacity
+                onPress={() => {
+                  setMinPrice(''), setMaxPrice('')
+                }}
+              >
+                <Text style={{ fontFamily: 'Corbel', fontSize: 16 }}>Clear</Text>
+              </TouchableOpacity>
               <LightButton
                 text="Save"
                 textStyle={{ paddingHorizontal: 50 }}
                 style={{ borderRadius: 20 }}
-                onPress={() => setModalFilterPrice(false)}
+                onPress={() => {
+                  setFilterActive('MinMaxPrice')
+                  setModalFilterPrice(false), getRangePrice()
+                }}
               />
             </View>
           </View>
