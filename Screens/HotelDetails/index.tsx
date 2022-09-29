@@ -263,9 +263,6 @@ const HotelDetails = ({ navigation, route }: any) => {
         style={styles.buttonStyle}
         onPress={() => {
           if (authStatus?.isAuthenticated) {
-            // if (rateType === 'RECHECK') {
-
-            // }
             navigation.navigate('ConfirmPayment', {
               isShow: Object.keys(hotelDetailData).length > 1 ? true : false,
               hotelId: code,
