@@ -5,7 +5,7 @@ import PoolIcon from '../../assets/icons/Pool'
 import GridGalleryImages from '../../Components/GridGalleryImages'
 import Reviews from '../../Components/Reviews'
 import COLORS from '../../Constants/styles'
-import { commentsReviews } from '../../../data'
+import { commentsReviews } from '../../data'
 import MapView, { Marker } from 'react-native-maps'
 
 import styles from './styles'

@@ -34,6 +34,8 @@ import LightButton from '../../Components/LightButton'
 import CartoonPersonIcon from '../../assets/icons/CartoonPerson'
 import DoubleCartoonsIcon from '../../assets/icons/DoubleCartoons'
 import FamilyCartoonsIcon from '../../assets/icons/FamilyCartoons'
+import { Country, State, City } from 'country-state-city'
+import Dropdown from 'react-native-input-select'
 
 import { FilterQueryProps } from '../../Constants/data'
 
@@ -77,6 +79,7 @@ const Home = (props: any) => {
   const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn)
   const [whereFocus, setWhereFocus] = useState(false)
   const [initialDate, setInitialDate] = useState('')
+  const [destination, setDestination] = useState('')
 
   useEffect(() => {
     ;(async () => {
@@ -142,6 +145,7 @@ const Home = (props: any) => {
 
   useEffect(() => {
     if (dateValue && !secondDateValue) {
+      console.log('dateValue', dateValue)
       setTeste({
         [dateValue]: {
           selected: true,
@@ -152,6 +156,7 @@ const Home = (props: any) => {
     }
 
     if (dateValue && secondDateValue) {
+      console.log('datevalue', dateValue, 'second Date Value', secondDateValue)
       setTeste({
         [dateValue]: { selected: true, startingDay: true, color: '#1B4298', textColor: '#fff' },
         [secondDateValue]: {
@@ -170,6 +175,7 @@ const Home = (props: any) => {
     const y = dataVenc.getFullYear(),
       m = dataVenc.getMonth() + 1,
       d = dataVenc.getDate()
+    console.log('adicionarDiasData', `${y}-${m > 9 ? m : `0${m}`}-${d > 9 ? d : `0${d}`}`)
 
     return `${y}-${m > 9 ? m : `0${m}`}-${d > 9 ? d : `0${d}`}`
   }
@@ -182,7 +188,7 @@ const Home = (props: any) => {
 
     let dates = []
 
-    for (let i = 1; i < days + 2; i++) {
+    for (let i = 0; i < days + 1; i++) {
       dates.push(adicionarDiasData(i))
     }
 
@@ -396,6 +402,42 @@ const Home = (props: any) => {
                   onBlur={() => setWhereFocus(false)}
                   onChangeText={(text) => setWhere(text)}
                 />
+                {/* <Dropdown
+                  placeholder="Search for destination"
+                  options={[
+                    { name: 'Albania', code: 'AL' },
+                    { name: 'Åland Islands', code: 'AX' },
+                    { name: 'Algeria', code: 'DZ' },
+                    { name: 'American Samoa', code: 'AS' },
+                    { name: 'Andorra', code: 'AD' },
+                    { name: 'Angola', code: 'AO' },
+                    { name: 'Anguilla', code: 'AI' },
+                    { name: 'Antarctica', code: 'AQ' },
+                    { name: 'Antigua and Barbuda', code: 'AG' }
+                  ]}
+                  optionLabel={'name'}
+                  optionValue={'code'}
+                  selectedValue={destination}
+                  onValueChange={(e: string) => setDestination(e)}
+                  primaryColor={'green'}
+                  label={''}
+                  error={''}
+                  helperText={''}
+                  isMultiple={false}
+                  isSearchable={false}
+                  labelStyle={''}
+                  dropdownStyle={{ borderColor: 'blue', margin: 5, borderWidth: 0 }}
+                  dropdownContainerStyle={{ backgroundColor: 'red', width: '30%' }}
+                  dropdownErrorStyle={{ borderWidth: 2, borderStyle: 'solid' }}
+                  dropdownErrorTextStyle={{ color: 'red', fontWeight: 500 }}
+                  dropdownHelperTextStyle={{ color: 'green', fontWeight: 500 }}
+                  selectedItemStyle={{ backgroundColor: 'red', color: 'yellow' }}
+                  multipleSelectedItemStyle={{ backgroundColor: 'red', color: 'yellow' }}
+                  modalBackgroundStyle={{ backgroundColor: 'blue' }}
+                  modalOptionsContainer={{ padding: 5 }}
+                  searchInputStyle={{ backgroundColor: 'red', borderRadius: 0 }}
+                  disabled={false}
+                ></Dropdown> */}
               </View>
               <View style={{ marginLeft: 50, width: '100%' }}>
                 {!whereFocus && <Text style={styles.modalText}>Not sure where to go? </Text>}
