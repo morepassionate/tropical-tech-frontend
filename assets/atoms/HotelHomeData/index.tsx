@@ -28,6 +28,9 @@ export type SearchItemType = {
   price: number
   noprepaymentneeded: boolean
   bedType: string
+  rateKey: string
+  rateType: string
+  taxes: string
   from: string
   to: string
 }

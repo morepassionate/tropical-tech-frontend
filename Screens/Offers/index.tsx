@@ -32,9 +32,8 @@ const Offers = ({ navigation }: any) => {
   const [travellingForWork, setTravellingForWork] = useState(false)
   const [modalSearch, setModalSearch] = useState(false)
   const [modalSort, setModalSort] = useState(false)
-  const [filterActive, setFilterActive] = useState('Normal') //Normal ,Search, SortAsc, SortDesc, Price, MinMaxPrice
+  const [filterActive, setFilterActive] = useState('Normal')
   const [personsAndRooms, setPersonsAndRooms] = useState('')
-  const [sort, setSort] = useState('') //Lower, Higher, Distance, Top
   const [modalFilterPrice, setModalFilterPrice] = useState(false)
   const [dateSearch, setDateSearch] = useState('')
   const [placeSearch, setPlaceSearch] = useState('')
@@ -56,8 +55,14 @@ const Offers = ({ navigation }: any) => {
     return b.price - a.price
   })
 
-  const sortDistanceAsc = searchedHotelData.slice().sort((a: SearchItemType, b: SearchItemType) => {
-    return b.distance - a.distance
+  const sortDistanceDesc = searchedHotelData
+    .slice()
+    .sort((a: SearchItemType, b: SearchItemType) => {
+      return b.distance - a.distance
+    })
+
+  const sortTopDesc = searchedHotelData.slice().sort((a: SearchItemType, b: SearchItemType) => {
+    return b.reviewsCount - a.reviewsCount
   })
 
   const getRangePrice = () => {
@@ -72,12 +77,14 @@ const Offers = ({ navigation }: any) => {
         return searchedHotelData
       case 'Search':
         return placeSearch === '' ? searchedHotelData : searchFilterData
-      case 'SortAsc':
+      case 'SortPriceAsc':
         return sortFilterAsc
-      case 'SortDesc':
+      case 'SortPriceDesc':
         return sortFilterDesc
-      case 'Distance':
-        return sortDistanceAsc
+      case 'SortDistanceDesc':
+        return sortDistanceDesc
+      case 'SortReviewedDesc':
+        return sortTopDesc
       case 'MinMaxPrice':
         return getRangePrice()
       default:
@@ -206,7 +213,10 @@ const Offers = ({ navigation }: any) => {
                       cancellationPolicies: item.cancellationPolicies,
                       from: item.from,
                       to: item.to,
-                      numberofadults: 1
+                      numberofadults: 1,
+                      rateKey: item.rateKey,
+                      rateType: item.rateType,
+                      taxes: item.taxes
                     })
                   }
                 />
@@ -263,7 +273,10 @@ const Offers = ({ navigation }: any) => {
                       cancellationPolicies: item.cancellationPolicies,
                       from: item.from,
                       to: item.to,
-                      numberofadults: 1
+                      numberofadults: 1,
+                      rateKey: item.rateKey,
+                      rateType: item.rateType,
+                      taxes: item.taxes
                     })
                   }
                 />
@@ -320,7 +333,10 @@ const Offers = ({ navigation }: any) => {
                       cancellationPolicies: item.cancellationPolicies,
                       from: item.from,
                       to: item.to,
-                      numberofadults: 1
+                      numberofadults: 1,
+                      rateKey: item.rateKey,
+                      rateType: item.rateType,
+                      taxes: item.taxes
                     })
                   }
                 />
@@ -510,7 +526,7 @@ const Offers = ({ navigation }: any) => {
               style={styles.sortTexts}
               onPress={() => {
                 setModalSort(false)
-                setFilterActive('SortAsc')
+                setFilterActive('SortPriceAsc')
               }}
             >
               <Text style={styles.text16}>Price Lower</Text>
@@ -519,7 +535,7 @@ const Offers = ({ navigation }: any) => {
               style={styles.sortTexts}
               onPress={() => {
                 setModalSort(false)
-                setFilterActive('SortDesc')
+                setFilterActive('SortPriceDesc')
               }}
             >
               <Text style={styles.text16}>Price Higher</Text>
@@ -527,7 +543,7 @@ const Offers = ({ navigation }: any) => {
             <TouchableOpacity
               style={styles.sortTexts}
               onPress={() => {
-                setModalSort(false), setSort('Distance')
+                setModalSort(false), setFilterActive('SortDistanceDesc')
               }}
             >
               <Text style={styles.text16}>Distance from city center</Text>
@@ -535,10 +551,10 @@ const Offers = ({ navigation }: any) => {
             <TouchableOpacity
               style={styles.sortTexts}
               onPress={() => {
-                setModalSort(false), setSort('Top')
+                setModalSort(false), setFilterActive('SortReviewedDesc')
               }}
             >
-              <Text style={styles.text16}>Top revived</Text>
+              <Text style={styles.text16}>Top reviwed</Text>
             </TouchableOpacity>
           </View>
         </View>

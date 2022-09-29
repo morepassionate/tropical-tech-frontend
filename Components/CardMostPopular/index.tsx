@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { View, Text, Image, ScrollView, TouchableOpacity, LogBox } from 'react-native'
+import { View, Text, Image, ScrollView, TouchableOpacity, LogBox, ImageEditor } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
 import * as Progress from 'react-native-progress'
@@ -51,7 +51,10 @@ const CardMostPopular = (props: CardMostPropsType) => {
                           to: item.to,
                           currency: item.currency,
                           image: item.image,
-                          numberofadults: numberofadults
+                          numberofadults: numberofadults,
+                          rateKey: item.rateKey,
+                          rateType: item.rateType,
+                          taxes: item.taxes
                         } as never
                       )
                     }
@@ -98,7 +101,10 @@ const CardMostPopular = (props: CardMostPropsType) => {
                           to: item.to,
                           currency: item.currency,
                           image: item.image,
-                          numberofadults: numberofadults
+                          numberofadults: numberofadults,
+                          rateKey: item.rateKey,
+                          rateType: item.rateType,
+                          taxes: item.taxes
                         } as never
                       )
                     }

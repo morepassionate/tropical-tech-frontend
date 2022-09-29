@@ -15,6 +15,7 @@ import { IconButton, RadioButton } from 'react-native-paper'
 import { AntDesign } from '@expo/vector-icons'
 import { useRecoilState } from 'recoil'
 import axios from 'axios'
+import { Dropdown } from 'react-native-element-dropdown'
 
 import {
   getBestDealHotels,
@@ -23,6 +24,8 @@ import {
   getRecentsearchHotels,
   getSearchedHotelAll
 } from '../../api/apiCaller'
+
+import { states } from '../../assets/States/index.json'
 
 import CardUpcomingTrips from '../../Components/CardUpcomingTrips'
 import CardDestinationIdeas from '../../Components/CardDestinationIdeas'
@@ -34,8 +37,6 @@ import LightButton from '../../Components/LightButton'
 import CartoonPersonIcon from '../../assets/icons/CartoonPerson'
 import DoubleCartoonsIcon from '../../assets/icons/DoubleCartoons'
 import FamilyCartoonsIcon from '../../assets/icons/FamilyCartoons'
-import { Country, State, City } from 'country-state-city'
-import Dropdown from 'react-native-input-select'
 
 import { FilterQueryProps } from '../../Constants/data'
 
@@ -68,21 +69,22 @@ const Home = (props: any) => {
   const [_____, setBestdeals] = useRecoilState(bestdeals)
   const [isBestDealsLoading, setIsLoadingBestDeals] = useRecoilState(isLoadingBestDeals)
   const [______, setFilterQueryForSearch] = useRecoilState(filterQueryForSearch)
+  const [allState, setAllState] = useState([] as { label: string; value: string }[])
 
   const [modalWhereVisible, setModalWhereVisible] = useState(false)
   const [modalWhenVisible, setModalWhenVisible] = useState(false)
   const [modalHowManyVisible, setModalHowManyVisible] = useState(false)
   const [modalChoiceRooms, setModalChoiceRooms] = useState(false)
-  const onToggleSnackBar = () => setModalWhereVisible(!modalWhereVisible)
-  const onDismissSnackBar = () => setModalWhereVisible(false)
-  const [isSwitchOn, setIsSwitchOn] = useState(false)
-  const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn)
-  const [whereFocus, setWhereFocus] = useState(false)
   const [initialDate, setInitialDate] = useState('')
-  const [destination, setDestination] = useState('')
 
   useEffect(() => {
     ;(async () => {
+      for (let i = 0; i < states.length; i++) {
+        let item = { label: states[i].name, value: states[i].name }
+        allState.push(item)
+      }
+      setAllState(allState)
+
       LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
       setIsLoadingMostPopular({ isLoading: true })
       await getMostPopularHotels()
@@ -145,7 +147,6 @@ const Home = (props: any) => {
 
   useEffect(() => {
     if (dateValue && !secondDateValue) {
-      console.log('dateValue', dateValue)
       setTeste({
         [dateValue]: {
           selected: true,
@@ -156,7 +157,6 @@ const Home = (props: any) => {
     }
 
     if (dateValue && secondDateValue) {
-      console.log('datevalue', dateValue, 'second Date Value', secondDateValue)
       setTeste({
         [dateValue]: { selected: true, startingDay: true, color: '#1B4298', textColor: '#fff' },
         [secondDateValue]: {
@@ -175,7 +175,6 @@ const Home = (props: any) => {
     const y = dataVenc.getFullYear(),
       m = dataVenc.getMonth() + 1,
       d = dataVenc.getDate()
-    console.log('adicionarDiasData', `${y}-${m > 9 ? m : `0${m}`}-${d > 9 ? d : `0${d}`}`)
 
     return `${y}-${m > 9 ? m : `0${m}`}-${d > 9 ? d : `0${d}`}`
   }
@@ -228,19 +227,61 @@ const Home = (props: any) => {
         }
         filterQuery.stay = stay
 
-        let roomType = 'Shared'
+        let roomType = []
         if (radioRoomsValues === 'Shared') {
-          roomType = 'Shared'
+          roomType = ['DBL.OM', 'TWN.OM', 'TWN.H6', 'TWN.DX-1', 'TWN.AS', '']
         } else if (radioRoomsValues === 'Single') {
-          roomType = 'Single'
+          roomType = [
+            'SGL.ST',
+            'SUI.EJ',
+            'STU.ST',
+            'TWN.ST',
+            'APT.B1',
+            'JSU.EJ',
+            'SGL.OM',
+            'STU.BL',
+            'TPL.KG'
+          ]
         } else if (radioRoomsValues === 'Double') {
-          roomType = 'Double'
+          roomType = [
+            'DBT.ST',
+            'DBL.AS-1',
+            'DBL.SU',
+            'DBL.DX',
+            'TPL.DX',
+            'DBA.AS',
+            'DBL.OM',
+            'DBT.ST-2',
+            'DBT.ST-4',
+            'DBT.ST-3',
+            'DBT.ST-1',
+            'TWN.PI',
+            'DBL.PI',
+            'DBL.EJ',
+            'TWN.OM',
+            'TWN.AS',
+            'DBL.VM',
+            'DBL.DX-VM'
+          ]
         } else {
-          roomType = 'Family'
+          roomType = [
+            'DBT.ST-5',
+            'JSU.ST',
+            'QUA.ST',
+            'TPL.ST',
+            'FAM.CM',
+            'QUA.SU',
+            'QUA.ST',
+            'FAM.SU',
+            'FAM.ST',
+            'APT.C5',
+            'APT.B1-C4',
+            'APT.B1-C5'
+          ]
         }
         const rooms = {
           included: true,
-          room: [roomType]
+          room: roomType
         }
         filterQuery.rooms = rooms
 
@@ -285,6 +326,14 @@ const Home = (props: any) => {
   const [inputChildren, setInputChildren] = useState(0)
   const [inputInfants, setInputInfants] = useState(0)
   const [radioRoomsValues, setRadioRoomsValues] = useState('Shared') // Shared, Single, Double, Family
+
+  const renderItem = (item: any) => {
+    return (
+      <View style={styles.item}>
+        <Text style={styles.textItem}>{item.label}</Text>
+      </View>
+    )
+  }
 
   return (
     <>
@@ -377,7 +426,7 @@ const Home = (props: any) => {
           }}
         >
           <View style={styles.centeredView}>
-            <View style={!whereFocus ? styles.modalView : styles.modalViewTyping}>
+            <View style={styles.modalView}>
               <IconButton
                 icon={'close'}
                 size={24}
@@ -394,54 +443,34 @@ const Home = (props: any) => {
                 </View>
               </View>
               <View style={styles.inputBottom}>
-                <TextInput
+                <Dropdown
                   style={styles.inputModal}
+                  placeholderStyle={styles.placeholderStyle}
+                  selectedTextStyle={styles.selectedTextStyle}
+                  inputSearchStyle={styles.inputSearchStyle}
+                  data={allState}
+                  search
+                  maxHeight={350}
+                  labelField="label"
+                  containerStyle={{ margin: 0, borderRadius: 10 }}
+                  itemContainerStyle={{ margin: 0 }}
+                  valueField="value"
+                  placeholder="Search for destination"
+                  searchPlaceholder="Search Cities"
+                  dropdownPosition="auto"
                   value={where}
-                  placeholder="Search for destination"
-                  onFocus={() => [setWhereFocus(true), setWhere('')]}
-                  onBlur={() => setWhereFocus(false)}
-                  onChangeText={(text) => setWhere(text)}
+                  onChange={(item) => {
+                    setWhere(item.value)
+                  }}
+                  onFocus={() => {
+                    setWhere('')
+                  }}
+                  renderItem={renderItem}
                 />
-                {/* <Dropdown
-                  placeholder="Search for destination"
-                  options={[
-                    { name: 'Albania', code: 'AL' },
-                    { name: 'Åland Islands', code: 'AX' },
-                    { name: 'Algeria', code: 'DZ' },
-                    { name: 'American Samoa', code: 'AS' },
-                    { name: 'Andorra', code: 'AD' },
-                    { name: 'Angola', code: 'AO' },
-                    { name: 'Anguilla', code: 'AI' },
-                    { name: 'Antarctica', code: 'AQ' },
-                    { name: 'Antigua and Barbuda', code: 'AG' }
-                  ]}
-                  optionLabel={'name'}
-                  optionValue={'code'}
-                  selectedValue={destination}
-                  onValueChange={(e: string) => setDestination(e)}
-                  primaryColor={'green'}
-                  label={''}
-                  error={''}
-                  helperText={''}
-                  isMultiple={false}
-                  isSearchable={false}
-                  labelStyle={''}
-                  dropdownStyle={{ borderColor: 'blue', margin: 5, borderWidth: 0 }}
-                  dropdownContainerStyle={{ backgroundColor: 'red', width: '30%' }}
-                  dropdownErrorStyle={{ borderWidth: 2, borderStyle: 'solid' }}
-                  dropdownErrorTextStyle={{ color: 'red', fontWeight: 500 }}
-                  dropdownHelperTextStyle={{ color: 'green', fontWeight: 500 }}
-                  selectedItemStyle={{ backgroundColor: 'red', color: 'yellow' }}
-                  multipleSelectedItemStyle={{ backgroundColor: 'red', color: 'yellow' }}
-                  modalBackgroundStyle={{ backgroundColor: 'blue' }}
-                  modalOptionsContainer={{ padding: 5 }}
-                  searchInputStyle={{ backgroundColor: 'red', borderRadius: 0 }}
-                  disabled={false}
-                ></Dropdown> */}
               </View>
               <View style={{ marginLeft: 50, width: '100%' }}>
-                {!whereFocus && <Text style={styles.modalText}>Not sure where to go? </Text>}
-                {!whereFocus && (
+                {<Text style={styles.modalText}>Not sure where to go? </Text>}
+                {
                   <TouchableOpacity
                     style={styles.icons}
                     onPress={() => props.navigation.navigate('Home')}
@@ -458,8 +487,8 @@ const Home = (props: any) => {
                     </View>
                     <Text style={styles.textIcons}>Everywhere</Text>
                   </TouchableOpacity>
-                )}
-                {!whereFocus && (
+                }
+                {
                   <TouchableOpacity
                     style={styles.icons}
                     onPress={() => props.navigation.navigate('Home')}
@@ -476,8 +505,8 @@ const Home = (props: any) => {
                     </View>
                     <Text style={styles.textIcons}>Most Popular</Text>
                   </TouchableOpacity>
-                )}
-                {!whereFocus && (
+                }
+                {
                   <TouchableOpacity
                     style={styles.icons}
                     onPress={() => props.navigation.navigate('Home')}
@@ -494,8 +523,8 @@ const Home = (props: any) => {
                     </View>
                     <Text style={styles.textIcons}>Best deals</Text>
                   </TouchableOpacity>
-                )}
-                {!whereFocus && (
+                }
+                {
                   <TouchableOpacity
                     style={[styles.loginWhereModalButton, styles.btnSearch]}
                     onPress={() => setModalWhereVisible(false)}
@@ -504,7 +533,7 @@ const Home = (props: any) => {
                       <AntDesign name="search1" size={20} color="#1B4298" /> Search
                     </Text>
                   </TouchableOpacity>
-                )}
+                }
               </View>
             </View>
           </View>

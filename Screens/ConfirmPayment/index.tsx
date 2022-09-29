@@ -8,7 +8,6 @@ import CashbackAtom from '../../assets/atoms/Purchase/cashback'
 import UserData from '../../assets/atoms/UserData'
 import MasterCardIcon from '../../assets/icons/MasterCard'
 import { hotelbedImg } from '../../Constants/styles'
-import { dataHotel } from '../../data'
 import styles from './styles'
 
 const ConfirmPayment = ({ navigation, route }: any) => {
@@ -264,7 +263,6 @@ const ConfirmPayment = ({ navigation, route }: any) => {
           labelStyle={{ color: 'white', fontFamily: 'Corbel' }}
           onPress={() => {
             if (userData?.creditCard.length === 0 || userData?.creditCard.length === undefined) {
-              // navigation.navigate('ReservationAccepted')
               setAddNewCard(true)
               return
             } else {
@@ -272,16 +270,16 @@ const ConfirmPayment = ({ navigation, route }: any) => {
                 setPurchase([
                   {
                     day: new Date().toUTCString(),
-                    outValue: dataHotel[1].value,
-                    transactionName: `Reservation-${dataHotel[1].name}`,
+                    outValue: price,
+                    transactionName: `Reservation-${hotelName}`,
                     type: 'OUT'
                   }
                 ])
                 setCashback([
                   {
                     day: new Date().toUTCString(),
-                    inValue: authStatus?.isAuthenticated ? (dataHotel[1].value * 10) / 100 : 0,
-                    transactionName: `Reservation-${dataHotel[1].name}`,
+                    inValue: authStatus?.isAuthenticated ? (price * 10) / 100 : 0,
+                    transactionName: `Reservation-${hotelName}`,
                     type: 'IN'
                   }
                 ])
@@ -290,8 +288,8 @@ const ConfirmPayment = ({ navigation, route }: any) => {
                   ...(prevStatus || []),
                   {
                     day: new Date().toUTCString(),
-                    outValue: dataHotel[1].value,
-                    transactionName: `Reservation-${dataHotel[1].name}`,
+                    outValue: price,
+                    transactionName: `Reservation-${hotelName}`,
                     type: 'OUT'
                   }
                 ])
@@ -299,8 +297,8 @@ const ConfirmPayment = ({ navigation, route }: any) => {
                   ...(prevStatus || []),
                   {
                     day: new Date().toUTCString(),
-                    inValue: authStatus?.isAuthenticated ? (dataHotel[1].value * 10) / 100 : 0,
-                    transactionName: `Reservation-${dataHotel[1].name}`,
+                    inValue: authStatus?.isAuthenticated ? (price * 10) / 100 : 0,
+                    transactionName: `Reservation-${hotelName}`,
                     type: 'IN'
                   }
                 ])
@@ -312,7 +310,7 @@ const ConfirmPayment = ({ navigation, route }: any) => {
           }}
         >
           <Text style={{ fontSize: 18, lineHeight: 22, fontWeight: 'bold', fontFamily: 'Corbel' }}>
-            Confirm and pay
+            Confirm and Pay
           </Text>
         </Button>
       </View>

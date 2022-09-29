@@ -42,11 +42,6 @@ const styles = StyleSheet.create({
     width: 163,
     marginLeft: 'auto',
     marginRight: 'auto'
-    // backgroundColor: '#fff',
-    // marginHorizontal: '25%',
-    // borderRadius: 20,
-    // marginVertical: 6.5,
-    // paddingVertical: 3.5
   },
   loginButtonText: {
     fontSize: 16,
@@ -127,7 +122,7 @@ const styles = StyleSheet.create({
   },
   modalView: {
     width: '100%',
-    height: '80%',
+    height: '100%',
     textAlign: 'left',
     backgroundColor: 'white',
     borderRadius: 20,
@@ -211,7 +206,8 @@ const styles = StyleSheet.create({
     elevation: 5,
     padding: 15,
     textAlign: 'center',
-    alignSelf: 'flex-start'
+    alignSelf: 'flex-start',
+    fontFamily: 'Corbel'
   },
   icons: {
     flexDirection: 'row',
@@ -259,7 +255,39 @@ const styles = StyleSheet.create({
     width: 150,
     height: 100
   },
-  inputBottom: {}
+  inputBottom: {},
+  icon: {
+    marginRight: 5
+  },
+  item: {
+    padding: 17,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  textItem: {
+    flex: 1,
+    fontSize: 16,
+    fontFamily: 'Corbel'
+  },
+  placeholderStyle: {
+    fontSize: 16,
+    fontFamily: 'Corbel'
+  },
+  selectedTextStyle: {
+    fontSize: 16,
+    fontFamily: 'Corbel'
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+    fontFamily: 'Corbel'
+  },
+  inputSearchStyle: {
+    height: 45,
+    fontSize: 16,
+    fontFamily: 'Corbel'
+  }
 })
 
 export default styles

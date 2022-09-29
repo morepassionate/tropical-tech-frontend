@@ -38,7 +38,10 @@ function CardUpcomingTrips(props: { numberofadults: number }) {
                       to: item.to,
                       image: item.image,
                       currency: item.currency,
-                      numberofadults
+                      numberofadults,
+                      rateKey: item.rateKey,
+                      rateType: item.rateType,
+                      taxes: item.taxes
                     } as never
                   )
                 }

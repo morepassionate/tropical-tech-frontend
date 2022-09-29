@@ -10,6 +10,9 @@ export interface HotelInfoProps {
   currency: string
   ratings: number
   reviewsCount: number
+  rateKey: string
+  rateType: string
+  taxes: string
   cancellationPolicies: {
     amount: string
     from: string
