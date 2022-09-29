@@ -285,6 +285,7 @@ const styles = StyleSheet.create({
   },
   inputSearchStyle: {
     height: 45,
+    borderRadius: 25,
     fontSize: 16,
     fontFamily: 'Corbel'
   }
