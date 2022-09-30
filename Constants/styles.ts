@@ -1,3 +1,5 @@
+import { LinearGradient } from 'expo-linear-gradient'
+
 export const COLORS = {
   primary: '#1B4298',
   primary90: '#5163B0',

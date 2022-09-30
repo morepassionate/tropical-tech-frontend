@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     backgroundColor: 'white',
     borderRadius: 30,
-    paddingHorizontal: 15,
+    width: 150,
     height: 45,
     marginTop: 10
   },
@@ -207,15 +207,15 @@ const styles = StyleSheet.create({
   },
   modalSearchContainer: {
     backgroundColor: 'white',
-    width: '90%',
-    height: 350,
+    width: '100%',
+    height: 370,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
     shadowRadius: 5,
     elevation: 5,
-    borderBottomRightRadius: 20,
-    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 50,
+    borderBottomLeftRadius: 50,
     paddingHorizontal: 22
   },
   text16: {

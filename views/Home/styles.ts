@@ -61,6 +61,8 @@ const styles = StyleSheet.create({
     marginRight: 25
   },
   input: {
+    color: COLORS.grey,
+    fontFamily: 'Corbel',
     marginBottom: 15,
     backgroundColor: '#DEE9FF',
     borderRadius: 18,
@@ -142,7 +144,7 @@ const styles = StyleSheet.create({
   },
   modalViewTyping: {
     width: '100%',
-    height: '100%',
+    height: '90%',
     textAlign: 'left',
     backgroundColor: 'white',
     borderRadius: 20,
