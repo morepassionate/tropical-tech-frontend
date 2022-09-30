@@ -338,13 +338,7 @@ const Home = (props: any) => {
 
   return (
     <>
-      <ScrollView
-        style={
-          modalWhereVisible || modalWhenVisible || modalHowManyVisible || modalChoiceRooms
-            ? { backgroundColor: COLORS.primary90 }
-            : { backgroundColor: 'white' }
-        }
-      >
+      <ScrollView style={{ backgroundColor: 'white' }}>
         <View>
           <ImageBackground
             style={styles.container}

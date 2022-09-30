@@ -105,13 +105,7 @@ const Offers = ({ navigation }: any) => {
   const mostPrices = [400, 350, 550, 150, 200, 250, 270, 300, 539, 600, 456, 345, 234]
 
   return (
-    <ScrollView
-      style={
-        modalSearch || modalSort || modalFilterPrice
-          ? { backgroundColor: COLORS.primary90 }
-          : { backgroundColor: 'white' }
-      }
-    >
+    <ScrollView style={{ backgroundColor: 'white' }}>
       <View>
         <View style={styles.navContainer}>
           <View style={styles.borderNav} />
