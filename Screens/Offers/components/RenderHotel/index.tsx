@@ -103,19 +103,15 @@ const RenderHotelComponent: React.FC<RenderHotelProps> = (props) => {
               <PersonLocationIcon />
             </View>
             <Text style={styles.areaText}>Area</Text>
-            <View style={{ marginLeft: 5 }}>
-              <Text
-                numberOfLines={4}
-                ellipsizeMode="tail"
-                style={[styles.point, { width: 150, marginTop: 7 }]}
-              >
+            <View style={{ marginLeft: 5, width: 150 }}>
+              <Text numberOfLines={4} ellipsizeMode="tail" style={[styles.point, { marginTop: 7 }]}>
                 {address}
               </Text>
               <Text style={[styles.point, { marginTop: 5 }]}>
                 {city}
                 {','}
               </Text>
-              {/* <Text style={styles.point}>{country}</Text> */}
+              <Text style={styles.point}>{country}</Text>
             </View>
           </View>
           <View style={styles.rowContent}>

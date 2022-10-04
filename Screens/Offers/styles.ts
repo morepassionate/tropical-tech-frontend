@@ -194,16 +194,19 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   inputSearch: {
-    height: 43,
-    textAlign: 'center',
+    color: COLORS.grey,
+    fontFamily: 'Corbel',
+    marginBottom: 15,
     backgroundColor: '#DEE9FF',
-    borderTopRightRadius: 20,
-    borderTopLeftRadius: 20,
-    borderBottomRightRadius: 20,
-    borderBottomLeftRadius: 20,
-    fontSize: 16,
-    marginVertical: 7,
-    fontFamily: 'Corbel'
+    borderRadius: 18,
+    height: 48,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 5,
+    elevation: 5,
+    padding: 15,
+    textAlign: 'center'
   },
   modalSearchContainer: {
     backgroundColor: 'white',
@@ -224,6 +227,170 @@ const styles = StyleSheet.create({
   },
   sortTexts: {
     marginVertical: 8
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+    backgroundColor: 'rgba(18, 52, 123, 0.8)'
+  },
+  modalView: {
+    width: '100%',
+    height: '100%',
+    textAlign: 'left',
+    backgroundColor: 'white',
+    borderRadius: 20,
+    paddingTop: 50,
+    paddingBottom: 50,
+    paddingLeft: 25,
+    paddingRight: 25,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  modalHeader: {
+    flexDirection: 'row'
+  },
+  modalHeaderContent: {
+    flexGrow: 1
+  },
+  modalTitle: {
+    marginBottom: 16,
+    color: '#000',
+    fontSize: 21,
+    fontWeight: 'bold',
+    fontFamily: 'Corbel',
+    alignSelf: 'flex-start'
+  },
+  inputBottom: {},
+  inputModal: {
+    width: 350,
+    marginBottom: 20,
+    backgroundColor: '#DEE9FF',
+    borderRadius: 25,
+    paddingBottom: 12,
+    height: 43,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
+    elevation: 5,
+    padding: 15,
+    textAlign: 'center',
+    alignSelf: 'flex-start',
+    fontFamily: 'Corbel'
+  },
+  placeholderStyle: {
+    fontSize: 16,
+    fontFamily: 'Corbel'
+  },
+  selectedTextStyle: {
+    fontSize: 16,
+    fontFamily: 'Corbel'
+  },
+  inputSearchStyle: {
+    height: 45,
+    borderRadius: 25,
+    fontSize: 16,
+    fontFamily: 'Corbel'
+  },
+  modalText: {
+    marginBottom: 16,
+    color: '#5163B0',
+    fontSize: 16,
+    fontFamily: 'Corbel',
+    alignSelf: 'flex-start'
+  },
+  icons: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    marginBottom: 25
+  },
+  textIcons: {
+    color: '#05233A',
+    marginLeft: 15,
+    fontFamily: 'Corbel',
+    fontSize: 16
+  },
+  loginWhereModalButton: {
+    padding: 12,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    borderRadius: 25,
+    marginTop: 5,
+    marginBottom: 10,
+    width: 163,
+    marginLeft: 'auto',
+    marginRight: 25
+  },
+  btnSearch: {
+    marginTop: 30,
+    textAlign: 'right',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 2,
+    elevation: 5
+  },
+  loginButtonText: {
+    fontSize: 16,
+    color: '#1B4298',
+    fontFamily: 'Corbel',
+    fontWeight: 'bold'
+  },
+  modalViewTyping: {
+    width: '100%',
+    height: '90%',
+    textAlign: 'left',
+    backgroundColor: 'white',
+    borderRadius: 20,
+    paddingTop: 50,
+    paddingBottom: 50,
+    paddingLeft: 25,
+    paddingRight: 25,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  calendarBtnSearch: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 2,
+    elevation: 5,
+    padding: 12,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    borderRadius: 25,
+    marginBottom: 10,
+    width: 163,
+    marginLeft: 'auto'
+  },
+  item: {
+    padding: 17,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  textItem: {
+    flex: 1,
+    fontSize: 16,
+    fontFamily: 'Corbel'
   }
 })
 
