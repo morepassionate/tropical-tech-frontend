@@ -1,3 +1,14 @@
+import { states } from './assets/States/index.json'
+
+export const stateData = (() => {
+  let allStates = [] as { label: string; value: string }[]
+  for (let i = 0; i < states.length; i++) {
+    let item = { label: states[i].name, value: states[i].name }
+    allStates.push(item)
+  }
+  return allStates
+})()
+
 export const dataHotel = [
   {
     name: 'Aranwa Cusco Hotel',

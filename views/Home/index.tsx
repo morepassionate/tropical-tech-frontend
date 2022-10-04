@@ -25,7 +25,7 @@ import {
   getSearchedHotelAll
 } from '../../api/apiCaller'
 
-import { states } from '../../assets/States/index.json'
+import { stateData } from '../../data'
 
 import CardUpcomingTrips from '../../Components/CardUpcomingTrips'
 import CardDestinationIdeas from '../../Components/CardDestinationIdeas'
@@ -55,7 +55,6 @@ import {
   filterQueryForSearch,
   currentLocation
 } from '../../assets/atoms/HotelHomeData'
-import COLORS from '../../Constants/styles'
 
 const Home = (props: any) => {
   const [_, setSearched] = useRecoilState(searched)
@@ -71,7 +70,6 @@ const Home = (props: any) => {
   const [_____, setBestdeals] = useRecoilState(bestdeals)
   const [isBestDealsLoading, setIsLoadingBestDeals] = useRecoilState(isLoadingBestDeals)
   const [______, setFilterQueryForSearch] = useRecoilState(filterQueryForSearch)
-  const [allState, setAllState] = useState([] as { label: string; value: string }[])
   const [_______, setCoordinate] = useRecoilState(currentLocation)
   const currentCoordinates = useRecoilValue(currentLocation)
 
@@ -84,11 +82,6 @@ const Home = (props: any) => {
   useEffect(() => {
     ;(async () => {
       LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
-      for (let i = 0; i < states.length; i++) {
-        let item = { label: states[i].name, value: states[i].name }
-        allState.push(item)
-      }
-      setAllState(allState)
 
       await axios.get('http://ipinfo.io/json').then((res) => {
         setCoordinate({
@@ -455,7 +448,7 @@ const Home = (props: any) => {
                     placeholderStyle={styles.placeholderStyle}
                     selectedTextStyle={styles.selectedTextStyle}
                     inputSearchStyle={styles.inputSearchStyle}
-                    data={allState}
+                    data={stateData}
                     search
                     maxHeight={350}
                     labelField="label"

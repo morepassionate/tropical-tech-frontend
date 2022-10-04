@@ -4,9 +4,8 @@ import { Button, Checkbox, IconButton, RadioButton } from 'react-native-paper'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import * as Progress from 'react-native-progress'
 import { RangeSlider } from '@sharcoux/slider'
-import axios from 'axios'
 import { Dropdown } from 'react-native-element-dropdown'
-import { states } from '../../assets/States/index.json'
+import { stateData } from '../../data'
 import { Calendar } from 'react-native-calendars'
 import { AntDesign } from '@expo/vector-icons'
 import CartoonPersonIcon from '../../assets/icons/CartoonPerson'
@@ -74,7 +73,6 @@ const Offers = ({ navigation }: any) => {
 
   const [numberOfDays, setNumberOfDays] = useState(1)
   const [teste, setTeste] = useState({})
-  const [allState, setAllState] = useState([] as { label: string; value: string }[])
 
   const [inputAdults, setInputAdults] = useState(0)
   const [inputChildren, setInputChildren] = useState(0)
@@ -195,14 +193,6 @@ const Offers = ({ navigation }: any) => {
         console.log('error', err)
       })
   }
-
-  useEffect(() => {
-    for (let i = 0; i < states.length; i++) {
-      let item = { label: states[i].name, value: states[i].name }
-      allState.push(item)
-    }
-    setAllState(allState)
-  })
 
   useEffect(() => {
     if (dateValue && !secondDateValue) {
@@ -1004,7 +994,7 @@ const Offers = ({ navigation }: any) => {
                   placeholderStyle={styles.placeholderStyle}
                   selectedTextStyle={styles.selectedTextStyle}
                   inputSearchStyle={styles.inputSearchStyle}
-                  data={allState}
+                  data={stateData}
                   search
                   maxHeight={350}
                   labelField="label"
