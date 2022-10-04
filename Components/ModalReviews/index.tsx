@@ -114,7 +114,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: 'rgba(18, 52, 123, 0.8)'
   },
   modalInnerContainer: {
     backgroundColor: 'white',

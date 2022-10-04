@@ -168,7 +168,7 @@ const Trips = ({ navigation }: any) => {
       >
         <View
           style={{
-            backgroundColor: 'white',
+            backgroundColor: 'rgba(18, 52, 123, 0.8)',
             position: 'absolute',
             bottom: 0,
             width: '100%',
@@ -249,7 +249,7 @@ const Trips = ({ navigation }: any) => {
       >
         <View
           style={{
-            backgroundColor: 'white',
+            backgroundColor: 'rgba(18, 52, 123, 0.8)',
             position: 'absolute',
             bottom: 0,
             width: '100%',

@@ -115,11 +115,11 @@ const RenderHotelComponent: React.FC<RenderHotelProps> = (props) => {
                 {city}
                 {','}
               </Text>
-              <Text style={styles.point}>{country}</Text>
+              {/* <Text style={styles.point}>{country}</Text> */}
             </View>
           </View>
           <View style={styles.rowContent}>
-            <Text style={styles.starText}>{`${distance.toFixed(2)} mile from location`}</Text>
+            <Text style={styles.starText}>{`${distance.toFixed(2)} km from location`}</Text>
           </View>
           <Text style={styles.typeRoomText}>{roomType}</Text>
           <Text style={styles.text16}>{bedType}</Text>

@@ -289,7 +289,7 @@ const Saved = ({ navigation }: any) => {
       >
         <View
           style={{
-            backgroundColor: 'white',
+            backgroundColor: 'rgba(18, 52, 123, 0.8)',
             position: 'absolute',
             width: '98%',
             height: '98%',
@@ -396,7 +396,7 @@ const Saved = ({ navigation }: any) => {
       >
         <View
           style={{
-            backgroundColor: 'white',
+            backgroundColor: 'rgba(18, 52, 123, 0.8)',
             position: 'absolute',
             bottom: 0,
             width: '100%',
@@ -471,7 +471,7 @@ const Saved = ({ navigation }: any) => {
       >
         <View
           style={{
-            backgroundColor: 'white',
+            backgroundColor: 'rgba(18, 52, 123, 0.8)',
             position: 'absolute',
             bottom: 0,
             width: '98%',
@@ -539,7 +539,7 @@ const Saved = ({ navigation }: any) => {
       >
         <View
           style={{
-            backgroundColor: 'white',
+            backgroundColor: 'rgba(18, 52, 123, 0.8)',
             position: 'absolute',
             bottom: 0,
             width: '100%',

@@ -30,7 +30,14 @@ const Onboarding = ({ navigation }: any) => {
         onRequestClose={() => setModalBook(false)}
         style={styles.modal}
       >
-        <>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(18, 52, 123, 0.8)'
+          }}
+        >
           <View style={{ flex: 0.8 }}></View>
           <View style={styles.modalBook}>
             <Text style={styles.title}>Book Travel</Text>
@@ -67,7 +74,7 @@ const Onboarding = ({ navigation }: any) => {
               <View style={[styles.dots, pagination === 2 ? { opacity: 1 } : { opacity: 0.3 }]} />
             </View>
           </View>
-        </>
+        </View>
       </Modal>
       <Modal
         animationType={'slide'}
@@ -76,7 +83,14 @@ const Onboarding = ({ navigation }: any) => {
         onRequestClose={() => setModalCashback(false)}
         style={styles.modal}
       >
-        <>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(18, 52, 123, 0.8)'
+          }}
+        >
           <View style={{ flex: 0.8 }}></View>
           <View style={styles.modalBook}>
             <Text style={styles.title}>Earn Cashback</Text>
@@ -101,7 +115,7 @@ const Onboarding = ({ navigation }: any) => {
               <View style={[styles.dots, pagination === 2 ? { opacity: 1 } : { opacity: 0.3 }]} />
             </View>
           </View>
-        </>
+        </View>
       </Modal>
     </View>
   )

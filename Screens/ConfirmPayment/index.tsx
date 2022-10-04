@@ -28,7 +28,6 @@ const ConfirmPayment = ({ navigation, route }: any) => {
     cancellationPolicies,
     currency
   } = route.params
-  console.log('isSHow', isShow)
 
   const mock = [
     { title: 'Date', info: `${isShow && from}` },
@@ -322,7 +321,14 @@ const ConfirmPayment = ({ navigation, route }: any) => {
           setModalPolicy(!modalPolicy)
         }}
       >
-        <View>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(18, 52, 123, 0.8)'
+          }}
+        >
           <View
             style={{
               backgroundColor: 'white',

@@ -230,7 +230,7 @@ const Home = (props: any) => {
 
         let roomType = []
         if (radioRoomsValues === 'Shared') {
-          roomType = ['DBL.OM', 'TWN.OM', 'TWN.H6', 'TWN.DX-1', 'TWN.AS', '']
+          roomType = ['DBL.OM', 'TWN.OM', 'TWN.H6', 'TWN.DX-1', 'TWN.AS']
         } else if (radioRoomsValues === 'Single') {
           roomType = [
             'SGL.ST',
@@ -296,6 +296,11 @@ const Home = (props: any) => {
         filterQuery.occupancies = occupancies
 
         filterQuery.destination = { destination: where }
+
+        const limit = 7
+        filterQuery.limit = limit
+        let page = 0
+        filterQuery.page = page
 
         setFilterQueryForSearch(filterQuery)
         setIsLoadingSearched({ isLoading: true })
@@ -901,7 +906,14 @@ const Home = (props: any) => {
             visible={modalHowManyVisible}
             onRequestClose={() => setModalHowManyVisible(false)}
           >
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: 'rgba(18, 52, 123, 0.8)'
+              }}
+            >
               <View
                 style={{
                   backgroundColor: 'white',
@@ -998,7 +1010,14 @@ const Home = (props: any) => {
             visible={modalChoiceRooms}
             onRequestClose={() => setModalChoiceRooms(false)}
           >
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: 'rgba(18, 52, 123, 0.8)'
+              }}
+            >
               <View
                 style={{
                   backgroundColor: 'white',

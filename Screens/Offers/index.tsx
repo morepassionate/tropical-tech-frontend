@@ -4,6 +4,7 @@ import { Button, Checkbox, IconButton, TextInput } from 'react-native-paper'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import * as Progress from 'react-native-progress'
 import { RangeSlider } from '@sharcoux/slider'
+import axios from 'axios'
 
 import {
   SearchItemType,
@@ -28,6 +29,7 @@ const Offers = ({ navigation }: any) => {
   const [_, setSearchedMore] = useRecoilState(searched)
   const searchedHotelData = useRecoilValue(searched)
   const isLoading = useRecoilValue(isLoadingSearched)
+  const [__, setFilterQuery] = useRecoilState(filterQueryForSearch)
   const filterQuery = useRecoilValue(filterQueryForSearch)
   const [isLoadmoreLoading, setIsLoadmoreLoading] = useState(false)
   const [travellingForWork, setTravellingForWork] = useState(false)
@@ -42,6 +44,7 @@ const Offers = ({ navigation }: any) => {
   const [placeSearch, setPlaceSearch] = useState('')
   const [minPrice, setMinPrice] = useState('')
   const [maxPrice, setMaxPrice] = useState('')
+  const [isShowLoadmore, setIsShowLoadmore] = useState(true)
 
   const sortFilterAsc = searchedHotelData.slice().sort((a: SearchItemType, b: SearchItemType) => {
     return a.price - b.price
@@ -88,9 +91,12 @@ const Offers = ({ navigation }: any) => {
 
   const handleLoadmore = () => {
     setIsLoadmoreLoading(true)
-    getSearchedHotelAll(filterQuery)
+    const newFilterQuery = { ...filterQuery, page: (filterQuery.page || 0) + 1 }
+    setFilterQuery(newFilterQuery)
+    getSearchedHotelAll(newFilterQuery)
       .then((res) => {
         const data = res.data
+        if (data.length === 0) setIsShowLoadmore(false)
         const newData = [...searchedHotelData, ...data]
         setSearchedMore(newData)
         setIsLoadmoreLoading(false)
@@ -211,7 +217,8 @@ const Offers = ({ navigation }: any) => {
                         numberofadults: 1,
                         rateKey: item.rateKey,
                         rateType: item.rateType,
-                        taxes: item.taxes
+                        taxes: item.taxes,
+                        coordinates: item.coordinates
                       })
                     }
                   />
@@ -271,7 +278,8 @@ const Offers = ({ navigation }: any) => {
                         numberofadults: 1,
                         rateKey: item.rateKey,
                         rateType: item.rateType,
-                        taxes: item.taxes
+                        taxes: item.taxes,
+                        coordinates: item.coordinates
                       })
                     }
                   />
@@ -331,7 +339,8 @@ const Offers = ({ navigation }: any) => {
                         numberofadults: 1,
                         rateKey: item.rateKey,
                         rateType: item.rateType,
-                        taxes: item.taxes
+                        taxes: item.taxes,
+                        coordinates: item.coordinates
                       })
                     }
                   />
@@ -341,14 +350,16 @@ const Offers = ({ navigation }: any) => {
           })
         )}
         {!isLoadmoreLoading ? (
-          <Button
-            mode={'contained'}
-            onPress={() => handleLoadmore()}
-            style={styles.loadMore}
-            labelStyle={{ color: 'white' }}
-          >
-            Load more
-          </Button>
+          isShowLoadmore && (
+            <Button
+              mode={'contained'}
+              onPress={() => handleLoadmore()}
+              style={styles.loadMore}
+              labelStyle={{ color: 'white' }}
+            >
+              Load more
+            </Button>
+          )
         ) : (
           <Progress.Circle
             color="#1B4298"
@@ -364,7 +375,9 @@ const Offers = ({ navigation }: any) => {
           visible={modalSearch}
           onRequestClose={() => setModalSearch(false)}
         >
-          <View style={{ flex: 1, alignItems: 'center' }}>
+          <View
+            style={{ flex: 1, alignItems: 'center', backgroundColor: 'rgba(18, 52, 123, 0.8)' }}
+          >
             <View style={styles.modalSearchContainer}>
               <IconButton
                 icon={'close'}
@@ -495,7 +508,14 @@ const Offers = ({ navigation }: any) => {
           visible={modalSort}
           onRequestClose={() => setModalSort(false)}
         >
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <View
+            style={{
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(18, 52, 123, 0.8)'
+            }}
+          >
             <View
               style={{
                 backgroundColor: 'white',
@@ -562,7 +582,14 @@ const Offers = ({ navigation }: any) => {
           visible={modalFilterPrice}
           onRequestClose={() => setModalFilterPrice(false)}
         >
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'rgba(18, 52, 123, 0.8)'
+            }}
+          >
             <View
               style={{
                 backgroundColor: 'white',
@@ -627,8 +654,8 @@ const Offers = ({ navigation }: any) => {
 
               <RangeSlider
                 style={{ marginLeft: '5%', marginRight: '5%', marginBottom: 20 }}
-                range={[10, 10000]}
-                minimumValue={10}
+                range={[0, 10000]}
+                minimumValue={0}
                 maximumValue={10000}
                 step={10}
                 minimumRange={10 || 0}

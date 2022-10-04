@@ -45,7 +45,8 @@ function CardBestDeals(props: { numberofadults: number }) {
                       numberofadults: numberofadults,
                       rateKey: item.rateKey,
                       rateType: item.rateType,
-                      taxes: item.taxes
+                      taxes: item.taxes,
+                      coordinates: item.coordinates
                     } as never
                   )
                 }

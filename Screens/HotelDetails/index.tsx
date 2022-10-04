@@ -40,15 +40,16 @@ const HotelDetails = ({ navigation, route }: any) => {
     numberofadults,
     rateKey,
     rateType,
-    taxes
+    taxes,
+    coordinates
   } = route.params
   const numberofnights = (new Date(to).getTime() - new Date(from).getTime()) / 24 / 3600 / 1000
 
   const [hotelDetailData, setHotelDetailData] = useState({} as HotelDetailProps)
   const [isLoading, setIsLoading] = useState(true)
   const [position, setPosition] = useState({
-    latitude: 37.78825,
-    longitude: -122.4324,
+    latitude: coordinates.latitude,
+    longitude: coordinates.longitude,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421
   })
@@ -297,7 +298,14 @@ const HotelDetails = ({ navigation, route }: any) => {
           setModalConfirm(!modalConfirm)
         }}
       >
-        <View>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(18, 52, 123, 0.8)'
+          }}
+        >
           <View
             style={{
               backgroundColor: 'white',
@@ -377,7 +385,14 @@ const HotelDetails = ({ navigation, route }: any) => {
           setModalPolicy(!modalPolicy)
         }}
       >
-        <View>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(18, 52, 123, 0.8)'
+          }}
+        >
           <View
             style={{
               backgroundColor: 'white',

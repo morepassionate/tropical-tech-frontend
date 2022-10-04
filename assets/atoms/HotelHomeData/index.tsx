@@ -1,4 +1,5 @@
 import { atom } from 'recoil'
+import { FilterQueryProps } from '../../../Constants/data'
 
 export interface IsLoadingType {
   isLoading: boolean
@@ -95,7 +96,7 @@ export const isLoadingBestDeals = atom({
   }
 })
 
-export const filterQueryForSearch = atom({
+export const filterQueryForSearch = atom<FilterQueryProps>({
   key: 'filterQueryForSearch',
-  default: {}
+  default: {} as FilterQueryProps
 })

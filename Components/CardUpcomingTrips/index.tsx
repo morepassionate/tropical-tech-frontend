@@ -41,7 +41,8 @@ function CardUpcomingTrips(props: { numberofadults: number }) {
                       numberofadults,
                       rateKey: item.rateKey,
                       rateType: item.rateType,
-                      taxes: item.taxes
+                      taxes: item.taxes,
+                      coordinates: item.coordinates
                     } as never
                   )
                 }

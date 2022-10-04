@@ -17,6 +17,10 @@ export interface HotelInfoProps {
     amount: string
     from: string
   }
+  coordinates: {
+    longitude: number
+    latitude: number
+  }
 }
 
 export interface OccupanciesProps {
@@ -26,22 +30,24 @@ export interface OccupanciesProps {
 }
 
 export interface FilterQueryProps {
-  stay: {
+  stay?: {
     checkIn: string
     checkOut: string
   }
-  occupancies: Array<OccupanciesProps>
-  destination: {
+  occupancies?: Array<OccupanciesProps>
+  destination?: {
     destination: string
   }
-  currentLocation: {
+  currentLocation?: {
     latitude: number
     longitude: number
   }
-  rooms: {
+  rooms?: {
     included: boolean
     room: string[]
   }
+  limit?: number
+  page?: number
 }
 
 export interface ReviewProps {

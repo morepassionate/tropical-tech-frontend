@@ -181,7 +181,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 22
+    marginTop: 22,
+    backgroundColor: 'rgba(18, 52, 123, 0.8)'
   },
   modalHeaderCloseText: {
     fontSize: 20,
@@ -290,6 +291,12 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     fontSize: 16,
     fontFamily: 'Corbel'
+  },
+  modalBlur: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)'
   }
 })
 
