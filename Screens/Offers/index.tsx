@@ -57,7 +57,7 @@ const Offers = ({ navigation }: any) => {
   const sortDistanceDesc = searchedHotelData
     .slice()
     .sort((a: SearchItemType, b: SearchItemType) => {
-      return b.distance - a.distance
+      return a.distance - b.distance
     })
 
   const sortTopDesc = searchedHotelData.slice().sort((a: SearchItemType, b: SearchItemType) => {

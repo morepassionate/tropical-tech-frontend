@@ -58,7 +58,6 @@ const HotelDetails = ({ navigation, route }: any) => {
   const [authStatus, setAuthStatus] = useRecoilState(AuthStatus)
   const [moreDetailDescription, setMoreDetailDescription] = useState(false)
   const [reviewModalVisible, setReviewModalVisible] = useState(false)
-  console.log('hotelDetailData', hotelDetailData)
 
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
