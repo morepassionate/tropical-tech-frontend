@@ -13,7 +13,7 @@ import {
 import { Calendar } from 'react-native-calendars'
 import { IconButton, RadioButton } from 'react-native-paper'
 import { AntDesign } from '@expo/vector-icons'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import axios from 'axios'
 import { Dropdown } from 'react-native-element-dropdown'
 
@@ -52,7 +52,8 @@ import {
   isLoadingDestinationIdeas,
   bestdeals,
   isLoadingBestDeals,
-  filterQueryForSearch
+  filterQueryForSearch,
+  currentLocation
 } from '../../assets/atoms/HotelHomeData'
 import COLORS from '../../Constants/styles'
 
@@ -71,6 +72,8 @@ const Home = (props: any) => {
   const [isBestDealsLoading, setIsLoadingBestDeals] = useRecoilState(isLoadingBestDeals)
   const [______, setFilterQueryForSearch] = useRecoilState(filterQueryForSearch)
   const [allState, setAllState] = useState([] as { label: string; value: string }[])
+  const [_______, setCoordinate] = useRecoilState(currentLocation)
+  const currentCoordinates = useRecoilValue(currentLocation)
 
   const [modalWhereVisible, setModalWhereVisible] = useState(false)
   const [modalWhenVisible, setModalWhenVisible] = useState(false)
@@ -80,13 +83,20 @@ const Home = (props: any) => {
 
   useEffect(() => {
     ;(async () => {
+      LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
       for (let i = 0; i < states.length; i++) {
         let item = { label: states[i].name, value: states[i].name }
         allState.push(item)
       }
       setAllState(allState)
 
-      LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
+      await axios.get('http://ipinfo.io/json').then((res) => {
+        setCoordinate({
+          latitude: Number(res.data.loc.split(',')[0]),
+          longitude: Number(res.data.loc.split(',')[1])
+        })
+      })
+
       setIsLoadingMostPopular({ isLoading: true })
       await getMostPopularHotels()
         .then((res) => {
@@ -210,121 +220,111 @@ const Home = (props: any) => {
   }
 
   const handleSubmitForm = () => {
-    axios
-      .get('http://ipinfo.io/json')
+    let filterQuery = {} as FilterQueryProps
+    const currentDate = new Date()
+    const nextDate = new Date(new Date().getTime() + 24 * 3600 * 1000)
+
+    filterQuery.currentLocation = currentCoordinates
+
+    const stay = {
+      checkIn: dateValue === '' ? currentDate.toISOString().split('T')[0] : dateValue,
+      checkOut: secondDateValue === '' ? nextDate.toISOString().split('T')[0] : secondDateValue
+    }
+    filterQuery.stay = stay
+
+    let roomType = []
+    if (radioRoomsValues === 'Shared') {
+      roomType = ['DBL.OM', 'TWN.OM', 'TWN.H6', 'TWN.DX-1', 'TWN.AS']
+    } else if (radioRoomsValues === 'Single') {
+      roomType = [
+        'SGL.ST',
+        'SUI.EJ',
+        'STU.ST',
+        'TWN.ST',
+        'APT.B1',
+        'JSU.EJ',
+        'SGL.OM',
+        'STU.BL',
+        'TPL.KG'
+      ]
+    } else if (radioRoomsValues === 'Double') {
+      roomType = [
+        'DBT.ST',
+        'DBL.AS-1',
+        'DBL.SU',
+        'DBL.DX',
+        'TPL.DX',
+        'DBA.AS',
+        'DBL.OM',
+        'DBT.ST-2',
+        'DBT.ST-4',
+        'DBT.ST-3',
+        'DBT.ST-1',
+        'TWN.PI',
+        'DBL.PI',
+        'DBL.EJ',
+        'TWN.OM',
+        'TWN.AS',
+        'DBL.VM',
+        'DBL.DX-VM'
+      ]
+    } else {
+      roomType = [
+        'DBT.ST-5',
+        'JSU.ST',
+        'QUA.ST',
+        'TPL.ST',
+        'FAM.CM',
+        'QUA.SU',
+        'QUA.ST',
+        'FAM.SU',
+        'FAM.ST',
+        'APT.C5',
+        'APT.B1-C4',
+        'APT.B1-C5'
+      ]
+    }
+    const rooms = {
+      included: true,
+      room: roomType
+    }
+    filterQuery.rooms = rooms
+
+    const occupancies = [
+      {
+        rooms: 1,
+        adults: inputAdults,
+        children: inputChildren + inputInfants
+      }
+    ]
+    filterQuery.occupancies = occupancies
+
+    filterQuery.destination = { destination: where }
+
+    const limit = 7
+    filterQuery.limit = limit
+    let page = 0
+    filterQuery.page = page
+
+    setFilterQueryForSearch(filterQuery)
+    setIsLoadingSearched({ isLoading: true })
+    getSearchedHotelAll(filterQuery)
       .then((res) => {
-        let filterQuery = {} as FilterQueryProps
-        const currentDate = new Date()
-        const nextDate = new Date(new Date().getTime() + 24 * 3600 * 1000)
-        let currentLocation = {} as { latitude: number; longitude: number }
-
-        currentLocation.latitude = Number(res.data.loc.split(',')[0])
-        currentLocation.longitude = Number(res.data.loc.split(',')[1])
-        filterQuery.currentLocation = currentLocation
-
-        const stay = {
-          checkIn: dateValue === '' ? currentDate.toISOString().split('T')[0] : dateValue,
-          checkOut: secondDateValue === '' ? nextDate.toISOString().split('T')[0] : secondDateValue
-        }
-        filterQuery.stay = stay
-
-        let roomType = []
-        if (radioRoomsValues === 'Shared') {
-          roomType = ['DBL.OM', 'TWN.OM', 'TWN.H6', 'TWN.DX-1', 'TWN.AS']
-        } else if (radioRoomsValues === 'Single') {
-          roomType = [
-            'SGL.ST',
-            'SUI.EJ',
-            'STU.ST',
-            'TWN.ST',
-            'APT.B1',
-            'JSU.EJ',
-            'SGL.OM',
-            'STU.BL',
-            'TPL.KG'
-          ]
-        } else if (radioRoomsValues === 'Double') {
-          roomType = [
-            'DBT.ST',
-            'DBL.AS-1',
-            'DBL.SU',
-            'DBL.DX',
-            'TPL.DX',
-            'DBA.AS',
-            'DBL.OM',
-            'DBT.ST-2',
-            'DBT.ST-4',
-            'DBT.ST-3',
-            'DBT.ST-1',
-            'TWN.PI',
-            'DBL.PI',
-            'DBL.EJ',
-            'TWN.OM',
-            'TWN.AS',
-            'DBL.VM',
-            'DBL.DX-VM'
-          ]
-        } else {
-          roomType = [
-            'DBT.ST-5',
-            'JSU.ST',
-            'QUA.ST',
-            'TPL.ST',
-            'FAM.CM',
-            'QUA.SU',
-            'QUA.ST',
-            'FAM.SU',
-            'FAM.ST',
-            'APT.C5',
-            'APT.B1-C4',
-            'APT.B1-C5'
-          ]
-        }
-        const rooms = {
-          included: true,
-          room: roomType
-        }
-        filterQuery.rooms = rooms
-
-        const occupancies = [
-          {
-            rooms: 1,
-            adults: inputAdults,
-            children: inputChildren + inputInfants
-          }
-        ]
-        filterQuery.occupancies = occupancies
-
-        filterQuery.destination = { destination: where }
-
-        const limit = 7
-        filterQuery.limit = limit
-        let page = 0
-        filterQuery.page = page
-
-        setFilterQueryForSearch(filterQuery)
-        setIsLoadingSearched({ isLoading: true })
-        getSearchedHotelAll(filterQuery)
-          .then((res) => {
-            setIsLoadingSearched({ isLoading: false })
-            const data = res.data
-            setSearched(data)
-            setInputAdults(0)
-            setInputChildren(0)
-            setInputInfants(0)
-            setRadioRoomsValues('Shared')
-            setDateValue('')
-            setSecondDateValue('')
-            setTeste({})
-            setWhere('')
-          })
-          .catch((err) => {
-            setIsLoadingSearched({ isLoading: false })
-            console.log('error', err)
-          })
+        setIsLoadingSearched({ isLoading: false })
+        const data = res.data
+        setSearched(data)
+        setInputAdults(0)
+        setInputChildren(0)
+        setInputInfants(0)
+        setRadioRoomsValues('Shared')
+        setDateValue('')
+        setSecondDateValue('')
+        setTeste({})
+        setWhere('')
       })
       .catch((err) => {
-        console.log('ip info err', err)
+        setIsLoadingSearched({ isLoading: false })
+        console.log('error', err)
       })
   }
 

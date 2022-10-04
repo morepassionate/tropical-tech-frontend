@@ -1,3 +1,4 @@
+import { Coordinate } from 'react-native-maps'
 import { atom } from 'recoil'
 import { FilterQueryProps } from '../../../Constants/data'
 
@@ -34,6 +35,11 @@ export type SearchItemType = {
   taxes: string
   from: string
   to: string
+}
+
+interface CoordinateProps {
+  latitude: number
+  longitude: number
 }
 
 export const searched = atom({
@@ -99,4 +105,9 @@ export const isLoadingBestDeals = atom({
 export const filterQueryForSearch = atom<FilterQueryProps>({
   key: 'filterQueryForSearch',
   default: {} as FilterQueryProps
+})
+
+export const currentLocation = atom<CoordinateProps>({
+  key: 'currentLocation',
+  default: {} as CoordinateProps
 })

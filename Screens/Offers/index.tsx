@@ -176,7 +176,7 @@ const Offers = ({ navigation }: any) => {
             indeterminate={true}
             style={{ alignItems: 'center', justifyContent: 'center' }}
           />
-        ) : (
+        ) : getRenderActive(filterActive).length !== 0 ? (
           getRenderActive(filterActive).map((item: SearchItemType, index: number) => {
             if (index < 3) {
               return (
@@ -226,6 +226,18 @@ const Offers = ({ navigation }: any) => {
               )
             }
           })
+        ) : (
+          <Text
+            style={{
+              marginLeft: 8,
+              color: '#05233A',
+              fontFamily: 'Corbel',
+              fontSize: 22,
+              fontWeight: 'bold'
+            }}
+          >
+            There is no hotels you want.
+          </Text>
         )}
 
         <CardDestinationIdea numberofadults={1} />
