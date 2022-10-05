@@ -665,7 +665,11 @@ const Offers = ({ navigation }: any) => {
               />
               <Button
                 icon={{ direction: 'ltr', source: 'magnify' }}
-                labelStyle={{ textTransform: 'capitalize', paddingTop: 5, color: COLORS.primary }}
+                labelStyle={{
+                  textTransform: 'capitalize',
+                  paddingVertical: 5,
+                  color: COLORS.primary
+                }}
                 style={styles.modalSearch}
                 onPress={() => {
                   handleSubmitForm()
@@ -675,7 +679,12 @@ const Offers = ({ navigation }: any) => {
                 Search
               </Button>
               <View
-                style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
+                style={{
+                  flexDirection: 'row',
+                  marginTop: 10,
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
               >
                 <Text style={{ fontFamily: 'Corbel', fontSize: 16, color: '#5163B0' }}>
                   I'm travelling for work

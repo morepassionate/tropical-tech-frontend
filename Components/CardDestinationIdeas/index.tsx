@@ -49,10 +49,10 @@ function CardDestinationIdea(props: { numberofadults: number }) {
               >
                 <View style={styles.containerCard}>
                   <Image style={styles.imgCard} source={{ uri: `${hotelbedImg}${item.image}` }} />
-                  <Text>
+                  <View>
                     <Text style={styles.textTown}>{item.name} </Text>
                     <Text style={styles.textCountry}>{item.country}</Text>
-                  </Text>
+                  </View>
                 </View>
               </TouchableOpacity>
             )

@@ -190,7 +190,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 30,
     width: 150,
-    height: 45,
     marginTop: 10
   },
   inputSearch: {
