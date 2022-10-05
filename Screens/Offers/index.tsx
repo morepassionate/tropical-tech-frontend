@@ -16,7 +16,8 @@ import {
   SearchItemType,
   searched,
   isLoadingSearched,
-  filterQueryForSearch
+  filterQueryForSearch,
+  isShowLoadmore
 } from '../../assets/atoms/HotelHomeData'
 import FilterIcon from '../../assets/icons/Filter'
 import LocationIcon from '../../assets/icons/Location'
@@ -46,6 +47,8 @@ const Offers = ({ navigation }: any) => {
   const [______, setFilterQueryForSearch] = useRecoilState(filterQueryForSearch)
   const [isSearchLoading, setIsLoadingSearched] = useRecoilState(isLoadingSearched)
   const isLoading = useRecoilValue(isLoadingSearched)
+  const [_________, setIsShowLoadmore] = useRecoilState(isShowLoadmore)
+  const isShowLoadmoreButton = useRecoilValue(isShowLoadmore)
 
   const [modalSearch, setModalSearch] = useState(false)
   const [modalSort, setModalSort] = useState(false)
@@ -57,7 +60,6 @@ const Offers = ({ navigation }: any) => {
   const [placeSearch, setPlaceSearch] = useState('')
   const [minPrice, setMinPrice] = useState('')
   const [maxPrice, setMaxPrice] = useState('')
-  const [isShowLoadmore, setIsShowLoadmore] = useState(true)
 
   const [modalWhereVisible, setModalWhereVisible] = useState(false)
   const [modalWhenVisible, setModalWhenVisible] = useState(false)
@@ -187,6 +189,7 @@ const Offers = ({ navigation }: any) => {
         setSecondDateValue('')
         setTeste({})
         setWhere('')
+        setIsShowLoadmore(true)
       })
       .catch((err) => {
         setIsLoadingSearched({ isLoading: false })
@@ -301,7 +304,7 @@ const Offers = ({ navigation }: any) => {
     getSearchedHotelAll(newFilterQuery)
       .then((res) => {
         const data = res.data
-        if (data.length === 0) setIsShowLoadmore(false)
+        data.length === 0 && setIsShowLoadmore(false)
         const newData = [...searchedHotelData, ...data]
         setSearchedMore(newData)
         setIsLoadmoreLoading(false)
@@ -575,7 +578,7 @@ const Offers = ({ navigation }: any) => {
           })
         )}
         {!isLoadmoreLoading ? (
-          isShowLoadmore && (
+          isShowLoadmoreButton ? (
             <Button
               mode={'contained'}
               onPress={() => handleLoadmore()}
@@ -584,6 +587,20 @@ const Offers = ({ navigation }: any) => {
             >
               Load more
             </Button>
+          ) : (
+            <Text
+              style={{
+                marginLeft: 8,
+                color: '#05233A',
+                fontFamily: 'Corbel',
+                fontSize: 22,
+                fontWeight: 'bold',
+                marginVertical: 15,
+                textAlign: 'center'
+              }}
+            >
+              There is no more hotels.
+            </Text>
           )
         ) : (
           <Progress.Circle
@@ -674,6 +691,7 @@ const Offers = ({ navigation }: any) => {
                 onPress={() => {
                   handleSubmitForm()
                   setModalSearch(false)
+                  setIsShowLoadmore(true)
                 }}
               >
                 Search

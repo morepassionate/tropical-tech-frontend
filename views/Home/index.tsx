@@ -53,7 +53,8 @@ import {
   bestdeals,
   isLoadingBestDeals,
   filterQueryForSearch,
-  currentLocation
+  currentLocation,
+  isShowLoadmore
 } from '../../assets/atoms/HotelHomeData'
 
 const Home = (props: any) => {
@@ -72,6 +73,7 @@ const Home = (props: any) => {
   const [______, setFilterQueryForSearch] = useRecoilState(filterQueryForSearch)
   const [_______, setCoordinate] = useRecoilState(currentLocation)
   const currentCoordinates = useRecoilValue(currentLocation)
+  const [________, setIsShowLoadmore] = useRecoilState(isShowLoadmore)
 
   const [modalWhereVisible, setModalWhereVisible] = useState(false)
   const [modalWhenVisible, setModalWhenVisible] = useState(false)
@@ -314,6 +316,7 @@ const Home = (props: any) => {
         setSecondDateValue('')
         setTeste({})
         setWhere('')
+        setIsShowLoadmore(true)
       })
       .catch((err) => {
         setIsLoadingSearched({ isLoading: false })

@@ -112,7 +112,7 @@ export const currentLocation = atom<CoordinateProps>({
   default: {} as CoordinateProps
 })
 
-export const allState = atom({
-  key: 'allStateData',
-  default: []
+export const isShowLoadmore = atom({
+  key: 'isShowLoadmore',
+  default: true
 })
