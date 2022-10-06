@@ -27,6 +27,7 @@ export interface OccupanciesProps {
   rooms: number
   adults: number
   children: number
+  paxes: { type: string; age: number }[]
 }
 
 export interface FilterQueryProps {

@@ -81,6 +81,10 @@ const Home = (props: any) => {
   const [modalChoiceRooms, setModalChoiceRooms] = useState(false)
   const [initialDate, setInitialDate] = useState('')
 
+  const [isRoomTouched, setIsRoomTouched] = useState(false)
+  const [isWhenTouched, setIsWhenTouched] = useState(false)
+  const [isWhereTouched, setIsWhereTouched] = useState(false)
+
   useEffect(() => {
     ;(async () => {
       LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
@@ -92,6 +96,7 @@ const Home = (props: any) => {
         })
       })
 
+      console.log('useEffect')
       setIsLoadingMostPopular({ isLoading: true })
       await getMostPopularHotels()
         .then((res) => {
@@ -216,20 +221,38 @@ const Home = (props: any) => {
 
   const handleSubmitForm = () => {
     let filterQuery = {} as FilterQueryProps
-    const currentDate = new Date()
-    const nextDate = new Date(new Date().getTime() + 24 * 3600 * 1000)
 
     filterQuery.currentLocation = currentCoordinates
 
     const stay = {
-      checkIn: dateValue === '' ? currentDate.toISOString().split('T')[0] : dateValue,
-      checkOut: secondDateValue === '' ? nextDate.toISOString().split('T')[0] : secondDateValue
+      checkIn: dateValue,
+      checkOut: secondDateValue
     }
     filterQuery.stay = stay
 
     let roomType = []
     if (radioRoomsValues === 'Shared') {
-      roomType = ['DBL.OM', 'TWN.OM', 'TWN.H6', 'TWN.DX-1', 'TWN.AS']
+      roomType = [
+        'DBL.OM',
+        'TWN.OM',
+        'TWN.H6',
+        'TWN.DX-1',
+        'TWN.AS',
+        'DBT.ST',
+        'DBL.ST',
+        'DBL.SU',
+        'DBL.DX',
+        'DBA.AS',
+        'DBT.ST-2',
+        'DBT.ST-4',
+        'DBT.ST-5',
+        'DBT.ST-3',
+        'DBT.ST-1',
+        'DBL.PI',
+        'DBL.EJ',
+        'DBL.VM',
+        'DBL.DX-VM'
+      ]
     } else if (radioRoomsValues === 'Single') {
       roomType = [
         'SGL.ST',
@@ -285,11 +308,31 @@ const Home = (props: any) => {
     }
     filterQuery.rooms = rooms
 
+    const paxes = [] as { type: string; age: number }[]
+    if (inputChildren > 0 || inputInfants > 0) {
+      for (let i = 0; i < inputChildren; i++) {
+        const item = {
+          type: 'CH',
+          age: 7
+        }
+        paxes.push(item)
+      }
+
+      for (let i = 0; i < inputInfants; i++) {
+        const item = {
+          type: 'CH',
+          age: 2
+        }
+        paxes.push(item)
+      }
+    }
+
     const occupancies = [
       {
         rooms: 1,
         adults: inputAdults,
-        children: inputChildren + inputInfants
+        children: inputChildren + inputInfants,
+        paxes: paxes
       }
     ]
     filterQuery.occupancies = occupancies
@@ -305,8 +348,8 @@ const Home = (props: any) => {
     setIsLoadingSearched({ isLoading: true })
     getSearchedHotelAll(filterQuery)
       .then((res) => {
-        setIsLoadingSearched({ isLoading: false })
         const data = res.data
+        setIsLoadingSearched({ isLoading: false })
         setSearched(data)
         setInputAdults(0)
         setInputChildren(0)
@@ -317,9 +360,15 @@ const Home = (props: any) => {
         setTeste({})
         setWhere('')
         setIsShowLoadmore(true)
+        setIsRoomTouched(false)
+        setIsWhenTouched(false)
+        setIsWhereTouched(false)
       })
       .catch((err) => {
         setIsLoadingSearched({ isLoading: false })
+        setIsRoomTouched(false)
+        setIsWhenTouched(false)
+        setIsWhereTouched(false)
         console.log('error', err)
       })
   }
@@ -348,7 +397,11 @@ const Home = (props: any) => {
             <View style={styles.loginForm}>
               <View style={styles.inputBottom}>
                 <TextInput
-                  style={styles.input}
+                  style={
+                    isRoomTouched && inputAdults === 0 && inputChildren === 0 && inputInfants === 0
+                      ? [styles.input, { borderColor: 'rgba(255, 0, 0, 0.5)', borderWidth: 1 }]
+                      : styles.input
+                  }
                   value={
                     inputAdults === 0 && inputChildren === 0 && inputInfants === 0
                       ? 'How many rooms & people?'
@@ -356,11 +409,12 @@ const Home = (props: any) => {
                           inputChildren + inputInfants
                         }, Room-${radioRoomsValues}`
                   }
-                  placeholder="How many rooms & people?"
+                  placeholder={'How many rooms & people?'}
                   onChangeText={() => {
                     return
                   }}
                   onFocus={() => {
+                    setIsRoomTouched(true)
                     setModalHowManyVisible(true)
                     setInputAdults(0)
                     setInputChildren(0)
@@ -371,14 +425,19 @@ const Home = (props: any) => {
               </View>
               <View style={styles.inputBottom}>
                 <TextInput
-                  style={styles.input}
+                  style={
+                    isWhenTouched && dateValue === '' && secondDateValue === ''
+                      ? [styles.input, { borderColor: 'rgba(255, 0, 0, 0.5)', borderWidth: 1 }]
+                      : styles.input
+                  }
                   value={
                     dateValue === '' && secondDateValue === ''
                       ? 'When do you want to go?'
                       : `${dateValue} - ${secondDateValue}`
                   }
-                  placeholder="When do you want to go?"
+                  placeholder={'When do you want to go?'}
                   onFocus={() => {
+                    setIsWhenTouched(true)
                     setModalWhenVisible(true),
                       setTabsActive('flexible'),
                       setDateValue(''),
@@ -392,17 +451,31 @@ const Home = (props: any) => {
               </View>
               <View style={styles.inputBottom}>
                 <TextInput
-                  style={styles.input}
+                  style={
+                    isWhereTouched && where === ''
+                      ? [styles.input, { borderColor: 'rgba(255, 0, 0, 0.5)', borderWidth: 1 }]
+                      : styles.input
+                  }
                   value={where === '' ? 'Where are you going?' : where}
                   onChangeText={() => {
                     return
                   }}
-                  placeholder="Where are you going?"
-                  onFocus={() => [setModalWhereVisible(true), setWhere('')]}
+                  placeholder={'Where are you going?'}
+                  onFocus={() => [
+                    setIsWhereTouched(true),
+                    setModalWhereVisible(true),
+                    setWhere('')
+                  ]}
                 />
               </View>
               <View>
                 <TouchableOpacity
+                  disabled={
+                    (inputAdults === 0 && inputChildren === 0 && inputInfants === 0) ||
+                    dateValue === '' ||
+                    secondDateValue === '' ||
+                    where === ''
+                  }
                   style={styles.loginButton}
                   onPress={() => [handleSubmitForm(), props.navigation.navigate('Offers')]}
                 >

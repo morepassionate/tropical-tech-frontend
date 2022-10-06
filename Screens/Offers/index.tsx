@@ -81,6 +81,10 @@ const Offers = ({ navigation }: any) => {
   const [inputInfants, setInputInfants] = useState(0)
   const [radioRoomsValues, setRadioRoomsValues] = useState('Shared') // Shared, Single, Double, Family
 
+  const [isRoomTouched, setIsRoomTouched] = useState(false)
+  const [isWhenTouched, setIsWhenTouched] = useState(false)
+  const [isWhereTouched, setIsWhereTouched] = useState(false)
+
   function sendWhen(text: string) {
     setTabsActive('calendar')
     setNumberOfDays(1)
@@ -158,11 +162,33 @@ const Offers = ({ navigation }: any) => {
     }
     filterQuery.rooms = rooms
 
+    const paxes = [] as { type: string; age: number }[]
+    console.log('inputChildren', inputChildren, 'inputInfants', inputInfants)
+    if (inputChildren > 0 || inputInfants > 0) {
+      console.log('herer')
+      for (let i = 0; i < inputChildren; i++) {
+        const item = {
+          type: 'CH',
+          age: 7
+        }
+        paxes.push(item)
+      }
+
+      for (let i = 0; i < inputInfants; i++) {
+        const item = {
+          type: 'CH',
+          age: 2
+        }
+        paxes.push(item)
+      }
+    }
+
     const occupancies = [
       {
         rooms: 1,
         adults: travellingForWork ? 1 : inputAdults,
-        children: travellingForWork ? 0 : inputChildren + inputInfants
+        children: travellingForWork ? 0 : inputChildren + inputInfants,
+        paxes: paxes
       }
     ]
     filterQuery.occupancies = occupancies
@@ -190,9 +216,15 @@ const Offers = ({ navigation }: any) => {
         setTeste({})
         setWhere('')
         setIsShowLoadmore(true)
+        setIsRoomTouched(false)
+        setIsWhenTouched(false)
+        setIsWhereTouched(false)
       })
       .catch((err) => {
         setIsLoadingSearched({ isLoading: false })
+        setIsRoomTouched(false)
+        setIsWhenTouched(false)
+        setIsWhereTouched(false)
         console.log('error', err)
       })
   }
@@ -449,7 +481,8 @@ const Offers = ({ navigation }: any) => {
               color: '#05233A',
               fontFamily: 'Corbel',
               fontSize: 22,
-              fontWeight: 'bold'
+              fontWeight: 'bold',
+              textAlign: 'center'
             }}
           >
             There is no hotels you want.
@@ -631,29 +664,35 @@ const Offers = ({ navigation }: any) => {
               />
               <TextInput
                 placeholder={'Where are you going?'}
-                style={styles.inputSearch}
+                style={
+                  isWhereTouched && where === ''
+                    ? [styles.inputSearch, { borderColor: 'rgba(255, 0, 0, 0.5)', borderWidth: 1 }]
+                    : styles.inputSearch
+                }
                 value={where === '' ? 'Where are you going?' : where}
                 onChangeText={() => {
                   return
                 }}
                 onFocus={() => {
+                  setIsWhereTouched(true)
                   setModalWhereVisible(true), setWhere('')
                 }}
               />
               <TextInput
                 placeholder={'When do you want to go?'}
-                style={styles.inputSearch}
+                style={
+                  isWhenTouched && dateValue === '' && secondDateValue === ''
+                    ? [styles.inputSearch, { borderColor: 'rgba(255, 0, 0, 0.5)', borderWidth: 1 }]
+                    : styles.inputSearch
+                }
                 value={
                   dateValue === '' && secondDateValue === ''
                     ? 'When do you want to go?'
                     : `${dateValue} - ${secondDateValue}`
                 }
                 onFocus={() => {
-                  setModalWhenVisible(true),
-                    setTabsActive('flexible'),
-                    setDateValue(''),
-                    setSecondDateValue(''),
-                    setTeste({})
+                  setModalWhenVisible(true), setIsWhenTouched(true)
+                  setTabsActive('flexible'), setDateValue(''), setSecondDateValue(''), setTeste({})
                 }}
                 onChangeText={() => {
                   return
@@ -661,7 +700,11 @@ const Offers = ({ navigation }: any) => {
               />
               <TextInput
                 placeholder={'How many rooms & people?'}
-                style={styles.inputSearch}
+                style={
+                  isRoomTouched && inputAdults === 0 && inputChildren === 0 && inputInfants === 0
+                    ? [styles.inputSearch, { borderColor: 'rgba(255, 0, 0, 0.5)', borderWidth: 1 }]
+                    : styles.inputSearch
+                }
                 value={
                   inputAdults === 0 && inputChildren === 0 && inputInfants === 0
                     ? 'How many rooms & people?'
@@ -673,6 +716,7 @@ const Offers = ({ navigation }: any) => {
                   return
                 }}
                 onFocus={() => {
+                  setIsRoomTouched(true)
                   setModalHowManyVisible(true)
                   setInputAdults(0)
                   setInputChildren(0)
@@ -681,6 +725,12 @@ const Offers = ({ navigation }: any) => {
                 }}
               />
               <Button
+                disabled={
+                  (inputAdults === 0 && inputChildren === 0 && inputInfants === 0) ||
+                  dateValue === '' ||
+                  secondDateValue === '' ||
+                  where === ''
+                }
                 icon={{ direction: 'ltr', source: 'magnify' }}
                 labelStyle={{
                   textTransform: 'capitalize',
