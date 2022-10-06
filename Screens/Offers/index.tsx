@@ -165,7 +165,6 @@ const Offers = ({ navigation }: any) => {
     const paxes = [] as { type: string; age: number }[]
     console.log('inputChildren', inputChildren, 'inputInfants', inputInfants)
     if (inputChildren > 0 || inputInfants > 0) {
-      console.log('herer')
       for (let i = 0; i < inputChildren; i++) {
         const item = {
           type: 'CH',

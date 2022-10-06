@@ -88,62 +88,34 @@ const Home = (props: any) => {
   useEffect(() => {
     ;(async () => {
       LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
-
-      await axios.get('http://ipinfo.io/json').then((res) => {
+      try {
+        const ipInfo = await axios.get('http://ipinfo.io/json')
         setCoordinate({
-          latitude: Number(res.data.loc.split(',')[0]),
-          longitude: Number(res.data.loc.split(',')[1])
+          latitude: Number(ipInfo.data.loc.split(',')[0]),
+          longitude: Number(ipInfo.data.loc.split(',')[1])
         })
-      })
-
-      console.log('useEffect')
-      setIsLoadingMostPopular({ isLoading: true })
-      await getMostPopularHotels()
-        .then((res) => {
-          setIsLoadingMostPopular({ isLoading: false })
-          const data = res.data
-          setMostpopular(data)
-        })
-        .catch((err) => {
-          setIsLoadingMostPopular({ isLoading: false })
-          console.log('most popular error', err)
-        })
-
-      setIsLoadingRecentSearches({ isLoading: true })
-      await getRecentsearchHotels()
-        .then((res) => {
-          setIsLoadingRecentSearches({ isLoading: false })
-          const data = res.data
-          setrecentsearches(data)
-        })
-        .catch((err) => {
-          setIsLoadingRecentSearches({ isLoading: false })
-          console.log('recent search error', err)
-        })
-
-      setIsLoadingDestinationIdeas({ isLoading: true })
-      await getDestinationIdeaHotels()
-        .then((res) => {
-          setIsLoadingDestinationIdeas({ isLoading: false })
-          const data = res.data
-          setDestinationideas(data)
-        })
-        .catch((err) => {
-          setIsLoadingDestinationIdeas({ isLoading: false })
-          console.log('destination hotel error', err)
-        })
-
-      setIsLoadingBestDeals({ isLoading: true })
-      await getBestDealHotels()
-        .then((res) => {
-          setIsLoadingBestDeals({ isLoading: false })
-          const data = res.data
-          setBestdeals(data)
-        })
-        .catch((err) => {
-          setIsLoadingBestDeals({ isLoading: false })
-          console.log('best deal error', err)
-        })
+        setIsLoadingMostPopular({ isLoading: true })
+        const mostPopular = await getMostPopularHotels()
+        setIsLoadingMostPopular({ isLoading: false })
+        setMostpopular(mostPopular.data)
+        setIsLoadingRecentSearches({ isLoading: true })
+        const recentSearches = await getRecentsearchHotels()
+        setIsLoadingRecentSearches({ isLoading: false })
+        setrecentsearches(recentSearches.data)
+        setIsLoadingDestinationIdeas({ isLoading: true })
+        const destinationIdeas = await getDestinationIdeaHotels()
+        setIsLoadingDestinationIdeas({ isLoading: false })
+        setDestinationideas(destinationIdeas.data)
+        setIsLoadingBestDeals({ isLoading: true })
+        const bestDeals = await getBestDealHotels()
+        setIsLoadingBestDeals({ isLoading: false })
+        setBestdeals(bestDeals.data)
+      } catch {
+        setIsLoadingMostPopular({ isLoading: false })
+        setIsLoadingRecentSearches({ isLoading: false })
+        setIsLoadingDestinationIdeas({ isLoading: false })
+        setIsLoadingBestDeals({ isLoading: false })
+      }
     })()
   }, [])
 
