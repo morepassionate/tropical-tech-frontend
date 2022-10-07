@@ -114,5 +114,5 @@ export const currentLocation = atom<CoordinateProps>({
 
 export const isShowLoadmore = atom({
   key: 'isShowLoadmore',
-  default: true
+  default: false
 })

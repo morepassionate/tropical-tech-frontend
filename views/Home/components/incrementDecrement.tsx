@@ -36,14 +36,7 @@ const IncrementDecrementInputComponent: React.FC<IncrementProps> = (props) => {
           </Text>
         </TouchableOpacity>
 
-        <TextInput
-          mode={'flat'}
-          activeOutlineColor={'transparent'}
-          outlineColor={'transparent'}
-          underlineColor={'transparent'}
-          activeUnderlineColor={'transparent'}
-          value={inputValue.toString()}
-          onChangeText={onChangeText}
+        <Text
           style={{
             textAlign: 'center',
             height: 35,
@@ -57,9 +50,12 @@ const IncrementDecrementInputComponent: React.FC<IncrementProps> = (props) => {
             borderBottomColor: '#DEE9FF',
             borderLeftColor: '#DEE9FF',
             borderRightColor: '#DEE9FF',
-            width: 60
+            width: 60,
+            textAlignVertical: 'center'
           }}
-        />
+        >
+          {inputValue.toString()}
+        </Text>
         <TouchableOpacity onPress={Increment}>
           <Text
             style={{

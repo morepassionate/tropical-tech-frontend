@@ -110,7 +110,7 @@ const HotelDetails = ({ navigation, route }: any) => {
             <Text style={styles.value}>
               {Object.keys(hotelDetailData).length > 1 ? `${price}` : `0`}{' '}
             </Text>
-            <Text style={styles.person}>per person</Text>
+            {/* <Text style={styles.person}>per person</Text> */}
           </View>
           <View style={styles.pinCashback}>
             <Text style={styles.pinText}>

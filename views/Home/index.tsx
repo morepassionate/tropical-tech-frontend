@@ -88,34 +88,62 @@ const Home = (props: any) => {
   useEffect(() => {
     ;(async () => {
       LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
-      try {
-        const ipInfo = await axios.get('http://ipinfo.io/json')
+
+      await axios.get('http://ipinfo.io/json').then((res) => {
         setCoordinate({
-          latitude: Number(ipInfo.data.loc.split(',')[0]),
-          longitude: Number(ipInfo.data.loc.split(',')[1])
+          latitude: Number(res.data.loc.split(',')[0]),
+          longitude: Number(res.data.loc.split(',')[1])
         })
-        setIsLoadingMostPopular({ isLoading: true })
-        const mostPopular = await getMostPopularHotels()
-        setIsLoadingMostPopular({ isLoading: false })
-        setMostpopular(mostPopular.data)
-        setIsLoadingRecentSearches({ isLoading: true })
-        const recentSearches = await getRecentsearchHotels()
-        setIsLoadingRecentSearches({ isLoading: false })
-        setrecentsearches(recentSearches.data)
-        setIsLoadingDestinationIdeas({ isLoading: true })
-        const destinationIdeas = await getDestinationIdeaHotels()
-        setIsLoadingDestinationIdeas({ isLoading: false })
-        setDestinationideas(destinationIdeas.data)
-        setIsLoadingBestDeals({ isLoading: true })
-        const bestDeals = await getBestDealHotels()
-        setIsLoadingBestDeals({ isLoading: false })
-        setBestdeals(bestDeals.data)
-      } catch {
-        setIsLoadingMostPopular({ isLoading: false })
-        setIsLoadingRecentSearches({ isLoading: false })
-        setIsLoadingDestinationIdeas({ isLoading: false })
-        setIsLoadingBestDeals({ isLoading: false })
-      }
+      })
+
+      console.log('useEffect')
+      setIsLoadingMostPopular({ isLoading: true })
+      await getMostPopularHotels()
+        .then((res) => {
+          setIsLoadingMostPopular({ isLoading: false })
+          const data = res.data
+          setMostpopular(data)
+        })
+        .catch((err) => {
+          setIsLoadingMostPopular({ isLoading: false })
+          console.log('most popular error', err)
+        })
+
+      setIsLoadingRecentSearches({ isLoading: true })
+      await getRecentsearchHotels()
+        .then((res) => {
+          setIsLoadingRecentSearches({ isLoading: false })
+          const data = res.data
+          setrecentsearches(data)
+        })
+        .catch((err) => {
+          setIsLoadingRecentSearches({ isLoading: false })
+          console.log('recent search error', err)
+        })
+
+      setIsLoadingDestinationIdeas({ isLoading: true })
+      await getDestinationIdeaHotels()
+        .then((res) => {
+          setIsLoadingDestinationIdeas({ isLoading: false })
+          const data = res.data
+          setDestinationideas(data)
+        })
+        .catch((err) => {
+          setIsLoadingDestinationIdeas({ isLoading: false })
+          console.log('destination hotel error', err)
+        })
+
+      setIsLoadingBestDeals({ isLoading: true })
+      await getBestDealHotels()
+        .then((res) => {
+          setIsLoadingBestDeals({ isLoading: false })
+          const data = res.data
+          setBestdeals(data)
+        })
+        .catch((err) => {
+          setIsLoadingBestDeals({ isLoading: false })
+          console.log('best deal error', err)
+        })
     })()
   }, [])
 
@@ -235,7 +263,8 @@ const Home = (props: any) => {
         'JSU.EJ',
         'SGL.OM',
         'STU.BL',
-        'TPL.KG'
+        'TPL.KG',
+        'DBL.AS-1'
       ]
     } else if (radioRoomsValues === 'Double') {
       roomType = [
@@ -371,7 +400,7 @@ const Home = (props: any) => {
                 <TextInput
                   style={
                     isRoomTouched && inputAdults === 0 && inputChildren === 0 && inputInfants === 0
-                      ? [styles.input, { borderColor: 'rgba(255, 0, 0, 0.5)', borderWidth: 1 }]
+                      ? [styles.input, { borderColor: 'rgba(255, 0, 0, 0.5)', borderWidth: 2 }]
                       : styles.input
                   }
                   value={
@@ -399,7 +428,7 @@ const Home = (props: any) => {
                 <TextInput
                   style={
                     isWhenTouched && dateValue === '' && secondDateValue === ''
-                      ? [styles.input, { borderColor: 'rgba(255, 0, 0, 0.5)', borderWidth: 1 }]
+                      ? [styles.input, { borderColor: 'rgba(255, 0, 0, 0.5)', borderWidth: 2 }]
                       : styles.input
                   }
                   value={
@@ -425,7 +454,7 @@ const Home = (props: any) => {
                 <TextInput
                   style={
                     isWhereTouched && where === ''
-                      ? [styles.input, { borderColor: 'rgba(255, 0, 0, 0.5)', borderWidth: 1 }]
+                      ? [styles.input, { borderColor: 'rgba(255, 0, 0, 0.5)', borderWidth: 2 }]
                       : styles.input
                   }
                   value={where === '' ? 'Where are you going?' : where}
@@ -442,14 +471,20 @@ const Home = (props: any) => {
               </View>
               <View>
                 <TouchableOpacity
-                  disabled={
-                    (inputAdults === 0 && inputChildren === 0 && inputInfants === 0) ||
-                    dateValue === '' ||
-                    secondDateValue === '' ||
-                    where === ''
-                  }
                   style={styles.loginButton}
-                  onPress={() => [handleSubmitForm(), props.navigation.navigate('Offers')]}
+                  onPress={() => {
+                    setIsRoomTouched(true),
+                      setIsWhenTouched(true),
+                      setIsWhereTouched(true),
+                      isRoomTouched &&
+                        isWhenTouched &&
+                        isWhereTouched &&
+                        (inputAdults !== 0 || inputChildren !== 0 || inputInfants !== 0) &&
+                        dateValue !== '' &&
+                        secondDateValue !== '' &&
+                        where !== '' &&
+                        (handleSubmitForm(), props.navigation.navigate('Offers'))
+                  }}
                 >
                   <Text style={styles.loginButtonText}>
                     <AntDesign name="search1" size={20} color="#1B4298" style={{ margin: 50 }} />{' '}
@@ -517,71 +552,69 @@ const Home = (props: any) => {
                   />
                 </View>
                 <View style={{ marginLeft: 50, width: '100%' }}>
-                  {<Text style={styles.modalText}>Not sure where to go? </Text>}
-                  {
-                    <TouchableOpacity
-                      style={styles.icons}
-                      onPress={() => props.navigation.navigate('Home')}
+                  <Text style={styles.modalText}>Not sure where to go? </Text>
+                  <TouchableOpacity
+                    style={styles.icons}
+                    onPress={() => {
+                      setWhere('Everywhere'), setModalWhereVisible(false)
+                    }}
+                  >
+                    <View
+                      style={{
+                        width: 50,
+                        height: 50,
+                        backgroundColor: '#1B4298',
+                        borderRadius: 10
+                      }}
                     >
-                      <View
-                        style={{
-                          width: 50,
-                          height: 50,
-                          backgroundColor: '#1B4298',
-                          borderRadius: 10
-                        }}
-                      >
-                        <IconButton color={'white'} icon={LocationIcon} size={24} />
-                      </View>
-                      <Text style={styles.textIcons}>Everywhere</Text>
-                    </TouchableOpacity>
-                  }
-                  {
-                    <TouchableOpacity
-                      style={styles.icons}
-                      onPress={() => props.navigation.navigate('Home')}
+                      <IconButton color={'white'} icon={LocationIcon} size={24} />
+                    </View>
+                    <Text style={styles.textIcons}>Everywhere</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.icons}
+                    onPress={() => {
+                      setWhere('MostPopular'), setModalWhereVisible(false)
+                    }}
+                  >
+                    <View
+                      style={{
+                        width: 50,
+                        height: 50,
+                        backgroundColor: '#1B4298',
+                        borderRadius: 10
+                      }}
                     >
-                      <View
-                        style={{
-                          width: 50,
-                          height: 50,
-                          backgroundColor: '#1B4298',
-                          borderRadius: 10
-                        }}
-                      >
-                        <IconButton color={'white'} icon={LocationIcon} size={24} />
-                      </View>
-                      <Text style={styles.textIcons}>Most Popular</Text>
-                    </TouchableOpacity>
-                  }
-                  {
-                    <TouchableOpacity
-                      style={styles.icons}
-                      onPress={() => props.navigation.navigate('Home')}
+                      <IconButton color={'white'} icon={LocationIcon} size={24} />
+                    </View>
+                    <Text style={styles.textIcons}>Most Popular</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.icons}
+                    onPress={() => {
+                      setWhere('BestDeal'), setModalWhereVisible(false)
+                    }}
+                  >
+                    <View
+                      style={{
+                        width: 50,
+                        height: 50,
+                        backgroundColor: '#1B4298',
+                        borderRadius: 10
+                      }}
                     >
-                      <View
-                        style={{
-                          width: 50,
-                          height: 50,
-                          backgroundColor: '#1B4298',
-                          borderRadius: 10
-                        }}
-                      >
-                        <IconButton color={'white'} icon={LocationIcon} size={24} />
-                      </View>
-                      <Text style={styles.textIcons}>Best deals</Text>
-                    </TouchableOpacity>
-                  }
-                  {
-                    <TouchableOpacity
-                      style={[styles.loginWhereModalButton, styles.btnSearch]}
-                      onPress={() => setModalWhereVisible(false)}
-                    >
-                      <Text style={styles.loginButtonText}>
-                        <AntDesign name="search1" size={20} color="#1B4298" /> Search
-                      </Text>
-                    </TouchableOpacity>
-                  }
+                      <IconButton color={'white'} icon={LocationIcon} size={24} />
+                    </View>
+                    <Text style={styles.textIcons}>Best deals</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.loginWhereModalButton, styles.btnSearch]}
+                    onPress={() => setModalWhereVisible(false)}
+                  >
+                    <Text style={styles.loginButtonText}>
+                      <AntDesign name="search1" size={20} color="#1B4298" /> Search
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>
@@ -687,7 +720,13 @@ const Home = (props: any) => {
                   <View style={{ flexDirection: 'row', marginTop: 20, marginLeft: 0 }}>
                     <View style={{ flexDirection: 'row' }}>
                       <Pressable
-                        onPress={() => setNumberOfDays(numberOfDays - 1)}
+                        onPress={() => {
+                          if (numberOfDays === 1) {
+                            setNumberOfDays(1)
+                          } else {
+                            setNumberOfDays(numberOfDays - 1)
+                          }
+                        }}
                         style={{
                           borderWidth: 2,
                           width: 20,
@@ -710,7 +749,7 @@ const Home = (props: any) => {
                           -
                         </Text>
                       </Pressable>
-                      <TextInput
+                      <Text
                         style={{
                           borderWidth: 2,
                           borderRadius: 30,
@@ -719,12 +758,13 @@ const Home = (props: any) => {
                           marginLeft: 10,
                           marginRight: 10,
                           width: 90,
+                          textAlignVertical: 'center',
                           textAlign: 'center',
                           fontWeight: 'bold'
                         }}
                       >
                         {numberOfDays}
-                      </TextInput>
+                      </Text>
                       <Pressable
                         onPress={() => setNumberOfDays(numberOfDays + 1)}
                         style={{
@@ -959,11 +999,24 @@ const Home = (props: any) => {
                 style={{
                   backgroundColor: 'white',
                   width: '100%',
-                  height: 400,
-                  maxHeight: 400,
+                  height: 420,
+                  maxHeight: 450,
                   borderRadius: 20
                 }}
               >
+                <IconButton
+                  icon={'close'}
+                  size={24}
+                  color={'#8296CA'}
+                  style={{ alignSelf: 'flex-end', marginBottom: 0, marginRight: 20 }}
+                  onPress={() => {
+                    setModalHowManyVisible(false),
+                      setInputAdults(0),
+                      setInputChildren(0),
+                      setInputInfants(0)
+                  }}
+                  rippleColor={'white'}
+                />
                 <IncrementDecrementInputComponent
                   title={'Adults'}
                   subTitle={'Ages 13 or above'}
@@ -1063,11 +1116,21 @@ const Home = (props: any) => {
                 style={{
                   backgroundColor: 'white',
                   width: '100%',
-                  height: 400,
-                  maxHeight: 400,
+                  height: 420,
+                  maxHeight: 450,
                   borderRadius: 20
                 }}
               >
+                <IconButton
+                  icon={'close'}
+                  size={24}
+                  color={'#8296CA'}
+                  style={{ alignSelf: 'flex-end', marginRight: 20, marginBottom: 0 }}
+                  onPress={() => {
+                    setModalChoiceRooms(false), setRadioRoomsValues('Shared')
+                  }}
+                  rippleColor={'white'}
+                />
                 <View style={{ flexDirection: 'row', height: '80%', maxHeight: 300 }}>
                   <View style={{ width: '65%', justifyContent: 'center', maxWidth: 350 }}>
                     <View

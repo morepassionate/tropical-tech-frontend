@@ -55,9 +55,6 @@ const Offers = ({ navigation }: any) => {
   const [modalFilterPrice, setModalFilterPrice] = useState(false)
 
   const [filterActive, setFilterActive] = useState('Normal')
-  const [personsAndRooms, setPersonsAndRooms] = useState('')
-  const [dateSearch, setDateSearch] = useState('')
-  const [placeSearch, setPlaceSearch] = useState('')
   const [minPrice, setMinPrice] = useState('')
   const [maxPrice, setMaxPrice] = useState('')
 
@@ -93,20 +90,38 @@ const Offers = ({ navigation }: any) => {
 
   const handleSubmitForm = () => {
     let filterQuery = {} as FilterQueryProps
-    const currentDate = new Date()
-    const nextDate = new Date(new Date().getTime() + 24 * 3600 * 1000)
 
     filterQuery.currentLocation = currentCoordinates
 
     const stay = {
-      checkIn: dateValue === '' ? currentDate.toISOString().split('T')[0] : dateValue,
-      checkOut: secondDateValue === '' ? nextDate.toISOString().split('T')[0] : secondDateValue
+      checkIn: dateValue,
+      checkOut: secondDateValue
     }
     filterQuery.stay = stay
 
     let roomType = []
     if (radioRoomsValues === 'Shared') {
-      roomType = ['DBL.OM', 'TWN.OM', 'TWN.H6', 'TWN.DX-1', 'TWN.AS']
+      roomType = [
+        'DBL.OM',
+        'TWN.OM',
+        'TWN.H6',
+        'TWN.DX-1',
+        'TWN.AS',
+        'DBT.ST',
+        'DBL.ST',
+        'DBL.SU',
+        'DBL.DX',
+        'DBA.AS',
+        'DBT.ST-2',
+        'DBT.ST-4',
+        'DBT.ST-5',
+        'DBT.ST-3',
+        'DBT.ST-1',
+        'DBL.PI',
+        'DBL.EJ',
+        'DBL.VM',
+        'DBL.DX-VM'
+      ]
     } else if (radioRoomsValues === 'Single') {
       roomType = [
         'SGL.ST',
@@ -163,7 +178,6 @@ const Offers = ({ navigation }: any) => {
     filterQuery.rooms = rooms
 
     const paxes = [] as { type: string; age: number }[]
-    console.log('inputChildren', inputChildren, 'inputInfants', inputInfants)
     if (inputChildren > 0 || inputInfants > 0) {
       for (let i = 0; i < inputChildren; i++) {
         const item = {
@@ -187,7 +201,7 @@ const Offers = ({ navigation }: any) => {
         rooms: 1,
         adults: travellingForWork ? 1 : inputAdults,
         children: travellingForWork ? 0 : inputChildren + inputInfants,
-        paxes: paxes
+        paxes: travellingForWork ? [] : paxes
       }
     ]
     filterQuery.occupancies = occupancies
@@ -658,14 +672,23 @@ const Offers = ({ navigation }: any) => {
                 size={24}
                 color={'#8296CA'}
                 style={{ alignSelf: 'flex-end' }}
-                onPress={() => setModalSearch(false)}
+                onPress={() => {
+                  setModalSearch(false),
+                    setWhere(''),
+                    setDateValue(''),
+                    setSecondDateValue(''),
+                    setInputAdults(0),
+                    setInputChildren(0),
+                    setInputInfants(0),
+                    setRadioRoomsValues('Shared')
+                }}
                 rippleColor={'white'}
               />
               <TextInput
                 placeholder={'Where are you going?'}
                 style={
                   isWhereTouched && where === ''
-                    ? [styles.inputSearch, { borderColor: 'rgba(255, 0, 0, 0.5)', borderWidth: 1 }]
+                    ? [styles.inputSearch, { borderColor: 'rgba(255, 0, 0, 0.5)', borderWidth: 2 }]
                     : styles.inputSearch
                 }
                 value={where === '' ? 'Where are you going?' : where}
@@ -681,7 +704,7 @@ const Offers = ({ navigation }: any) => {
                 placeholder={'When do you want to go?'}
                 style={
                   isWhenTouched && dateValue === '' && secondDateValue === ''
-                    ? [styles.inputSearch, { borderColor: 'rgba(255, 0, 0, 0.5)', borderWidth: 1 }]
+                    ? [styles.inputSearch, { borderColor: 'rgba(255, 0, 0, 0.5)', borderWidth: 2 }]
                     : styles.inputSearch
                 }
                 value={
@@ -701,7 +724,7 @@ const Offers = ({ navigation }: any) => {
                 placeholder={'How many rooms & people?'}
                 style={
                   isRoomTouched && inputAdults === 0 && inputChildren === 0 && inputInfants === 0
-                    ? [styles.inputSearch, { borderColor: 'rgba(255, 0, 0, 0.5)', borderWidth: 1 }]
+                    ? [styles.inputSearch, { borderColor: 'rgba(255, 0, 0, 0.5)', borderWidth: 2 }]
                     : styles.inputSearch
                 }
                 value={
@@ -724,12 +747,6 @@ const Offers = ({ navigation }: any) => {
                 }}
               />
               <Button
-                disabled={
-                  (inputAdults === 0 && inputChildren === 0 && inputInfants === 0) ||
-                  dateValue === '' ||
-                  secondDateValue === '' ||
-                  where === ''
-                }
                 icon={{ direction: 'ltr', source: 'magnify' }}
                 labelStyle={{
                   textTransform: 'capitalize',
@@ -738,9 +755,17 @@ const Offers = ({ navigation }: any) => {
                 }}
                 style={styles.modalSearch}
                 onPress={() => {
-                  handleSubmitForm()
-                  setModalSearch(false)
-                  setIsShowLoadmore(true)
+                  setIsRoomTouched(true),
+                    setIsWhenTouched(true),
+                    setIsWhereTouched(true),
+                    isRoomTouched &&
+                      isWhenTouched &&
+                      isWhereTouched &&
+                      (inputAdults !== 0 || inputChildren !== 0 || inputInfants !== 0) &&
+                      dateValue !== '' &&
+                      secondDateValue !== '' &&
+                      where !== '' &&
+                      (handleSubmitForm(), setModalSearch(false), setIsShowLoadmore(true))
                 }}
               >
                 Search
@@ -758,7 +783,9 @@ const Offers = ({ navigation }: any) => {
                 </Text>
                 <Checkbox
                   color="#5163B0"
-                  onPress={() => setTravellingForWork(!travellingForWork)}
+                  onPress={() => {
+                    setTravellingForWork(!travellingForWork), setIsRoomTouched(!isRoomTouched)
+                  }}
                   status={travellingForWork ? 'checked' : 'unchecked'}
                   theme={{
                     colors: {
@@ -1095,7 +1122,9 @@ const Offers = ({ navigation }: any) => {
                 {
                   <TouchableOpacity
                     style={styles.icons}
-                    onPress={() => navigation.navigate('Home')}
+                    onPress={() => {
+                      setWhere('Everywhere'), setModalWhereVisible(false)
+                    }}
                   >
                     <View
                       style={{
@@ -1113,7 +1142,9 @@ const Offers = ({ navigation }: any) => {
                 {
                   <TouchableOpacity
                     style={styles.icons}
-                    onPress={() => navigation.navigate('Home')}
+                    onPress={() => {
+                      setWhere('MostPopular'), setModalWhereVisible(false)
+                    }}
                   >
                     <View
                       style={{
@@ -1131,7 +1162,9 @@ const Offers = ({ navigation }: any) => {
                 {
                   <TouchableOpacity
                     style={styles.icons}
-                    onPress={() => navigation.navigate('Home')}
+                    onPress={() => {
+                      setWhere('BestDeal'), setModalWhereVisible(false)
+                    }}
                   >
                     <View
                       style={{
@@ -1261,7 +1294,13 @@ const Offers = ({ navigation }: any) => {
                 <View style={{ flexDirection: 'row', marginTop: 20, marginLeft: 0 }}>
                   <View style={{ flexDirection: 'row' }}>
                     <Pressable
-                      onPress={() => setNumberOfDays(numberOfDays - 1)}
+                      onPress={() => {
+                        if (numberOfDays === 1) {
+                          setNumberOfDays(1)
+                        } else {
+                          setNumberOfDays(numberOfDays - 1)
+                        }
+                      }}
                       style={{
                         borderWidth: 2,
                         width: 20,
@@ -1284,7 +1323,7 @@ const Offers = ({ navigation }: any) => {
                         -
                       </Text>
                     </Pressable>
-                    <TextInput
+                    <Text
                       style={{
                         borderWidth: 2,
                         borderRadius: 30,
@@ -1293,12 +1332,13 @@ const Offers = ({ navigation }: any) => {
                         marginLeft: 10,
                         marginRight: 10,
                         width: 90,
+                        textAlignVertical: 'center',
                         textAlign: 'center',
                         fontWeight: 'bold'
                       }}
                     >
                       {numberOfDays}
-                    </TextInput>
+                    </Text>
                     <Pressable
                       onPress={() => setNumberOfDays(numberOfDays + 1)}
                       style={{
@@ -1533,11 +1573,24 @@ const Offers = ({ navigation }: any) => {
               style={{
                 backgroundColor: 'white',
                 width: '100%',
-                height: 400,
-                maxHeight: 400,
+                height: 420,
+                maxHeight: 450,
                 borderRadius: 20
               }}
             >
+              <IconButton
+                icon={'close'}
+                size={24}
+                color={'#8296CA'}
+                style={{ alignSelf: 'flex-end', marginBottom: 0, marginRight: 20 }}
+                onPress={() => {
+                  setModalHowManyVisible(false),
+                    setInputAdults(0),
+                    setInputChildren(0),
+                    setInputInfants(0)
+                }}
+                rippleColor={'white'}
+              />
               <IncrementDecrementInputComponent
                 title={'Adults'}
                 subTitle={'Ages 13 or above'}
@@ -1636,11 +1689,21 @@ const Offers = ({ navigation }: any) => {
               style={{
                 backgroundColor: 'white',
                 width: '100%',
-                height: 400,
-                maxHeight: 400,
+                height: 420,
+                maxHeight: 450,
                 borderRadius: 20
               }}
             >
+              <IconButton
+                icon={'close'}
+                size={24}
+                color={'#8296CA'}
+                style={{ alignSelf: 'flex-end', marginRight: 20, marginBottom: 0 }}
+                onPress={() => {
+                  setModalChoiceRooms(false), setRadioRoomsValues('Shared')
+                }}
+                rippleColor={'white'}
+              />
               <View style={{ flexDirection: 'row', height: '80%', maxHeight: 300 }}>
                 <View style={{ width: '65%', justifyContent: 'center', maxWidth: 350 }}>
                   <View
