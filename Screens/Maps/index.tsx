@@ -31,27 +31,6 @@ const Maps = ({ navigation }: any) => {
   useEffect(() => {
     ;(async () => {
       try {
-        console.log('where again')
-        const params = {
-          access_key: 'a7cb1d426ef75fa213f89c8ad28ff346',
-          query: where,
-          limit: 1
-        }
-        const { data } = await axios.get('http://api.positionstack.com/v1/forward', { params })
-        setPosition({
-          ...position,
-          latitude: data.data[0].latitude,
-          longitude: data.data[0].longitude
-        })
-      } catch (err) {
-        console.log('err', err)
-      }
-    })()
-  }, [where])
-
-  useEffect(() => {
-    ;(async () => {
-      try {
         console.log('select position')
         const params = {
           access_key: 'a7cb1d426ef75fa213f89c8ad28ff346',
@@ -61,11 +40,36 @@ const Maps = ({ navigation }: any) => {
         const { data } = await axios.get('http://api.positionstack.com/v1/reverse', { params })
         setTitle(data.data[0].region)
         setDescription(data.data[0].label)
+        where === '' && setWhere(data.data[0].region)
       } catch (err) {
         console.log('err', err)
       }
     })()
   }, [position])
+
+  useEffect(() => {
+    ;(async () => {
+      try {
+        console.log('where again', where)
+
+        const params = {
+          access_key: 'a7cb1d426ef75fa213f89c8ad28ff346',
+          query: where,
+          limit: 1
+        }
+        if (where !== '') {
+          const { data } = await axios.get('http://api.positionstack.com/v1/forward', { params })
+          setPosition({
+            ...position,
+            latitude: data.data[0].latitude,
+            longitude: data.data[0].longitude
+          })
+        }
+      } catch (err) {
+        console.log('error', err)
+      }
+    })()
+  }, [where])
 
   const renderItem = (item: { label: string; value: string }) => {
     return (
