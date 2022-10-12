@@ -55,8 +55,8 @@ const Offers = ({ navigation }: any) => {
   const [modalFilterPrice, setModalFilterPrice] = useState(false)
 
   const [filterActive, setFilterActive] = useState('Normal')
-  const [minPrice, setMinPrice] = useState('')
-  const [maxPrice, setMaxPrice] = useState('')
+  const [minPrice, setMinPrice] = useState(0)
+  const [maxPrice, setMaxPrice] = useState(10000)
 
   const [modalWhereVisible, setModalWhereVisible] = useState(false)
   const [modalWhenVisible, setModalWhenVisible] = useState(false)
@@ -73,7 +73,7 @@ const Offers = ({ navigation }: any) => {
   const [numberOfDays, setNumberOfDays] = useState(1)
   const [teste, setTeste] = useState({})
 
-  const [inputAdults, setInputAdults] = useState(0)
+  const [inputAdults, setInputAdults] = useState(1)
   const [inputChildren, setInputChildren] = useState(0)
   const [inputInfants, setInputInfants] = useState(0)
   const [radioRoomsValues, setRadioRoomsValues] = useState('Shared') // Shared, Single, Double, Family
@@ -220,7 +220,7 @@ const Offers = ({ navigation }: any) => {
         setIsLoadingSearched({ isLoading: false })
         const data = res.data
         setSearched(data)
-        setInputAdults(0)
+        setInputAdults(1)
         setInputChildren(0)
         setInputInfants(0)
         setRadioRoomsValues('Shared')
@@ -488,18 +488,20 @@ const Offers = ({ navigation }: any) => {
             }
           })
         ) : (
-          <Text
-            style={{
-              marginLeft: 8,
-              color: '#05233A',
-              fontFamily: 'Corbel',
-              fontSize: 22,
-              fontWeight: 'bold',
-              textAlign: 'center'
-            }}
-          >
-            There is no hotels you want.
-          </Text>
+          isShowLoadmoreButton && (
+            <Text
+              style={{
+                marginLeft: 8,
+                color: '#05233A',
+                fontFamily: 'Corbel',
+                fontSize: 22,
+                fontWeight: 'bold',
+                textAlign: 'center'
+              }}
+            >
+              There is no hotels you want.
+            </Text>
+          )
         )}
 
         <CardDestinationIdea numberofadults={1} />
@@ -634,19 +636,21 @@ const Offers = ({ navigation }: any) => {
               Load more
             </Button>
           ) : (
-            <Text
-              style={{
-                marginLeft: 8,
-                color: '#05233A',
-                fontFamily: 'Corbel',
-                fontSize: 22,
-                fontWeight: 'bold',
-                marginVertical: 15,
-                textAlign: 'center'
-              }}
-            >
-              There is no more hotels.
-            </Text>
+            isShowLoadmoreButton && (
+              <Text
+                style={{
+                  marginLeft: 8,
+                  color: '#05233A',
+                  fontFamily: 'Corbel',
+                  fontSize: 22,
+                  fontWeight: 'bold',
+                  marginVertical: 15,
+                  textAlign: 'center'
+                }}
+              >
+                There is no more hotels.
+              </Text>
+            )
           )
         ) : (
           <Progress.Circle
@@ -677,7 +681,7 @@ const Offers = ({ navigation }: any) => {
                     setWhere(''),
                     setDateValue(''),
                     setSecondDateValue(''),
-                    setInputAdults(0),
+                    setInputAdults(1),
                     setInputChildren(0),
                     setInputInfants(0),
                     setRadioRoomsValues('Shared')
@@ -740,7 +744,7 @@ const Offers = ({ navigation }: any) => {
                 onFocus={() => {
                   setIsRoomTouched(true)
                   setModalHowManyVisible(true)
-                  setInputAdults(0)
+                  setInputAdults(1)
                   setInputChildren(0)
                   setInputInfants(0)
                   setRadioRoomsValues('Shared')
@@ -816,7 +820,7 @@ const Offers = ({ navigation }: any) => {
               style={{
                 backgroundColor: 'white',
                 width: '65%',
-                height: '25%',
+                height: 220,
                 borderRadius: 20,
                 paddingHorizontal: 22,
                 shadowColor: '#000',
@@ -906,11 +910,13 @@ const Offers = ({ navigation }: any) => {
                 size={24}
                 color={'#8296CA'}
                 style={{ alignSelf: 'flex-end' }}
-                onPress={() => setModalFilterPrice(false)}
+                onPress={() => {
+                  setMinPrice(0), setMaxPrice(10000), setModalFilterPrice(false)
+                }}
                 rippleColor={'white'}
               />
               <Text style={[styles.text16, { marginLeft: '5%', marginBottom: 57 }]}>
-                The average price of an experience is 000€.
+                The average price of an experience is {'456.56'}€.
               </Text>
               <View
                 style={{
@@ -950,7 +956,7 @@ const Offers = ({ navigation }: any) => {
 
               <RangeSlider
                 style={{ marginLeft: '5%', marginRight: '5%', marginBottom: 20 }}
-                range={[0, 10000]}
+                range={[minPrice, maxPrice]}
                 minimumValue={0}
                 maximumValue={10000}
                 step={10}
@@ -978,8 +984,8 @@ const Offers = ({ navigation }: any) => {
                 trackHeight={2}
                 thumbSize={22}
                 slideOnTap={true}
-                onValueChange={([minPrice, maxPrice]) => {
-                  setMinPrice(String(minPrice)), setMaxPrice(String(maxPrice))
+                onSlidingComplete={([minPrice, maxPrice]) => {
+                  setMinPrice(minPrice), setMaxPrice(maxPrice)
                 }}
               />
 
@@ -990,19 +996,36 @@ const Offers = ({ navigation }: any) => {
                   <Text style={{ fontFamily: 'Corbel', fontSize: 16, paddingHorizontal: 5 }}>
                     min. price
                   </Text>
-                  <TextInput
-                    style={{
-                      backgroundColor: 'white',
-                      fontFamily: 'Corbel-Bold',
-                      fontSize: 16,
-                      paddingHorizontal: 5,
-                      height: 30,
-                      borderRadius: 12
-                    }}
-                    keyboardType="numeric"
-                    value={minPrice}
-                    onChangeText={(e) => setMinPrice(e.replace(/[^0-9]/g, ''))}
-                  ></TextInput>
+                  <View style={{ flexDirection: 'row' }}>
+                    <Text
+                      style={{
+                        paddingTop: 2,
+                        backgroundColor: 'white',
+                        fontFamily: 'Corbel-Bold',
+                        fontSize: 18,
+                        paddingLeft: 5,
+                        paddingRight: 2,
+                        color: 'black',
+                        borderRadius: 12
+                      }}
+                    >
+                      €
+                    </Text>
+                    <TextInput
+                      style={{
+                        width: 50,
+                        backgroundColor: 'white',
+                        fontFamily: 'Corbel-Bold',
+                        color: 'black',
+                        marginLeft: 2,
+                        fontSize: 16,
+                        borderRadius: 12
+                      }}
+                      keyboardType="numeric"
+                      value={String(minPrice)}
+                      onChangeText={(text) => setMinPrice(Number(text))}
+                    ></TextInput>
+                  </View>
                 </View>
                 <View
                   style={{
@@ -1019,19 +1042,36 @@ const Offers = ({ navigation }: any) => {
                   <Text style={{ fontFamily: 'Corbel', fontSize: 16, paddingHorizontal: 5 }}>
                     max. price
                   </Text>
-                  <TextInput
-                    style={{
-                      backgroundColor: 'white',
-                      fontFamily: 'Corbel-Bold',
-                      fontSize: 16,
-                      paddingHorizontal: 5,
-                      height: 30,
-                      borderRadius: 12
-                    }}
-                    keyboardType="numeric"
-                    value={maxPrice}
-                    onChangeText={(e) => setMaxPrice(e.replace(/[^0-9]/g, ''))}
-                  ></TextInput>
+                  <View style={{ flexDirection: 'row' }}>
+                    <Text
+                      style={{
+                        paddingTop: 2,
+                        backgroundColor: 'white',
+                        fontFamily: 'Corbel-Bold',
+                        fontSize: 18,
+                        paddingLeft: 5,
+                        paddingRight: 2,
+                        color: 'black',
+                        borderRadius: 12
+                      }}
+                    >
+                      €
+                    </Text>
+                    <TextInput
+                      style={{
+                        width: 50,
+                        backgroundColor: 'white',
+                        fontFamily: 'Corbel-Bold',
+                        color: 'black',
+                        marginLeft: 2,
+                        fontSize: 16,
+                        borderRadius: 12
+                      }}
+                      keyboardType="numeric"
+                      value={String(maxPrice)}
+                      onChangeText={(text) => setMaxPrice(Number(text))}
+                    ></TextInput>
+                  </View>
                 </View>
               </View>
               <View
@@ -1048,7 +1088,7 @@ const Offers = ({ navigation }: any) => {
               >
                 <TouchableOpacity
                   onPress={() => {
-                    setMinPrice(''), setMaxPrice('')
+                    setMinPrice(0), setMaxPrice(10000)
                   }}
                 >
                   <Text style={{ fontFamily: 'Corbel', fontSize: 16 }}>Clear</Text>
@@ -1229,7 +1269,13 @@ const Offers = ({ navigation }: any) => {
                   }}
                 />
               )}
-              <View style={{ display: tabsActive === 'calendar' ? 'flex' : 'none' }}>
+              <View
+                style={{
+                  display: tabsActive === 'calendar' ? 'flex' : 'none',
+                  width: '100%',
+                  height: 420
+                }}
+              >
                 <Calendar
                   initialDate={initialDate}
                   minDate={new Date().toISOString().split('T')[0].toString()}
@@ -1237,8 +1283,6 @@ const Offers = ({ navigation }: any) => {
                   markedDates={teste}
                   style={{
                     marginTop: 30,
-                    width: 400,
-                    height: 420,
                     borderWidth: 2,
                     borderColor: '#506F9D',
                     borderRadius: 12,
@@ -1287,11 +1331,11 @@ const Offers = ({ navigation }: any) => {
                   display: tabsActive === 'flexible' ? 'flex' : 'none',
                   paddingTop: 30,
                   width: '100%',
-                  marginBottom: '32.5%'
+                  marginBottom: '25%'
                 }}
               >
                 <Text style={{ fontWeight: 'bold' }}>Number of Days</Text>
-                <View style={{ flexDirection: 'row', marginTop: 20, marginLeft: 0 }}>
+                <View style={{ flexDirection: 'row', marginTop: 20 }}>
                   <View style={{ flexDirection: 'row' }}>
                     <Pressable
                       onPress={() => {
@@ -1364,7 +1408,12 @@ const Offers = ({ navigation }: any) => {
                       </Text>
                     </Pressable>
                   </View>
-                  <View>
+                  <View
+                    style={{
+                      marginLeft: 'auto',
+                      marginRight: '5%'
+                    }}
+                  >
                     <Pressable
                       onPress={() => [
                         setTabsActive('calendar'),
@@ -1373,9 +1422,6 @@ const Offers = ({ navigation }: any) => {
                         setSecondDateValue(''),
                         setTeste({})
                       ]}
-                      style={{
-                        marginLeft: 90
-                      }}
                     >
                       <Text
                         style={{
@@ -1402,46 +1448,11 @@ const Offers = ({ navigation }: any) => {
                     Go in<Text style={{ fontWeight: 'bold' }}>{'  '}Month</Text>
                   </Text>
 
-                  <View style={{ flexDirection: 'row', marginTop: 30 }}>
+                  <View
+                    style={{ flexDirection: 'row', marginTop: 30, justifyContent: 'space-around' }}
+                  >
                     <TouchableOpacity
-                      style={{
-                        borderWidth: 2,
-                        borderRadius: 12,
-                        borderColor: '#1B4298',
-                        width: 80,
-                        height: 80,
-                        marginRight: 10
-                      }}
-                      onPress={() => [setInitialDate('2022-09-01'), setTabsActive('calendar')]}
-                    >
-                      <IconButton
-                        style={{ marginLeft: 'auto', marginRight: 'auto' }}
-                        icon={'calendar'}
-                        size={24}
-                        color={'#1B4298'}
-                      ></IconButton>
-                      <Text
-                        style={{
-                          fontSize: 16,
-                          lineHeight: 19,
-                          fontFamily: 'Corbel',
-                          alignItems: 'center',
-                          textAlign: 'center',
-                          color: '#1B4298'
-                        }}
-                      >
-                        Sep
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={{
-                        borderWidth: 2,
-                        borderRadius: 12,
-                        borderColor: '#1B4298',
-                        width: 80,
-                        height: 80,
-                        marginRight: 10
-                      }}
+                      style={styles.monthCard}
                       onPress={() => [setInitialDate('2022-10-01'), setTabsActive('calendar')]}
                     >
                       <IconButton
@@ -1450,28 +1461,10 @@ const Offers = ({ navigation }: any) => {
                         size={24}
                         color={'#1B4298'}
                       ></IconButton>
-                      <Text
-                        style={{
-                          fontSize: 16,
-                          lineHeight: 19,
-                          fontFamily: 'Corbel',
-                          alignItems: 'center',
-                          textAlign: 'center',
-                          color: '#1B4298'
-                        }}
-                      >
-                        Oct
-                      </Text>
+                      <Text style={styles.monthText}>Oct</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      style={{
-                        borderWidth: 2,
-                        borderRadius: 12,
-                        borderColor: '#1B4298',
-                        width: 80,
-                        height: 80,
-                        marginRight: 10
-                      }}
+                      style={styles.monthCard}
                       onPress={() => [setInitialDate('2022-11-01'), setTabsActive('calendar')]}
                     >
                       <IconButton
@@ -1480,28 +1473,10 @@ const Offers = ({ navigation }: any) => {
                         size={24}
                         color={'#1B4298'}
                       ></IconButton>
-                      <Text
-                        style={{
-                          fontSize: 16,
-                          lineHeight: 19,
-                          fontFamily: 'Corbel',
-                          alignItems: 'center',
-                          textAlign: 'center',
-                          color: '#1B4298'
-                        }}
-                      >
-                        Dec
-                      </Text>
+                      <Text style={styles.monthText}>Nov</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      style={{
-                        borderWidth: 2,
-                        borderRadius: 12,
-                        borderColor: '#1B4298',
-                        width: 80,
-                        height: 80,
-                        marginRight: 10
-                      }}
+                      style={styles.monthCard}
                       onPress={() => [setInitialDate('2022-12-01'), setTabsActive('calendar')]}
                     >
                       <IconButton
@@ -1510,18 +1485,19 @@ const Offers = ({ navigation }: any) => {
                         size={24}
                         color={'#1B4298'}
                       ></IconButton>
-                      <Text
-                        style={{
-                          fontSize: 16,
-                          lineHeight: 19,
-                          fontFamily: 'Corbel',
-                          alignItems: 'center',
-                          textAlign: 'center',
-                          color: '#1B4298'
-                        }}
-                      >
-                        Dec
-                      </Text>
+                      <Text style={styles.monthText}>Dec</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.monthCard}
+                      onPress={() => [setInitialDate('2023-01-01'), setTabsActive('calendar')]}
+                    >
+                      <IconButton
+                        style={{ marginLeft: 'auto', marginRight: 'auto' }}
+                        icon={'calendar'}
+                        size={24}
+                        color={'#1B4298'}
+                      ></IconButton>
+                      <Text style={styles.monthText}>Jan</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -1573,24 +1549,11 @@ const Offers = ({ navigation }: any) => {
               style={{
                 backgroundColor: 'white',
                 width: '100%',
-                height: 420,
-                maxHeight: 450,
+                height: '60%',
+                maxHeight: 400,
                 borderRadius: 20
               }}
             >
-              <IconButton
-                icon={'close'}
-                size={24}
-                color={'#8296CA'}
-                style={{ alignSelf: 'flex-end', marginBottom: 0, marginRight: 20 }}
-                onPress={() => {
-                  setModalHowManyVisible(false),
-                    setInputAdults(0),
-                    setInputChildren(0),
-                    setInputInfants(0)
-                }}
-                rippleColor={'white'}
-              />
               <IncrementDecrementInputComponent
                 title={'Adults'}
                 subTitle={'Ages 13 or above'}
@@ -1598,8 +1561,8 @@ const Offers = ({ navigation }: any) => {
                 onChangeText={() => setInputAdults(inputAdults)}
                 Increment={() => setInputAdults(inputAdults + 1)}
                 Decrement={() => {
-                  if (inputAdults === 0) {
-                    setInputAdults(0)
+                  if (inputAdults === 1) {
+                    setInputAdults(1)
                   } else {
                     setInputAdults(inputAdults - 1)
                   }
@@ -1652,7 +1615,7 @@ const Offers = ({ navigation }: any) => {
               >
                 <TouchableOpacity
                   onPress={() => {
-                    setInputAdults(0), setInputChildren(0), setInputInfants(0)
+                    setInputAdults(1), setInputChildren(0), setInputInfants(0)
                     setRadioRoomsValues('Shared')
                   }}
                 >
@@ -1689,21 +1652,11 @@ const Offers = ({ navigation }: any) => {
               style={{
                 backgroundColor: 'white',
                 width: '100%',
-                height: 420,
-                maxHeight: 450,
+                height: '60%',
+                maxHeight: 400,
                 borderRadius: 20
               }}
             >
-              <IconButton
-                icon={'close'}
-                size={24}
-                color={'#8296CA'}
-                style={{ alignSelf: 'flex-end', marginRight: 20, marginBottom: 0 }}
-                onPress={() => {
-                  setModalChoiceRooms(false), setRadioRoomsValues('Shared')
-                }}
-                rippleColor={'white'}
-              />
               <View style={{ flexDirection: 'row', height: '80%', maxHeight: 300 }}>
                 <View style={{ width: '65%', justifyContent: 'center', maxWidth: 350 }}>
                   <View
@@ -1829,7 +1782,7 @@ const Offers = ({ navigation }: any) => {
               >
                 <TouchableOpacity
                   onPress={() => {
-                    setInputAdults(0), setInputChildren(0), setInputInfants(0)
+                    setInputAdults(1), setInputChildren(0), setInputInfants(0)
                     setRadioRoomsValues('Shared')
                   }}
                 >

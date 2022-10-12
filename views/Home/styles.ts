@@ -144,11 +144,11 @@ const styles = StyleSheet.create({
   },
   modalViewTyping: {
     width: '100%',
-    height: '90%',
+    height: '85%',
     textAlign: 'left',
     backgroundColor: 'white',
     borderRadius: 20,
-    paddingTop: 50,
+    paddingTop: '7%',
     paddingBottom: 50,
     paddingLeft: 25,
     paddingRight: 25,
@@ -196,7 +196,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   inputModal: {
-    width: 350,
+    width: '95%',
+    marginLeft: 'auto',
+    marginRight: 'auto',
     marginBottom: 20,
     backgroundColor: '#DEE9FF',
     borderRadius: 25,
@@ -245,7 +247,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 25,
     marginBottom: 10,
-    width: 163,
+    width: 150,
     marginLeft: 'auto'
   },
   buttons: {
@@ -258,7 +260,9 @@ const styles = StyleSheet.create({
     width: 150,
     height: 100
   },
-  inputBottom: {},
+  inputBottom: {
+    width: '100%'
+  },
   icon: {
     marginRight: 5
   },
@@ -297,6 +301,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)'
+  },
+  monthCard: {
+    borderWidth: 2,
+    borderRadius: 12,
+    borderColor: '#1B4298',
+    paddingHorizontal: 20,
+    paddingBottom: 5
+  },
+  monthText: {
+    fontSize: 16,
+    lineHeight: 19,
+    fontFamily: 'Corbel',
+    alignItems: 'center',
+    textAlign: 'center',
+    color: '#1B4298'
   }
 })
 

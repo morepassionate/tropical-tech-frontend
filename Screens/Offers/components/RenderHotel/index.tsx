@@ -76,15 +76,17 @@ const RenderHotelComponent: React.FC<RenderHotelProps> = (props) => {
         <View
           style={[
             styles.rowContent,
-            { marginBottom: 5, justifyContent: 'space-between', width: '70%' }
+            { marginBottom: 5, justifyContent: 'space-between', width: '80%' }
           ]}
         >
-          <Text style={styles.name}>{hotelName}</Text>
+          <Text numberOfLines={1} ellipsizeMode="tail" style={styles.name}>
+            {hotelName}
+          </Text>
           <IconButton
             icon={'heart'}
             size={17}
             color={!isFavor ? COLORS.grey : COLORS.blue}
-            style={[styles.notMargin, { marginLeft: 20 }]}
+            style={[styles.notMargin, { marginLeft: 'auto' }]}
             onPress={() => {
               return setIsFavor(!isFavor)
             }}
@@ -138,6 +140,7 @@ const RenderHotelComponent: React.FC<RenderHotelProps> = (props) => {
 
 const styles = StyleSheet.create({
   borderMain: {
+    width: '100%',
     borderWidth: 1.75,
     borderRadius: 10,
     borderColor: COLORS.blue,
@@ -149,7 +152,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: 'Corbel',
     fontWeight: 'bold',
-    width: 150
+    width: 120
   },
   notMargin: {
     margin: 0

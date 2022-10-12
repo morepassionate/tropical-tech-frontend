@@ -14,8 +14,8 @@ import { Calendar } from 'react-native-calendars'
 import { IconButton, RadioButton } from 'react-native-paper'
 import { AntDesign } from '@expo/vector-icons'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import axios from 'axios'
 import { Dropdown } from 'react-native-element-dropdown'
+import * as Location from 'expo-location'
 
 import {
   getBestDealHotels,
@@ -89,15 +89,22 @@ const Home = (props: any) => {
     ;(async () => {
       LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
 
-      await axios.get('http://ipinfo.io/json').then((res) => {
-        setCoordinate({
-          latitude: Number(res.data.loc.split(',')[0]),
-          longitude: Number(res.data.loc.split(',')[1])
-        })
+      let { status } = await Location.requestForegroundPermissionsAsync()
+      if (status !== 'granted') {
+        console.log('Permission to access location was denied')
+        return
+      }
+      let location = await Location.getCurrentPositionAsync({})
+      setCoordinate({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude
       })
 
       console.log('useEffect')
       setIsLoadingMostPopular({ isLoading: true })
+      setIsLoadingRecentSearches({ isLoading: true })
+      setIsLoadingDestinationIdeas({ isLoading: true })
+      setIsLoadingBestDeals({ isLoading: true })
       await getMostPopularHotels()
         .then((res) => {
           setIsLoadingMostPopular({ isLoading: false })
@@ -109,7 +116,6 @@ const Home = (props: any) => {
           console.log('most popular error', err)
         })
 
-      setIsLoadingRecentSearches({ isLoading: true })
       await getRecentsearchHotels()
         .then((res) => {
           setIsLoadingRecentSearches({ isLoading: false })
@@ -121,7 +127,6 @@ const Home = (props: any) => {
           console.log('recent search error', err)
         })
 
-      setIsLoadingDestinationIdeas({ isLoading: true })
       await getDestinationIdeaHotels()
         .then((res) => {
           setIsLoadingDestinationIdeas({ isLoading: false })
@@ -133,7 +138,6 @@ const Home = (props: any) => {
           console.log('destination hotel error', err)
         })
 
-      setIsLoadingBestDeals({ isLoading: true })
       await getBestDealHotels()
         .then((res) => {
           setIsLoadingBestDeals({ isLoading: false })
@@ -352,7 +356,7 @@ const Home = (props: any) => {
         const data = res.data
         setIsLoadingSearched({ isLoading: false })
         setSearched(data)
-        setInputAdults(0)
+        setInputAdults(1)
         setInputChildren(0)
         setInputInfants(0)
         setRadioRoomsValues('Shared')
@@ -374,7 +378,7 @@ const Home = (props: any) => {
       })
   }
 
-  const [inputAdults, setInputAdults] = useState(0)
+  const [inputAdults, setInputAdults] = useState(1)
   const [inputChildren, setInputChildren] = useState(0)
   const [inputInfants, setInputInfants] = useState(0)
   const [radioRoomsValues, setRadioRoomsValues] = useState('Shared') // Shared, Single, Double, Family
@@ -417,7 +421,7 @@ const Home = (props: any) => {
                   onFocus={() => {
                     setIsRoomTouched(true)
                     setModalHowManyVisible(true)
-                    setInputAdults(0)
+                    setInputAdults(1)
                     setInputChildren(0)
                     setInputInfants(0)
                     setRadioRoomsValues('Shared')
@@ -655,7 +659,13 @@ const Home = (props: any) => {
                     }}
                   />
                 )}
-                <View style={{ display: tabsActive === 'calendar' ? 'flex' : 'none' }}>
+                <View
+                  style={{
+                    display: tabsActive === 'calendar' ? 'flex' : 'none',
+                    width: '100%',
+                    height: 420
+                  }}
+                >
                   <Calendar
                     initialDate={initialDate}
                     minDate={new Date().toISOString().split('T')[0].toString()}
@@ -663,8 +673,6 @@ const Home = (props: any) => {
                     markedDates={teste}
                     style={{
                       marginTop: 30,
-                      width: 400,
-                      height: 420,
                       borderWidth: 2,
                       borderColor: '#506F9D',
                       borderRadius: 12,
@@ -713,11 +721,11 @@ const Home = (props: any) => {
                     display: tabsActive === 'flexible' ? 'flex' : 'none',
                     paddingTop: 30,
                     width: '100%',
-                    marginBottom: '32.5%'
+                    marginBottom: '20%'
                   }}
                 >
                   <Text style={{ fontWeight: 'bold' }}>Number of Days</Text>
-                  <View style={{ flexDirection: 'row', marginTop: 20, marginLeft: 0 }}>
+                  <View style={{ flexDirection: 'row', marginTop: 20 }}>
                     <View style={{ flexDirection: 'row' }}>
                       <Pressable
                         onPress={() => {
@@ -790,7 +798,12 @@ const Home = (props: any) => {
                         </Text>
                       </Pressable>
                     </View>
-                    <View>
+                    <View
+                      style={{
+                        marginLeft: 'auto',
+                        marginRight: '5%'
+                      }}
+                    >
                       <Pressable
                         onPress={() => [
                           setTabsActive('calendar'),
@@ -799,9 +812,6 @@ const Home = (props: any) => {
                           setSecondDateValue(''),
                           setTeste({})
                         ]}
-                        style={{
-                          marginLeft: 90
-                        }}
                       >
                         <Text
                           style={{
@@ -823,51 +833,20 @@ const Home = (props: any) => {
                       </Pressable>
                     </View>
                   </View>
-                  <View style={{ marginTop: 60 }}>
+                  <View style={{ marginTop: 50 }}>
                     <Text>
                       Go in<Text style={{ fontWeight: 'bold' }}>{'  '}Month</Text>
                     </Text>
 
-                    <View style={{ flexDirection: 'row', marginTop: 30 }}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        marginTop: 30,
+                        justifyContent: 'space-around'
+                      }}
+                    >
                       <TouchableOpacity
-                        style={{
-                          borderWidth: 2,
-                          borderRadius: 12,
-                          borderColor: '#1B4298',
-                          width: 80,
-                          height: 80,
-                          marginRight: 10
-                        }}
-                        onPress={() => [setInitialDate('2022-09-01'), setTabsActive('calendar')]}
-                      >
-                        <IconButton
-                          style={{ marginLeft: 'auto', marginRight: 'auto' }}
-                          icon={'calendar'}
-                          size={24}
-                          color={'#1B4298'}
-                        ></IconButton>
-                        <Text
-                          style={{
-                            fontSize: 16,
-                            lineHeight: 19,
-                            fontFamily: 'Corbel',
-                            alignItems: 'center',
-                            textAlign: 'center',
-                            color: '#1B4298'
-                          }}
-                        >
-                          Sep
-                        </Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={{
-                          borderWidth: 2,
-                          borderRadius: 12,
-                          borderColor: '#1B4298',
-                          width: 80,
-                          height: 80,
-                          marginRight: 10
-                        }}
+                        style={styles.monthCard}
                         onPress={() => [setInitialDate('2022-10-01'), setTabsActive('calendar')]}
                       >
                         <IconButton
@@ -876,28 +855,10 @@ const Home = (props: any) => {
                           size={24}
                           color={'#1B4298'}
                         ></IconButton>
-                        <Text
-                          style={{
-                            fontSize: 16,
-                            lineHeight: 19,
-                            fontFamily: 'Corbel',
-                            alignItems: 'center',
-                            textAlign: 'center',
-                            color: '#1B4298'
-                          }}
-                        >
-                          Oct
-                        </Text>
+                        <Text style={styles.monthText}>Oct</Text>
                       </TouchableOpacity>
                       <TouchableOpacity
-                        style={{
-                          borderWidth: 2,
-                          borderRadius: 12,
-                          borderColor: '#1B4298',
-                          width: 80,
-                          height: 80,
-                          marginRight: 10
-                        }}
+                        style={styles.monthCard}
                         onPress={() => [setInitialDate('2022-11-01'), setTabsActive('calendar')]}
                       >
                         <IconButton
@@ -906,28 +867,10 @@ const Home = (props: any) => {
                           size={24}
                           color={'#1B4298'}
                         ></IconButton>
-                        <Text
-                          style={{
-                            fontSize: 16,
-                            lineHeight: 19,
-                            fontFamily: 'Corbel',
-                            alignItems: 'center',
-                            textAlign: 'center',
-                            color: '#1B4298'
-                          }}
-                        >
-                          Dec
-                        </Text>
+                        <Text style={styles.monthText}>Nov</Text>
                       </TouchableOpacity>
                       <TouchableOpacity
-                        style={{
-                          borderWidth: 2,
-                          borderRadius: 12,
-                          borderColor: '#1B4298',
-                          width: 80,
-                          height: 80,
-                          marginRight: 10
-                        }}
+                        style={styles.monthCard}
                         onPress={() => [setInitialDate('2022-12-01'), setTabsActive('calendar')]}
                       >
                         <IconButton
@@ -936,18 +879,19 @@ const Home = (props: any) => {
                           size={24}
                           color={'#1B4298'}
                         ></IconButton>
-                        <Text
-                          style={{
-                            fontSize: 16,
-                            lineHeight: 19,
-                            fontFamily: 'Corbel',
-                            alignItems: 'center',
-                            textAlign: 'center',
-                            color: '#1B4298'
-                          }}
-                        >
-                          Dec
-                        </Text>
+                        <Text style={styles.monthText}>Dec</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={styles.monthCard}
+                        onPress={() => [setInitialDate('2023-01-01'), setTabsActive('calendar')]}
+                      >
+                        <IconButton
+                          style={{ marginLeft: 'auto', marginRight: 'auto' }}
+                          icon={'calendar'}
+                          size={24}
+                          color={'#1B4298'}
+                        ></IconButton>
+                        <Text style={styles.monthText}>Jan</Text>
                       </TouchableOpacity>
                     </View>
                   </View>
@@ -999,24 +943,11 @@ const Home = (props: any) => {
                 style={{
                   backgroundColor: 'white',
                   width: '100%',
-                  height: 420,
-                  maxHeight: 450,
+                  height: '60%',
+                  maxHeight: 400,
                   borderRadius: 20
                 }}
               >
-                <IconButton
-                  icon={'close'}
-                  size={24}
-                  color={'#8296CA'}
-                  style={{ alignSelf: 'flex-end', marginBottom: 0, marginRight: 20 }}
-                  onPress={() => {
-                    setModalHowManyVisible(false),
-                      setInputAdults(0),
-                      setInputChildren(0),
-                      setInputInfants(0)
-                  }}
-                  rippleColor={'white'}
-                />
                 <IncrementDecrementInputComponent
                   title={'Adults'}
                   subTitle={'Ages 13 or above'}
@@ -1024,8 +955,8 @@ const Home = (props: any) => {
                   onChangeText={() => setInputAdults(inputAdults)}
                   Increment={() => setInputAdults(inputAdults + 1)}
                   Decrement={() => {
-                    if (inputAdults === 0) {
-                      setInputAdults(0)
+                    if (inputAdults === 1) {
+                      setInputAdults(1)
                     } else {
                       setInputAdults(inputAdults - 1)
                     }
@@ -1078,7 +1009,7 @@ const Home = (props: any) => {
                 >
                   <TouchableOpacity
                     onPress={() => {
-                      setInputAdults(0), setInputChildren(0), setInputInfants(0)
+                      setInputAdults(1), setInputChildren(0), setInputInfants(0)
                       setRadioRoomsValues('Shared')
                     }}
                   >
@@ -1116,21 +1047,11 @@ const Home = (props: any) => {
                 style={{
                   backgroundColor: 'white',
                   width: '100%',
-                  height: 420,
-                  maxHeight: 450,
+                  height: '60%',
+                  maxHeight: 400,
                   borderRadius: 20
                 }}
               >
-                <IconButton
-                  icon={'close'}
-                  size={24}
-                  color={'#8296CA'}
-                  style={{ alignSelf: 'flex-end', marginRight: 20, marginBottom: 0 }}
-                  onPress={() => {
-                    setModalChoiceRooms(false), setRadioRoomsValues('Shared')
-                  }}
-                  rippleColor={'white'}
-                />
                 <View style={{ flexDirection: 'row', height: '80%', maxHeight: 300 }}>
                   <View style={{ width: '65%', justifyContent: 'center', maxWidth: 350 }}>
                     <View
@@ -1256,7 +1177,7 @@ const Home = (props: any) => {
                 >
                   <TouchableOpacity
                     onPress={() => {
-                      setInputAdults(0), setInputChildren(0), setInputInfants(0)
+                      setInputAdults(1), setInputChildren(0), setInputInfants(0)
                       setRadioRoomsValues('Shared')
                     }}
                   >

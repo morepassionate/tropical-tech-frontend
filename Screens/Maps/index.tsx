@@ -4,49 +4,68 @@ import { StyleSheet, View, Text, Touchable, TouchableOpacity } from 'react-nativ
 import MapView, { Marker } from 'react-native-maps'
 import { IconButton, ProgressBar, TextInput } from 'react-native-paper'
 import { Dropdown } from 'react-native-element-dropdown'
-import { states } from '../../assets/States/index.json'
+import { currentLocation } from '../../assets/atoms/HotelHomeData'
 import * as Progress from 'react-native-progress'
+import { stateData } from '../../data'
+import { useRecoilValue } from 'recoil'
 
 // import { Container } from './styles';
 
 const Maps = ({ navigation }: any) => {
-  let currentLocation = {} as { latitude: number; longitude: number }
-  let title = ''
-  let description = ''
-
-  useEffect(() => {
-    ;(async () => {
-      const { data } = await axios.get('http://ipinfo.io/json')
-
-      currentLocation.latitude = Number(data.loc.split(',')[0])
-      currentLocation.longitude = Number(data.loc.split(',')[1])
-      title = data.region
-      description = `${data.city}, ${data.country}`
-
-      setPosition({
-        latitude: currentLocation.latitude,
-        longitude: currentLocation.longitude,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421
-      })
-    })()
-
-    for (let i = 0; i < states.length; i++) {
-      let item = { label: states[i].name, value: states[i].name }
-      allState.push(item)
-    }
-    setAllState(allState)
-  }, [])
-
+  const currentCoordinates = useRecoilValue(currentLocation)
+  const [where, setWhere] = useState('')
   const [position, setPosition] = useState<{
     latitude: number
     longitude: number
     latitudeDelta: number
     longitudeDelta: number
-  } | null>(null)
+  }>({
+    latitude: currentCoordinates.latitude,
+    longitude: currentCoordinates.longitude,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421
+  })
+  const [title, setTitle] = useState('')
+  const [description, setDescription] = useState('')
 
-  const [allState, setAllState] = useState([] as { label: string; value: string }[])
-  const [where, setWhere] = useState('')
+  useEffect(() => {
+    ;(async () => {
+      try {
+        console.log('where again')
+        const params = {
+          access_key: 'a7cb1d426ef75fa213f89c8ad28ff346',
+          query: where,
+          limit: 1
+        }
+        const { data } = await axios.get('http://api.positionstack.com/v1/forward', { params })
+        setPosition({
+          ...position,
+          latitude: data.data[0].latitude,
+          longitude: data.data[0].longitude
+        })
+      } catch (err) {
+        console.log('err', err)
+      }
+    })()
+  }, [where])
+
+  useEffect(() => {
+    ;(async () => {
+      try {
+        console.log('select position')
+        const params = {
+          access_key: 'a7cb1d426ef75fa213f89c8ad28ff346',
+          query: `${position.latitude},${position.longitude}`,
+          limit: 1
+        }
+        const { data } = await axios.get('http://api.positionstack.com/v1/reverse', { params })
+        setTitle(data.data[0].region)
+        setDescription(data.data[0].label)
+      } catch (err) {
+        console.log('err', err)
+      }
+    })()
+  }, [position])
 
   const renderItem = (item: { label: string; value: string }) => {
     return (
@@ -86,21 +105,18 @@ const Maps = ({ navigation }: any) => {
           placeholderStyle={styles.placeholderStyle}
           selectedTextStyle={styles.placeholderStyle}
           inputSearchStyle={styles.inputSearchStyle}
-          data={allState}
+          data={stateData}
           search
           labelField="label"
-          containerStyle={{ margin: 0, borderRadius: 10 }}
+          containerStyle={{ marginTop: -25, borderRadius: 10 }}
           itemContainerStyle={{ margin: 0 }}
           valueField="value"
           placeholder="Search here"
           searchPlaceholder="Search Cities"
-          dropdownPosition="top"
+          dropdownPosition="auto"
           value={where}
           onChange={(item) => {
             setWhere(item.value)
-          }}
-          onFocus={() => {
-            setWhere('')
           }}
           renderItem={renderItem}
         />
