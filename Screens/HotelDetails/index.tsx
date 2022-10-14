@@ -6,7 +6,7 @@ import GridGalleryImages from '../../Components/GridGalleryImages'
 import Reviews from '../../Components/Reviews'
 import COLORS from '../../Constants/styles'
 import { commentsReviews } from '../../data'
-import MapView, { Marker } from 'react-native-maps'
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 
 import styles from './styles'
 import { useRecoilState } from 'recoil'
@@ -47,12 +47,12 @@ const HotelDetails = ({ navigation, route }: any) => {
 
   const [hotelDetailData, setHotelDetailData] = useState({} as HotelDetailProps)
   const [isLoading, setIsLoading] = useState(true)
-  const [position, setPosition] = useState({
+  const region = {
     latitude: coordinates.latitude,
     longitude: coordinates.longitude,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421
-  })
+  }
   const [modalConfirm, setModalConfirm] = useState(false)
   const [modalPolicy, setModalPolicy] = useState(false)
   const [authStatus, setAuthStatus] = useRecoilState(AuthStatus)
@@ -167,20 +167,18 @@ const HotelDetails = ({ navigation, route }: any) => {
       {/* MAPA COM DESIGN ESCURO */}
       <MapView
         style={{ height: 180, width: '100%', marginBottom: 15, backgroundColor: 'yellow' }}
-        region={position}
-        onPress={(e) =>
-          setPosition({
-            ...position,
-            latitude: e.nativeEvent.coordinate.latitude,
-            longitude: e.nativeEvent.coordinate.longitude
-          })
-        }
+        initialRegion={region}
+        toolbarEnabled={true}
+        scrollEnabled={true}
+        pitchEnabled={true}
+        provider={PROVIDER_GOOGLE}
+        loadingEnabled={true}
+        showsUserLocation={true}
+        zoomEnabled={true}
+        mapType="standard"
+        moveOnMarkerPress={true}
       >
-        <Marker
-          coordinate={position}
-          title={`${hotelDetailData.hotelName}`}
-          description={'Hotel'}
-        />
+        <Marker coordinate={region} title={`${hotelDetailData.hotelName}`} description={'Hotel'} />
       </MapView>
       {/*  */}
       <View style={[styles.marginHorizontal, { marginTop: 19 }]}>

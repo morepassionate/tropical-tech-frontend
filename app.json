@@ -13,9 +13,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
@@ -24,7 +22,11 @@
         "foregroundImage": "./assets/img/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.aalmeida727.urh"
+      "package": "com.aalmeida727.urh",
+      "useNextNotificationsApi": true,
+      "config": {
+        "googleMaps": { "apiKey": "AIzaSyDE9uktLowa0GhzN2B2NeazdFziBywLhYM" }
+      }
     },
     "web": {
       "favicon": "./assets/img/favicon.png"

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View, Text, Touchable, TouchableOpacity } from 'react-native'
-import MapView, { Marker } from 'react-native-maps'
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import { IconButton, ProgressBar, TextInput } from 'react-native-paper'
 import { Dropdown } from 'react-native-element-dropdown'
 import { currentLocation } from '../../assets/atoms/HotelHomeData'
@@ -31,7 +31,6 @@ const Maps = ({ navigation }: any) => {
   useEffect(() => {
     ;(async () => {
       try {
-        console.log('select position')
         const params = {
           access_key: 'a7cb1d426ef75fa213f89c8ad28ff346',
           query: `${position.latitude},${position.longitude}`,
@@ -50,8 +49,6 @@ const Maps = ({ navigation }: any) => {
   useEffect(() => {
     ;(async () => {
       try {
-        console.log('where again', where)
-
         const params = {
           access_key: 'a7cb1d426ef75fa213f89c8ad28ff346',
           query: where,
@@ -104,7 +101,7 @@ const Maps = ({ navigation }: any) => {
           top: 30
         }}
       >
-        <Dropdown
+        {/* <Dropdown
           style={styles.inputSearch}
           placeholderStyle={styles.placeholderStyle}
           selectedTextStyle={styles.placeholderStyle}
@@ -112,7 +109,7 @@ const Maps = ({ navigation }: any) => {
           data={stateData}
           search
           labelField="label"
-          containerStyle={{ marginTop: -25, borderRadius: 10 }}
+          containerStyle={{ marginTop: -50, borderRadius: 10 }}
           itemContainerStyle={{ margin: 0 }}
           valueField="value"
           placeholder="Search here"
@@ -123,11 +120,20 @@ const Maps = ({ navigation }: any) => {
             setWhere(item.value)
           }}
           renderItem={renderItem}
-        />
+        /> */}
       </View>
       <MapView
-        style={{ height: 400, width: '100%', marginBottom: 15 }}
+        style={{ height: '100%', width: '100%', marginBottom: 15 }}
+        initialRegion={position}
         region={position}
+        toolbarEnabled={true}
+        provider={PROVIDER_GOOGLE}
+        loadingEnabled={true}
+        scrollEnabled={true}
+        pitchEnabled={true}
+        zoomEnabled={true}
+        mapType="standard"
+        moveOnMarkerPress={true}
         onPress={(e) =>
           setPosition({
             ...position,
