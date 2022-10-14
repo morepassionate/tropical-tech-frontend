@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { StyleSheet, View, Text, Touchable, TouchableOpacity } from 'react-native'
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import { IconButton, ProgressBar, TextInput } from 'react-native-paper'
@@ -27,19 +27,26 @@ const Maps = ({ navigation }: any) => {
   })
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
+  const componentMounted = useRef(true)
 
   useEffect(() => {
     ;(async () => {
       try {
+        console.log('latlon data')
         const params = {
           access_key: 'a7cb1d426ef75fa213f89c8ad28ff346',
           query: `${position.latitude},${position.longitude}`,
           limit: 1
         }
         const { data } = await axios.get('http://api.positionstack.com/v1/reverse', { params })
-        setTitle(data.data[0].region)
-        setDescription(data.data[0].label)
-        where === '' && setWhere(data.data[0].region)
+        if (componentMounted.current) {
+          setTitle(data.data[0].region)
+          setDescription(data.data[0].label)
+          where === '' && setWhere(data.data[0].region)
+        }
+        return () => {
+          componentMounted.current = false
+        }
       } catch (err) {
         console.log('err', err)
       }
@@ -49,6 +56,7 @@ const Maps = ({ navigation }: any) => {
   useEffect(() => {
     ;(async () => {
       try {
+        console.log('where data')
         const params = {
           access_key: 'a7cb1d426ef75fa213f89c8ad28ff346',
           query: where,
@@ -56,11 +64,16 @@ const Maps = ({ navigation }: any) => {
         }
         if (where !== '') {
           const { data } = await axios.get('http://api.positionstack.com/v1/forward', { params })
-          setPosition({
-            ...position,
-            latitude: data.data[0].latitude,
-            longitude: data.data[0].longitude
-          })
+          if (componentMounted.current) {
+            setPosition({
+              ...position,
+              latitude: data.data[0].latitude,
+              longitude: data.data[0].longitude
+            })
+          }
+          return () => {
+            componentMounted.current = false
+          }
         }
       } catch (err) {
         console.log('error', err)
@@ -101,7 +114,7 @@ const Maps = ({ navigation }: any) => {
           top: 30
         }}
       >
-        {/* <Dropdown
+        <Dropdown
           style={styles.inputSearch}
           placeholderStyle={styles.placeholderStyle}
           selectedTextStyle={styles.placeholderStyle}
@@ -120,14 +133,14 @@ const Maps = ({ navigation }: any) => {
             setWhere(item.value)
           }}
           renderItem={renderItem}
-        /> */}
+        />
       </View>
       <MapView
         style={{ height: '100%', width: '100%', marginBottom: 15 }}
         initialRegion={position}
         region={position}
         toolbarEnabled={true}
-        provider={PROVIDER_GOOGLE}
+        // provider={PROVIDER_GOOGLE}
         loadingEnabled={true}
         scrollEnabled={true}
         pitchEnabled={true}
@@ -144,7 +157,7 @@ const Maps = ({ navigation }: any) => {
       >
         <Marker coordinate={position} title={title} description={description} />
       </MapView>
-      <View style={{ height: '50%', backgroundColor: 'white' }}></View>
+      <View style={{ height: '50%', backgroundColor: 'black' }}></View>
     </View>
   )
 }
