@@ -122,7 +122,7 @@ const Maps = ({ navigation }: any) => {
           data={stateData}
           search
           labelField="label"
-          containerStyle={{ marginTop: -50, borderRadius: 10 }}
+          containerStyle={{ marginTop: '-13%', borderRadius: 10 }}
           itemContainerStyle={{ margin: 0 }}
           valueField="value"
           placeholder="Search here"
@@ -136,11 +136,11 @@ const Maps = ({ navigation }: any) => {
         />
       </View>
       <MapView
-        style={{ height: '100%', width: '100%', marginBottom: 15 }}
+        style={{ height: '100%', width: '100%' }}
         initialRegion={position}
         region={position}
         toolbarEnabled={true}
-        // provider={PROVIDER_GOOGLE}
+        provider={PROVIDER_GOOGLE}
         loadingEnabled={true}
         scrollEnabled={true}
         pitchEnabled={true}
@@ -164,19 +164,24 @@ const Maps = ({ navigation }: any) => {
 
 const styles = StyleSheet.create({
   inputSearch: {
-    height: 45,
+    marginTop: 7,
+    width: '100%',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    marginBottom: 20,
     backgroundColor: 'white',
     borderRadius: 25,
-    fontSize: 16,
-    marginVertical: 7,
-    fontFamily: 'Corbel',
-    padding: 15,
+    paddingBottom: 12,
+    height: 45,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
     shadowRadius: 10,
     elevation: 5,
-    textAlign: 'center'
+    padding: 15,
+    textAlign: 'center',
+    alignSelf: 'flex-start',
+    fontFamily: 'Corbel'
   },
   item: {
     padding: 15,

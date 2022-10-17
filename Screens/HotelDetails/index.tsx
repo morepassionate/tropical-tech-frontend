@@ -171,7 +171,7 @@ const HotelDetails = ({ navigation, route }: any) => {
         toolbarEnabled={true}
         scrollEnabled={true}
         pitchEnabled={true}
-        // provider={PROVIDER_GOOGLE}
+        provider={PROVIDER_GOOGLE}
         loadingEnabled={true}
         showsUserLocation={true}
         zoomEnabled={true}

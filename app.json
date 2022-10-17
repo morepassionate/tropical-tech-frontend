@@ -13,7 +13,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -25,11 +27,18 @@
       "package": "com.aalmeida727.urh",
       "useNextNotificationsApi": true,
       "config": {
-        "googleMaps": { "apiKey": "AIzaSyDE9uktLowa0GhzN2B2NeazdFziBywLhYM" }
+        "googleMaps": {
+          "apiKey": "AIzaSyDE9uktLowa0GhzN2B2NeazdFziBywLhYM"
+        }
       }
     },
     "web": {
       "favicon": "./assets/img/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "9b9ef366-e203-4daf-a594-9c33e598a9fe"
+      }
     }
   }
 }
