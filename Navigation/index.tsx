@@ -18,7 +18,7 @@ import {
   SignupStep4,
   VerificationCode,
   Welcome
-} from '../views'
+} from '../../views'
 import Offers from '../Screens/Offers'
 import HotelDetails from '../Screens/HotelDetails'
 import ConfirmPayment from '../Screens/ConfirmPayment'

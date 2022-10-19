@@ -1,8 +1,20 @@
+# UHR Booking
+
+### It is a front-end for a simple hotel booking site. The site is developed using React Native/Expo and React Native Library are used to provide extra features. There are total 5 webpages of the website.
+
+- Home Page - It is a indroductionary page about the hotel itself. It contains various images of the most popular, best deals, ideal destination hotels. It also contains details about the rooms and a link to rooms page. It also shows free features that hotel provides to every visitor. Some reviews that hotel recieved over the years are also represented in a conware fashion.
+
+- Offer page - It is a search results page about people search hotel they want. To sort hotels, there are price, distance, reviews sort and to filter hotels, there is a price range function. Furthermore, there is google map search.
+
+- Rooms Page - This page provides all the details about the rooms available in the hotel. When you hover over any of the room the details of that room will pe presented to you with a linear transition which is achieved with pure CSS3.
+
+- Booking Page - This is the page which has the booking faciltiy of the hotel. The form contains inputs for name, email-id, type of rooms, Number of rooms, and number of visitors. For number of rooms and visitors spinner buttons are provided (-,+) using a IncreaseDecreaseButton. For Date of Arrival and departure a datepicker is used.
+
 **Edit a file, create a new file, and clone from Bitbucket in under 2 minutes**
 
 When you're done, you can delete the content in this README and update the file with details for others getting started with your repository.
 
-*We recommend that you open this README in another tab as you perform the tasks below. You can [watch our video](https://youtu.be/0ocf7u76WSo) for a full demo of all the steps in this tutorial. Open the video in a new tab to avoid leaving Bitbucket.*
+_We recommend that you open this README in another tab as you perform the tasks below. You can [watch our video](https://youtu.be/0ocf7u76WSo) for a full demo of all the steps in this tutorial. Open the video in a new tab to avoid leaving Bitbucket._
 
 ---
 
@@ -13,7 +25,7 @@ You’ll start by editing this README file to learn how to edit a file in Bitbuc
 1. Click **Source** on the left side.
 2. Click the README.md link from the list of files.
 3. Click the **Edit** button.
-4. Delete the following text: *Delete this line to make a change to the README from Bitbucket.*
+4. Delete the following text: _Delete this line to make a change to the README from Bitbucket._
 5. After making your change, click **Commit** and then **Commit** again in the dialog. The commit page will open and you’ll see the change you just made.
 6. Go back to the **Source** page.
 
