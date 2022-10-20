@@ -32,7 +32,7 @@ import CardDestinationIdeas from '../../Components/CardDestinationIdeas'
 import CardMostPopular from '../../Components/CardMostPopular'
 import CardBestDeals from '../../Components/CardBestDeals'
 import LocationIcon from '../../assets/icons/Location'
-import IncrementDecrementInputComponent from './components/incrementDecrement'
+import IncrementDecrementInputComponent from '../../views/Home/components/incrementDecrement'
 import LightButton from '../../Components/LightButton'
 import CartoonPersonIcon from '../../assets/icons/CartoonPerson'
 import DoubleCartoonsIcon from '../../assets/icons/DoubleCartoons'
@@ -40,7 +40,7 @@ import FamilyCartoonsIcon from '../../assets/icons/FamilyCartoons'
 
 import { FilterQueryProps } from '../../Constants/data'
 
-import styles from './styles'
+import styles from '../../views/Home/styles'
 import {
   searched,
   isLoadingSearched,
