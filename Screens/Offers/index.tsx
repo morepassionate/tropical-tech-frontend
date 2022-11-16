@@ -24,6 +24,7 @@ import LocationIcon from '../../assets/icons/Location'
 import SortIcon from '../../assets/icons/Sort'
 import CardBestDeals from '../../Components/CardBestDeals'
 import CardDestinationIdea from '../../Components/CardDestinationIdeas'
+import CardUpcomingTrips from '../../Components/CardUpcomingTrips'
 import CardMostPopular from '../../Components/CardMostPopular'
 import LightButton from '../../Components/LightButton'
 import COLORS from '../../Constants/styles'
@@ -427,7 +428,7 @@ const Offers = ({ navigation }: any) => {
         </View>
         <Text style={styles.covidAlert}>Review COVID-19 travel restrictions before you book.</Text>
         <View style={styles.mostPopularContainer}>
-          <CardMostPopular isOfferPage={true} numberofadults={1} />
+          <CardUpcomingTrips numberofadults={1} />
         </View>
         {isLoading.isLoading ? (
           <Progress.Circle

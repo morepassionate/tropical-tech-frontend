@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import React, { useState, useEffect } from 'react'
-import { View, Text, Image, ScrollView, TouchableOpacity, LogBox } from 'react-native'
+import React from 'react'
+import { View, Text, Image, ScrollView, TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import * as Progress from 'react-native-progress'
 
@@ -18,7 +18,7 @@ function CardUpcomingTrips(props: { numberofadults: number }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Recent Searches</Text>
+      <Text style={styles.title}>Most Populars</Text>
       {recentSearchedHotels.length !== 0 || !isLoading.isLoading ? (
         <ScrollView horizontal style={styles.scrollview} showsHorizontalScrollIndicator={false}>
           {recentSearchedHotels.map((item: HotelInfoProps, index: number) => {

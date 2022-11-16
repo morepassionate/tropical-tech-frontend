@@ -12,11 +12,9 @@ import { isLoadingMostPopular, mostpopular } from '../../assets/atoms/HotelHomeD
 
 interface CardMostPropsType {
   numberofadults: number
-  isOfferPage?: boolean
 }
 
 const CardMostPopular = (props: CardMostPropsType) => {
-  const isOfferPage = props.isOfferPage
   const numberofadults = props.numberofadults
   const navigation = useNavigation()
   const mostPopularHotels = useRecoilValue(mostpopular)

@@ -1,13 +1,11 @@
 import React, { useEffect } from 'react'
 import { View } from 'react-native'
 import * as Font from 'expo-font'
-import Navigation from './Navigation'
+import Navigation from './views/Navigation'
 import Constants from 'expo-constants'
-import { StatusBar } from 'expo-status-bar'
 import { RecoilRoot } from 'recoil'
-import AppLoading from 'expo-app-loading'
 import * as SplashScreen from 'expo-splash-screen'
-import { configureFonts, DefaultTheme, Provider as PaperProvider } from 'react-native-paper'
+import { DefaultTheme } from 'react-native-paper'
 
 // SplashScreen.preventAutoHideAsync()
 

@@ -20,16 +20,14 @@ import * as Location from 'expo-location'
 import {
   getBestDealHotels,
   getDestinationIdeaHotels,
-  getMostPopularHotels,
-  getRecentsearchHotels,
-  getSearchedHotelAll
+  getSearchedHotelAll,
+  getRecentsearchHotels
 } from '../../api/apiCaller'
 
 import { stateData } from '../../data'
 
 import CardUpcomingTrips from '../../Components/CardUpcomingTrips'
 import CardDestinationIdeas from '../../Components/CardDestinationIdeas'
-import CardMostPopular from '../../Components/CardMostPopular'
 import CardBestDeals from '../../Components/CardBestDeals'
 import LocationIcon from '../../assets/icons/Location'
 import IncrementDecrementInputComponent from '../../views/Home/components/incrementDecrement'
@@ -45,7 +43,6 @@ import {
   searched,
   isLoadingSearched,
   mostpopular,
-  isLoadingMostPopular,
   recentsearches,
   isLoadingRecentSearches,
   destinationideas,
@@ -61,7 +58,6 @@ const Home = (props: any) => {
   const [_, setSearched] = useRecoilState(searched)
   const [isSearchLoading, setIsLoadingSearched] = useRecoilState(isLoadingSearched)
   const [__, setMostpopular] = useRecoilState(mostpopular)
-  const [isMostPopularLoading, setIsLoadingMostPopular] = useRecoilState(isLoadingMostPopular)
   const [___, setrecentsearches] = useRecoilState(recentsearches)
   const [isRecentSearchesLoading, setIsLoadingRecentSearches] =
     useRecoilState(isLoadingRecentSearches)
@@ -99,22 +95,11 @@ const Home = (props: any) => {
         latitude: location.coords.latitude,
         longitude: location.coords.longitude
       })
+      console.log('currentCoordinates', currentCoordinates)
 
-      console.log('useEffect')
-      setIsLoadingMostPopular({ isLoading: true })
       setIsLoadingRecentSearches({ isLoading: true })
       setIsLoadingDestinationIdeas({ isLoading: true })
       setIsLoadingBestDeals({ isLoading: true })
-      await getMostPopularHotels()
-        .then((res) => {
-          setIsLoadingMostPopular({ isLoading: false })
-          const data = res.data
-          setMostpopular(data)
-        })
-        .catch((err) => {
-          setIsLoadingMostPopular({ isLoading: false })
-          console.log('most popular error', err)
-        })
 
       await getRecentsearchHotels()
         .then((res) => {
@@ -124,7 +109,7 @@ const Home = (props: any) => {
         })
         .catch((err) => {
           setIsLoadingRecentSearches({ isLoading: false })
-          console.log('recent search error', err)
+          console.log('most popular hotel error', err)
         })
 
       await getDestinationIdeaHotels()
@@ -522,7 +507,7 @@ const Home = (props: any) => {
             </View>
           </ImageBackground>
           <View style={styles.containerHotels}>
-            <CardMostPopular numberofadults={inputAdults} />
+            {/* <CardMostPopular numberofadults={inputAdults} /> */}
             <CardUpcomingTrips numberofadults={inputAdults} />
             <CardDestinationIdeas numberofadults={inputAdults} />
             <CardBestDeals numberofadults={inputAdults} />

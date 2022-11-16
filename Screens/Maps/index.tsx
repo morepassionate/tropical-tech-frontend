@@ -32,7 +32,6 @@ const Maps = ({ navigation }: any) => {
   useEffect(() => {
     ;(async () => {
       try {
-        console.log('latlon data')
         const params = {
           access_key: 'a7cb1d426ef75fa213f89c8ad28ff346',
           query: `${position.latitude},${position.longitude}`,
@@ -56,7 +55,6 @@ const Maps = ({ navigation }: any) => {
   useEffect(() => {
     ;(async () => {
       try {
-        console.log('where data')
         const params = {
           access_key: 'a7cb1d426ef75fa213f89c8ad28ff346',
           query: where,

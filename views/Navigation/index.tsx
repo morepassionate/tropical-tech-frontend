@@ -2,7 +2,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import React from 'react'
 import { Image, View } from 'react-native'
-import styles from '../assets/css/index'
+import styles from '../../assets/css/index'
 import {
   ForgotPassword,
   Home,
@@ -19,25 +19,25 @@ import {
   VerificationCode,
   Welcome
 } from '../../views'
-import Offers from '../Screens/Offers'
-import HotelDetails from '../Screens/HotelDetails'
-import ConfirmPayment from '../Screens/ConfirmPayment'
-import ReservationAccepted from '../Screens/ReservationAccepted'
-import Trips from '../Screens/Trips'
-import Account from '../Screens/Account'
-import Credits from '../Screens/Credits'
-import ManagePayment from '../Screens/ManagePayment'
-import PayWith from '../Screens/ManagePayment/PayWith'
-import CardDetails from '../Screens/ManagePayment/CardDetails'
+import Offers from '../../Screens/Offers'
+import HotelDetails from '../../Screens/HotelDetails'
+import ConfirmPayment from '../../Screens/ConfirmPayment'
+import ReservationAccepted from '../../Screens/ReservationAccepted'
+import Trips from '../../Screens/Trips'
+import Account from '../../Screens/Account'
+import Credits from '../../Screens/Credits'
+import ManagePayment from '../../Screens/ManagePayment'
+import PayWith from '../../Screens/ManagePayment/PayWith'
+import CardDetails from '../../Screens/ManagePayment/CardDetails'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
-import COLORS from '../Constants/styles'
+import COLORS from '../../Constants/styles'
 import { IconButton } from 'react-native-paper'
-import Saved from '../Screens/Saved'
-import Onboarding from '../Screens/Onboarding'
+import Saved from '../../Screens/Saved'
+import Onboarding from '../../Screens/Onboarding'
 import { useRecoilValue } from 'recoil'
-import FirstAccess from '../assets/atoms/FirstAccess'
-import Maps from '../Screens/Maps'
-import SelectCardDefault from '../Screens/ManagePayment/SelectCardDefault'
+import FirstAccess from '../../assets/atoms/FirstAccess'
+import Maps from '../../Screens/Maps'
+import SelectCardDefault from '../../Screens/ManagePayment/SelectCardDefault'
 
 // import { Container } from './styles';
 const Stack = createNativeStackNavigator()
@@ -46,7 +46,7 @@ const HomeTabScreen = () => {
   return (
     <>
       <View style={styles.containerLogo}>
-        <Image source={require('../assets/img/logo.png')} style={styles.logo} />
+        <Image source={require('../../assets/img/logo.png')} style={styles.logo} />
       </View>
       <HomeNavigator.Navigator
         screenOptions={({ route }) => ({
