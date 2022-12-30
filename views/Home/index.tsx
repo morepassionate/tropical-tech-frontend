@@ -856,30 +856,6 @@ const Home = (props: any) => {
                     >
                       <TouchableOpacity
                         style={styles.monthCard}
-                        onPress={() => [setInitialDate('2022-10-01'), setTabsActive('calendar')]}
-                      >
-                        <IconButton
-                          style={{ marginLeft: 'auto', marginRight: 'auto' }}
-                          icon={'calendar'}
-                          size={24}
-                          color={'#1B4298'}
-                        ></IconButton>
-                        <Text style={styles.monthText}>Oct</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={styles.monthCard}
-                        onPress={() => [setInitialDate('2022-11-01'), setTabsActive('calendar')]}
-                      >
-                        <IconButton
-                          style={{ marginLeft: 'auto', marginRight: 'auto' }}
-                          icon={'calendar'}
-                          size={24}
-                          color={'#1B4298'}
-                        ></IconButton>
-                        <Text style={styles.monthText}>Nov</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={styles.monthCard}
                         onPress={() => [setInitialDate('2022-12-01'), setTabsActive('calendar')]}
                       >
                         <IconButton
@@ -901,6 +877,30 @@ const Home = (props: any) => {
                           color={'#1B4298'}
                         ></IconButton>
                         <Text style={styles.monthText}>Jan</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={styles.monthCard}
+                        onPress={() => [setInitialDate('2023-02-01'), setTabsActive('calendar')]}
+                      >
+                        <IconButton
+                          style={{ marginLeft: 'auto', marginRight: 'auto' }}
+                          icon={'calendar'}
+                          size={24}
+                          color={'#1B4298'}
+                        ></IconButton>
+                        <Text style={styles.monthText}>Feb</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={styles.monthCard}
+                        onPress={() => [setInitialDate('2023-03-01'), setTabsActive('calendar')]}
+                      >
+                        <IconButton
+                          style={{ marginLeft: 'auto', marginRight: 'auto' }}
+                          icon={'calendar'}
+                          size={24}
+                          color={'#1B4298'}
+                        ></IconButton>
+                        <Text style={styles.monthText}>Mar</Text>
                       </TouchableOpacity>
                     </View>
                   </View>
